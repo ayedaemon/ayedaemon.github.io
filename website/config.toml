@@ -1,0 +1,66 @@
+baseURL = "https://ayedaemon.github.io/"
+languageCode = "en-us"
+title = "‡Connected‡"
+theme = "dream"
+
+[params]
+  background = "white"
+  backgroundImage = "/img/light-background.jpg"
+  backgroundDark = "black"
+  backgroundImageDark = "/img/dark-background.jpg"
+
+
+  linkColor = "seagreen"
+
+  author = "ayedaemon"
+  # description = "This is demo"
+  # avatar = "https://avatars0.githubusercontent.com/u/39592651?s=460&u=848945d723f7bba30a84a761e232d0ffa03f1169&v=4"
+  avatar = "https://cdn-images-1.medium.com/max/640/1*_0awH307tnbccPVc6jlx6Q.jpeg"
+  motto = "Connecting the dots"
+  # categoriesLimitInHeader = 6
+  # headerBottomText = "asd"
+  #formAction = "https://formspree.io/mpzynepq"
+  #formActionText = 'Drop me a message'
+
+
+
+  # utterancesRepo = ""
+
+  # valine = true
+  # LEANCLOUD_APP_ID = ""
+  # LEANCLOUD_APP_KEY = ""
+  rss = true
+  email = "ris3234@gmail.com"
+  twitter = "aye_daemon"
+  linkedin = "ayedaemon"
+  github = "ayedaemon"
+  # stackoverflow = ""
+  medium = "ayedaemon"
+  reddit = "ayeDaemon"
+
+  siteStartYear = 2020
+
+  favicon = "/images/extras/favicon.ico"
+
+  highlightjs = true
+  highlightjsCDN = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"
+  highlightjsExtraLanguages = ["ocaml"]
+  highlightjsTheme = "gruvbox-light"
+  highlightjsThemeDark = "gruvbox-dark"
+
+  # search
+  enableSearch = true
+
+  # options
+  showSummaryCoverInPost = true
+  hasTwitterEmbed = true
+
+  # dark mode
+  darkLinkColor = "darkseagreen"
+  darkNav = true
+  dark404 = true
+
+
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]

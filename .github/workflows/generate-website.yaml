@@ -1,0 +1,42 @@
+name: Hugo site CI
+
+on:
+  push:
+    branches: [ master ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # to use github token ( used for commiting back to the same repo)
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      # install hugo
+    - name: Install hugo
+      run: |
+        wget https://github.com/gohugoio/hugo/releases/download/v0.81.0/hugo_extended_0.81.0_Linux-64bit.tar.gz -O /tmp/hugo.tar.gz
+        tar -xvf /tmp/hugo.tar.gz
+        sudo mv hugo /usr/bin/hugo
+
+      # generate local website static pages
+    - name: generate local website
+      run: |
+        rm -rf ./docs/* && echo "Done Deleting old files"
+        /usr/bin/hugo -d ../docs/ -s ./website/ --enableGitInfo
+
+      # change readme back to the default ( it changes the readme to hugo webpage)
+    - name: change readme
+      run: |
+        sudo bash ./scripts/change_readme.sh
+
+      # Push changes to website branch
+    - name: Commit & Push changes
+      uses: actions-js/push@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
+        message: "Auto building static website"
