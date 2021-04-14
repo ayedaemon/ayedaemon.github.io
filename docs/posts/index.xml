@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>All Blogs on ‡Connected‡</title>
+    <link>https://ayedaemon.github.io/posts/</link>
+    <description>Recent content in All Blogs on ‡Connected‡</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://ayedaemon.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git Form Inside Out</title>
+      <link>https://ayedaemon.github.io/posts/git-form-inside-out/</link>
+      <pubDate>Thu, 25 Feb 2021 23:07:04 +0530</pubDate>
+      
+      <guid>https://ayedaemon.github.io/posts/git-form-inside-out/</guid>
+      <description>&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Inside out approach to learn git&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>Keylogger for Linux</title>
+      <link>https://ayedaemon.github.io/posts/keylogger-for-linux/</link>
+      <pubDate>Tue, 02 Feb 2021 14:47:26 +0530</pubDate>
+      
+      <guid>https://ayedaemon.github.io/posts/keylogger-for-linux/</guid>
+      <description>&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Developing a low level keylogger for linux using C.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>Debugging C Code</title>
+      <link>https://ayedaemon.github.io/posts/debugging-c-code/</link>
+      <pubDate>Wed, 27 Jan 2021 14:58:51 +0530</pubDate>
+      
+      <guid>https://ayedaemon.github.io/posts/debugging-c-code/</guid>
+      <description>&lt;p&gt;How your x86 program starts up in linux&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Advanced Intrusion Detection Environment</title>
+      <link>https://ayedaemon.github.io/posts/advanced-intrusion-detection-environment/</link>
+      <pubDate>Sat, 19 Dec 2020 14:25:28 +0530</pubDate>
+      
+      <guid>https://ayedaemon.github.io/posts/advanced-intrusion-detection-environment/</guid>
+      <description>&lt;p&gt;Host-based intrusion detection system (HIDS) for checking the integrity of files&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>LUKS Disk Encryption</title>
+      <link>https://ayedaemon.github.io/posts/luks-disk-encryption/</link>
+      <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
+      
+      <guid>https://ayedaemon.github.io/posts/luks-disk-encryption/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

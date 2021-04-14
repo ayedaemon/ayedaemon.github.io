@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Debugging C Code | ‡Connected‡</title>
+
+    
+<link href="/images/extras/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="ayedaemon" />
+<meta name="description" content="How your x86 program starts up in linux
+" />
+
+
+
+<meta name="generator" content="Hugo 0.81.0" />
+
+<link rel="canonical" href="https://ayedaemon.github.io/posts/debugging-c-code/" />
+
+
+<meta property="og:title" content="Debugging C Code" />
+<meta property="og:description" content="How your x86 program starts up in linux" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ayedaemon.github.io/posts/debugging-c-code/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-01-27T14:58:51&#43;05:30" />
+<meta property="article:modified_time" content="2021-04-14T09:59:01&#43;05:30" />
+
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Debugging C Code"/>
+<meta name="twitter:description" content="How your x86 program starts up in linux"/>
+
+
+<link rel="stylesheet" href="/css/semantic.min.css" />
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="/css/OverlayScrollbars.min.css" />
+<link rel="stylesheet" href="/css/github-markdown.css" />
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  a:not(.ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.ui.button),
+  .inverted a:not(.ui.button):hover {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: white;
+    
+
+    
+    background-image: url(/img/light-background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+    background-color: black;
+    
+
+    
+    background-image: url(/img/dark-background.jpg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+<link rel="stylesheet" data-highlight href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/gruvbox-light.min.css" />
+
+
+
+
+
+
+
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu">
+
+  <div class="item">
+    <i class="large link bullseye icon dream-flip-toggle" title="Flip it!"></i>
+  </div>
+  <div class="item">
+    <i class="large link home icon" title="Home" onclick="window.location.href = 'https:\/\/ayedaemon.github.io\/'"></i>
+  </div>
+  
+  <div class="item">
+    <i class="large link icon theme-switch" onclick="themeSwitch()"></i>
+  </div>
+  
+  
+  <div class="item">
+    <i class="large link search icon" onclick="toggleSearch()"></i>
+  </div>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed grid dream-grid">
+  <aside class="sixteen wide mobile sixteen wide tablet four wide computer column dream-single-aside">
+    
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#basic-c-program">Basic C program</a></li>
+        <li><a href="#lets-decompile-our-simple-binary">Let&rsquo;s decompile our simple binary.</a></li>
+        <li><a href="#the-whole-picture">The whole picture</a></li>
+        <li><a href="#what-after-_start-">What after _start ??</a></li>
+        <li><a href="#after-main-">After main ??</a></li>
+        <li><a href="#the-end">The end.</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+    <div class="ui segment actions">
+      <button
+        class="ui circular icon button save-as-image"
+        title="Save as image"
+        onclick="savePostAsImg()">
+        <i class="save icon"></i>
+      </button>
+
+      <a href="https://twitter.com/intent/tweet?text=Debugging%20C%20Code&url=https%3a%2f%2fayedaemon.github.io%2fposts%2fdebugging-c-code%2f" class="ui circular twitter icon button">
+  <i class="twitter icon"></i>
+</a>
+<a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fayedaemon.github.io%2fposts%2fdebugging-c-code%2f" class="ui circular facebook icon button">
+  <i class="facebook icon"></i>
+</a>
+
+
+    </div>
+  </aside>
+  <div class="sixteen wide mobile sixteen wide tablet twelve wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    
+    <div class="ui top attached segment cover">
+      <div class="cover-img" style="background-image: url(https://cdn-images-1.medium.com/max/640/1*5ujtoxLz_BwH3tYkI6kdAA.png);"></div>
+    </div>
+    
+    <section class="ui attached segment">
+      <header>
+        <h1 class="ui large header">Debugging C Code<div class="sub header">
+            @
+            
+              
+                ayedaemon
+              
+            
+
+            | 
+                Wednesday, Jan 27, 2021
+              
+
+            | 10 minutes read
+
+            | Update at
+              
+                Wednesday, Apr 14, 2021
+              
+          </div>
+        </h1>
+      </header>
+
+      <article class="main"><p>How your x86 program starts up in linux</p>
+<p>In this blog, I will assume that you have basic understanding of assembly language. If not, then you should consider learning it. Although I&rsquo;ll try to explain things in the easiest terms as possible.</p>
+<h3 id="basic-c-program">Basic C program</h3>
+<p>Let&rsquo;s start with a basic C program&hellip;</p>
+<p><strong>CODE:</strong> (Saving it with <code>simple.c</code>)</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    printf(&quot;Hello main&quot;);
+    return 0;
+}
+</code></pre><p>&hellip; and compile it the way we have always done it with <code>gcc</code>.</p>
+<pre><code>gcc simple.c -o simple.out
+</code></pre><p>Now I have got a file <code>simple.out</code> which should be my executable binary.. I have a habit to check the file using <code>file</code> command to be more sure.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ file simple.out
+
+simple.out: ELF 64-bit LSB pie executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span style="color:#f92672">[</span>sha1<span style="color:#f92672">]=</span>11c9b757baf9a3a8271443682135b7488cb04e52, <span style="color:#66d9ef">for</span> GNU/Linux 3.2.0, not stripped
+</code></pre></div><p>And now we know that it is an ELF binary and dynamically linked.</p>
+<p>Let&rsquo;s see what shared objects they use.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ldd simple.out
+
+linux-vdso.so.1 <span style="color:#f92672">(</span>0x00007fffbc364000<span style="color:#f92672">)</span>
+libc.so.6 <span style="color:#f92672">=</span>&gt; /usr/lib/libc.so.6 <span style="color:#f92672">(</span>0x00007f5b0d6a7000<span style="color:#f92672">)</span>
+/lib64/ld-linux-x86-64.so.2 <span style="color:#f92672">=</span>&gt; /usr/lib64/ld-linux-x86-64.so.2 <span style="color:#f92672">(</span>0x00007f5b0d8b9000<span style="color:#f92672">)</span>
+</code></pre></div><p>The interesting one here is <code>libc.so.6 =&gt; /usr/lib/libc.so.6 (0x00007f5b0d6a7000)</code>. This shared object is used in almost every linux command you know. On checking the <code>man</code> page for libc.. I came to know that it is the standard C library used in linux.</p>
+<p>The question I am asking myself here is &ndash;&gt; <strong>Is this somehow responsible to execute the <code>main()</code> function in C programs.</strong></p>
+<p>Maybe. We&rsquo;ll see that later.</p>
+<h3 id="lets-decompile-our-simple-binary">Let&rsquo;s decompile our simple binary.</h3>
+<p>I can check the assembly code of the executable using <code>objdump -d simple.out</code> command on my terminal. It&rsquo;ll give me a lot of output but right now I am concerned about the <code>main()</code> function&hellip; so I&rsquo;ll just <code>grep</code> it.</p>
+<pre><code>$ objdump -d simple.out | grep -A12 '&lt;main&gt;:'
+
+
+0000000000001139 &lt;main&gt;:
+    1139:	55                   	push   %rbp
+    113a:	48 89 e5             	mov    %rsp,%rbp
+    113d:	48 8d 3d c0 0e 00 00 	lea    0xec0(%rip),%rdi        # 2004 &lt;_IO_stdin_used+0x4&gt;
+    1144:	b8 00 00 00 00       	mov    $0x0,%eax
+    1149:	e8 e2 fe ff ff       	callq  1030 &lt;printf@plt&gt;
+    114e:	b8 00 00 00 00       	mov    $0x0,%eax
+    1153:	5d                   	pop    %rbp
+    1154:	c3                   	retq
+    1155:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+    115c:	00 00 00
+    115f:	90                   	nop
+</code></pre><p><em>If you don&rsquo;t understand assembly, I get what you are feeling right now</em></p>
+<p>But you don&rsquo;t need to understand it completely right now. You can look into some syntax and they&rsquo;ll make sense in some time.
+Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>printf()</code> function. And we know before calling a function, you need to pass its arguments on the stack. That means the <code>mov</code> just above the <code>callq</code> statement is my string <code>Hello main</code> (which is the argument passed to <code>printf()</code>)</p>
+<p>Another Question &ndash;&gt; <strong>Is <code>main()</code> really the starting point of execution??</strong></p>
+<p>On further looking into the <code>objdump -d simple.out</code> command output&hellip; I can understand that there is another function<code>_start</code> that calls the <code>main()</code> function.</p>
+<pre><code>Disassembly of section .text:
+
+0000000000001040 &lt;_start&gt;:
+    1040:	f3 0f 1e fa          	endbr64
+    1044:	31 ed                	xor    %ebp,%ebp
+    1046:	49 89 d1             	mov    %rdx,%r9
+    1049:	5e                   	pop    %rsi
+    104a:	48 89 e2             	mov    %rsp,%rdx
+    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+    1051:	50                   	push   %rax
+    1052:	54                   	push   %rsp
+    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
+    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
+    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
+    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
+    106e:	f4                   	hlt
+    106f:	90                   	nop
+</code></pre><p>It does not call the <code>main()</code> directly.. But it takes <code>main()</code> as an argument and then calls __libc_start_main (from GlibC). Along with <code>main()</code>, it also takes <code>__libc_csu_fini</code> and <code>__libc_csu_init</code> as an argument.</p>
+<h3 id="the-whole-picture">The whole picture</h3>
+<p><img src="https://cdn-images-1.medium.com/max/640/0*HlrnUq2SuCxLLzuH.png" alt="the-whole-picture"></p>
+<p><em>This image is taken from <a href="http://dbp-consulting.com/tutorials/debugging/linuxProgramStartup.html">here</a>&hellip; This is a complete in-depth blog explaining <code>How the heck do we get to main()?</code></em></p>
+<p>Now from the picture, it is very much clear that <code>_start</code> passes <code>main</code> (and other 2 functions) to <code>__libc_start_main</code>(function name was not sure from the disassembly). And <code>__libc_start_main</code> starts the <code>main()</code>.</p>
+<p><strong>But what the hell is everything else??</strong></p>
+<p>To start with, <strong>Loader</strong> is a program that loads executable from disk to RAM (primary memory) for execution. In unix, it is the handler for <code>execve()</code> system call. As per the <a href="https://en.wikipedia.org/wiki/Loader_%28computing%29#Responsibilities">wikipedia page for loader(computing)</a>, It&rsquo;s tasks include:</p>
+<ol>
+<li>validation (permissions, memory requirements etc.);</li>
+<li>copying the program image from the disk into main memory;</li>
+<li>copying the command-line arguments on the stack;</li>
+<li>initializing registers (e.g., the stack pointer);</li>
+<li>jumping to the program entry point (<code>_start</code>).</li>
+</ol>
+<p>But before getting to <code>_start</code>, it pre-initializes some global variables to help <code>_start</code>. You can create your custom <code>preinit</code> function as well. For this, you&rsquo;ll need the constructor function. And yes, it is not C++ and it has a constructor and destructor. Every executable has a global C level constructor and destructor.</p>
+<p>This is a code (<code>unknown_functions.c</code>) to change the <code>preinit</code> function with my own. I have added 3 <code>printf()</code> statements to <code>preinit()</code> (which should be easy to figure out in assembly now).. I&rsquo;ll compile this code using <code>gcc unknown_functions.c -o unknown_functions.out</code>.</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+void preinit(int argc, char **argv, char **envp) {
+ printf(&quot;%s\n&quot;, __FUNCTION__);
+ printf(&quot;%d , %s , %s\n&quot;, argc, *argv, *envp);
+ printf(&quot;CLI arg : %s\n&quot;, argv[1]);
+}
+
+__attribute__((section(&quot;.preinit_array&quot;))) typeof(preinit) *__preinit = preinit;
+
+int main(int argc, char **argv, char **envp) {
+    printf(&quot;This is %s\n&quot;,__FUNCTION__);
+    printf(&quot;%d , %s , %s\n&quot;, argc, *argv, *envp);
+    printf(&quot;CLI arg : %s\n&quot;, argv[1]);
+    return 0;
+}
+</code></pre><p>On running it with <code>./unknown_functions.out</code>, I get some expected output.</p>
+<pre><code>preinit
+1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : (null)
+This is main
+1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : (null)
+</code></pre><p>And we can also pass CLI argument to the binary like <code>./unknown_functions.out abcd1</code> and then it&rsquo;ll give an output like this-</p>
+<pre><code>preinit
+2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : abcd1
+This is main
+2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : abcd1
+</code></pre><p>With this, we know that <code>preinit</code> function runs before <code>main()</code>. Let&rsquo;s move forward with <code>_start</code>. This function is responsible to load <code>main()</code> by default. What if we change this function with our custom function and never call <code>main()</code>.</p>
+<p>I am using below code(<code>nomain.c</code>) and compiling it with a (special flag this time) &ndash; <code>gcc nomain.c -nostartfiles -o nomain.out</code></p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt; // For declaration of exit()
+void _start()
+{
+    int x = my_fun(); //calling custom main function
+    exit(x);
+}
+
+int my_fun() // our custom main function
+{
+    printf(&quot;Surprise!!\n&quot;);
+    return 0;
+}
+
+int main()
+{
+  printf(&quot;Not the main anymore&quot;);
+  return 0;
+}
+</code></pre><p>On running the binary <code>./nomain.out</code> we get,</p>
+<pre><code>Surprise!!
+</code></pre><p>To understand what just happened, we need to look into the disassembly of this binary. &ndash; <code>objdump -d nomain.out</code></p>
+<pre><code>nomain.out:     file format elf64-x86-64
+
+
+Disassembly of section .plt:
+
+0000000000001000 &lt;.plt&gt;:
+    1000:	ff 35 02 30 00 00    	pushq  0x3002(%rip)        # 4008 &lt;_GLOBAL_OFFSET_TABLE_+0x8&gt;
+    1006:	ff 25 04 30 00 00    	jmpq   *0x3004(%rip)        # 4010 &lt;_GLOBAL_OFFSET_TABLE_+0x10&gt;
+    100c:	0f 1f 40 00          	nopl   0x0(%rax)
+
+0000000000001010 &lt;puts@plt&gt;:
+    1010:	ff 25 02 30 00 00    	jmpq   *0x3002(%rip)        # 4018 &lt;puts@GLIBC_2.2.5&gt;
+    1016:	68 00 00 00 00       	pushq  $0x0
+    101b:	e9 e0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+0000000000001020 &lt;printf@plt&gt;:
+    1020:	ff 25 fa 2f 00 00    	jmpq   *0x2ffa(%rip)        # 4020 &lt;printf@GLIBC_2.2.5&gt;
+    1026:	68 01 00 00 00       	pushq  $0x1
+    102b:	e9 d0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+0000000000001030 &lt;exit@plt&gt;:
+    1030:	ff 25 f2 2f 00 00    	jmpq   *0x2ff2(%rip)        # 4028 &lt;exit@GLIBC_2.2.5&gt;
+    1036:	68 02 00 00 00       	pushq  $0x2
+    103b:	e9 c0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+Disassembly of section .text:
+
+0000000000001040 &lt;_start&gt;:
+    1040:	55                   	push   %rbp
+    1041:	48 89 e5             	mov    %rsp,%rbp
+    1044:	48 83 ec 10          	sub    $0x10,%rsp
+    1048:	b8 00 00 00 00       	mov    $0x0,%eax
+    104d:	e8 0d 00 00 00       	callq  105f &lt;my_fun&gt;
+    1052:	89 45 fc             	mov    %eax,-0x4(%rbp)
+    1055:	8b 45 fc             	mov    -0x4(%rbp),%eax
+    1058:	89 c7                	mov    %eax,%edi
+    105a:	e8 d1 ff ff ff       	callq  1030 &lt;exit@plt&gt;
+
+000000000000105f &lt;my_fun&gt;:
+    105f:	55                   	push   %rbp
+    1060:	48 89 e5             	mov    %rsp,%rbp
+    1063:	48 8d 3d 96 0f 00 00 	lea    0xf96(%rip),%rdi        # 2000 &lt;main+0xf8a&gt;
+    106a:	e8 a1 ff ff ff       	callq  1010 &lt;puts@plt&gt;
+    106f:	b8 00 00 00 00       	mov    $0x0,%eax
+    1074:	5d                   	pop    %rbp
+    1075:	c3                   	retq
+
+0000000000001076 &lt;main&gt;:
+    1076:	55                   	push   %rbp
+    1077:	48 89 e5             	mov    %rsp,%rbp
+    107a:	48 8d 3d 8a 0f 00 00 	lea    0xf8a(%rip),%rdi        # 200b &lt;main+0xf95&gt;
+    1081:	b8 00 00 00 00       	mov    $0x0,%eax
+    1086:	e8 95 ff ff ff       	callq  1020 &lt;printf@plt&gt;
+    108b:	b8 00 00 00 00       	mov    $0x0,%eax
+    1090:	5d                   	pop    %rbp
+    1091:	c3                   	retq
+</code></pre><p>This is pretty small as compared to the disassembly of <code>simple.out</code>. The reason here is clear that we have changed the <code>_start</code> and not implemented any of the fancy functions in it. And this reduces the size of my binary as well.</p>
+<pre><code>$ du nomain.out simple.out
+
+
+16	nomain.out
+20	simple.out
+</code></pre><hr>
+<h3 id="what-after-_start-">What after _start ??</h3>
+<p>Till now, we have seen that we can pass our values to loader and replace <code>_start</code> with our custom functions&hellip; but this will not start <code>__libc_start_main</code> function.</p>
+<p><strong>Why do we need <code>__libc_start_main</code> to run??</strong></p>
+<p><code>__libc_start_main</code> is linked into our code from glibc. In general, it takes care of -</p>
+<ol>
+<li>takes care of setuid and setguid program security problems.</li>
+<li>registers <code>init</code> and <code>fini</code> arguments.</li>
+<li>Calls the <code>main</code> function and exit with the return value of <code>main</code>. (<em>This is something that we did in our custom function - <code>nomain.c</code></em>)</li>
+</ol>
+<p><a href="https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html">This here</a> is the definition for the <code>__libc_start_main</code> function which is implemented in the <code>libc</code> library.</p>
+<p>As seen in the disassembly (of <code>simple.out</code> binary)&hellip; we can see that while calling (<code>callq</code>) the <code>__libc_start_main</code> function&hellip; we are passing <code>main</code>, <code>__libc_csu_init</code> and <code>__libc_csu_fini</code>&hellip; along with other things.</p>
+<pre><code>0000000000001040 &lt;_start&gt;:
+    1040:	f3 0f 1e fa          	endbr64
+    1044:	31 ed                	xor    %ebp,%ebp
+    1046:	49 89 d1             	mov    %rdx,%r9
+    1049:	5e                   	pop    %rsi
+    104a:	48 89 e2             	mov    %rsp,%rdx
+    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+    1051:	50                   	push   %rax
+    1052:	54                   	push   %rsp
+    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
+    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
+    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
+    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
+    106e:	f4                   	hlt
+    106f:	90                   	nop
+
+</code></pre><p><strong>What&rsquo;s next??</strong></p>
+<p>Next thing that executes is <code>__libc_csu_init</code> which will call all the initializing functions. This phase <em>runs before the <code>main()</code> function</em>. The sequence which is followed(roughly) by the <code>__libc_csu_init</code> function is:</p>
+<ul>
+<li><code>__init</code></li>
+<li><code>__gmon_start__</code></li>
+<li><code>frame_dummy</code></li>
+<li><code>__do_global_ctors_aux</code></li>
+<li><code>C level global constructors</code></li>
+<li><code>init array</code></li>
+</ul>
+<p>We&rsquo;ll add our custom <code>c level global constructor</code> and <code>init array</code> function in below code(<code>pre-main.c</code>)&hellip;. and complie it with <code>gcc pre-main.c -o pre-main.out</code>.</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+void init(int argc, char **argv, char **envp) {
+ printf(&quot;%s\n&quot;, __FUNCTION__);
+}
+
+
+void  __attribute__ ((constructor)) constructor() {
+ printf(&quot;%s\n&quot;, __FUNCTION__);
+}
+
+__attribute__((section(&quot;.init_array&quot;))) typeof(init) *__init = init;
+
+int main()
+{
+    printf(&quot;Hello main&quot;);
+    return 0;
+}
+
+</code></pre><p>This will give output as below</p>
+<pre><code>constructor
+init
+Hello main
+</code></pre><h3 id="after-main-">After main ??</h3>
+<p>As we have in the diagram, after <code>main</code>, <code>exit</code> function is called&hellip; which calls multiple functions in the below order:-</p>
+<ol>
+<li>at_exit</li>
+<li>fini_array</li>
+<li>constructor.</li>
+</ol>
+<p>The below code(<code>after-main.c</code>) can be used to demonstrate that.</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+
+void fini() {
+ printf(&quot;%s\n&quot;, __FUNCTION__);
+
+}
+
+void __attribute__ ((destructor)) destructor() {
+ printf(&quot;%s\n&quot;, __FUNCTION__);
+}
+__attribute__((section(&quot;.fini_array&quot;))) typeof(fini) *__fini = fini;
+
+void do_something_at_end()
+{
+    printf(&quot;Bye bye\n&quot;);
+}
+
+int main()
+{
+    atexit(do_something_at_end);
+    printf(&quot;Hello main\n&quot;);
+    return 0;
+}
+</code></pre><p>This will return the below output - which confirms the order of execution.</p>
+<pre><code>Hello main
+Bye bye
+fini
+destructor
+</code></pre><p>Here we can see that the <code>atexit</code> function is called before the <code>printf</code> function but in output the <code>atexit</code> output is after the <code>printf</code> is called. The reason here is that here <code>atexit()</code> is simply registering <code>do_something_at_end</code> function to run at exit. It&rsquo;s not responsible to run it right away.</p>
+<hr>
+<h3 id="the-end">The end.</h3>
+<p>This is pretty much what happens when we run an ELF binary or a C program in linux. In this article, I haven&rsquo;t talked about a lot of other stuff that happens when a program executes&hellip; like setting up the environments variable for the program, how the memory layout is done or what is procedure linkage table(plt), etc&hellip;</p>
+<p>If you find any information wrongly presented in this article, feel free to correct me. I am still learning this whole stuff and there are a lot of things yet to discover.</p></article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2020 - 2021 ‡Connected‡</p>
+              
+
+              
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <center>
+<header class="ui basic very padded segment dream-header">
+  <div class="ui small circular image">
+    
+    <img src="https://cdn-images-1.medium.com/max/640/1*_0awH307tnbccPVc6jlx6Q.jpeg" />
+    
+  </div>
+
+  <div class="content">
+
+    <h1 class="ui medium header">ayedaemon&#39;s blog<div class="sub header">Connecting the dots</div>
+
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="Archives"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="All Categories"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="All Tags"></i>
+      </a>
+    </article>
+
+    
+    <article class="dream-tags">
+    
+      
+      
+      <a class="ui label" href="/tags/c-programming/" title="C Programming">C Programming</a>
+    
+      
+      
+      <a class="ui label" href="/tags/cryptograpy/" title="Cryptograpy">Cryptograpy</a>
+    
+      
+      
+      <a class="ui label" href="/tags/debugging/" title="Debugging">Debugging</a>
+    
+      
+      
+      <a class="ui label" href="/tags/git/" title="Git">Git</a>
+    
+      
+      
+      <a class="ui label" href="/tags/ids/" title="IDS">IDS</a>
+    
+      
+      
+      <a class="ui label" href="/tags/keylogger/" title="Keylogger">Keylogger</a>
+    
+      
+      
+      <a class="ui label" href="/tags/linux/" title="Linux">Linux</a>
+    
+      
+      
+      <a class="ui label" href="/tags/security/" title="Security">Security</a>
+    
+    </article>
+    
+  </div>
+</header>
+</center>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Certificates</h3>
+      <p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified System Administrator (RHEL 8)</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ansible Automation</a></p>
+<p>✔️<a href="https://rhtapps.redhat.com/verify?certId=190-153-684">Red Hat Certified Specialist in Ceph Storage Administration</a></p>
+<p>✔️<a href="https://www.credential.net/8cb287f5-5a70-4400-9d45-c9a2a38c2160#gs.cz20tt">Certified Network Security Specialist (CNSS | ICSI, UK)</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=i3PDBanCTh">Fortinet Certified NSE1</a></p>
+<p>✔️<a href="https://training.fortinet.com/mod/customcert/verify_certificate.php?code=IxKFPCjC6a">Fortinet Certified NSE2</a></p>
+
+    </article>
+  </div>
+  
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment markdown-body">
+      <h3 class="ui header">Who am I ???</h3>
+      <p>Hi, my name is Rishabh Umrao.</p>
+<p>I am an Information Security Engineer from India who is interested in Devops, Security and Automation. Learning about security flaws, exploiting and mitigating them is one of my hobbies.</p>
+<p>I am usually playing around with multiple technology stacks to keep track of new concepts and get better understanding of the old.</p>
+
+    </article>
+  </div>
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <h3 class="ui header">Social Links</h3>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+    <div class="item">
+      <a href="/index.xml">
+        <i class="large rss square icon" title="RSS"></i>
+      </a>
+    </div>
+  
+  
+    <div class="item">
+      <a href="mailto:ris3234@gmail.com">
+        <i class="large mail icon" title="Email"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://twitter.com/aye_daemon" target="_blank">
+        <i class="large twitter icon" title="Twitter"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.linkedin.com/in/ayedaemon" target="_blank">
+        <i class="large linkedin icon" title="Linkedin"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://github.com/ayedaemon" target="_blank">
+        <i class="large github icon" title="GitHub"></i>
+      </a>
+    </div>
+  
+
+  
+
+  
+    <div class="item">
+      <a href="https://www.medium.com/@ayedaemon" target="_blank">
+        <i class="large medium icon" title="medium"></i>
+      </a>
+    </div>
+  
+
+  
+    <div class="item">
+      <a href="https://www.reddit.com/user/ayeDaemon" target="_blank">
+        <i class="large reddit icon" title="reddit"></i>
+      </a>
+    </div>
+  
+
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+  </div>
+
+  
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+  window.defaultDark =  null 
+  window.backgroundDark = "black"
+  window.backgroundImageDark = "/img/dark-background.jpg"
+  window.darkNav =  true 
+  window.hasTwitterEmbed =  true 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/semantic.min.js"></script>
+<script src="/js/jquery.overlayScrollbars.min.js"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+<script src="/js/html2canvas.min.js"></script>
+<script src="/js/post.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/languages/ocaml.min.js"></script>
+
+
+
+<script>
+  hljs.initHighlightingOnLoad()
+  setHighlightTheme()
+
+  function setHighlightTheme() {
+    var isDark = localStore.getItem('hugo-theme-dream-is-dark')
+    isDark = isDark ? isDark : window.defaultDark ? 'y' : isDark
+
+    var lightTheme = "gruvbox-light"
+    var darkTheme = "gruvbox-dark"
+    var theme = isDark === 'y' ? darkTheme : lightTheme
+
+    $('link[data-highlight]').attr('href', 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/' + theme + '.min.css')
+    $('pre').css('background', isDark === 'y' ? '#333' : '')
+  }
+</script>
+
+
+
+
+
+    
+    <div class="ui inverted segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="Search" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/ayedaemon.github.io\//index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: true,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    
+  </body>
+</html>
