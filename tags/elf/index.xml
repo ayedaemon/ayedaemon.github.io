@@ -126,40 +126,40 @@
 </span></span></code></pre></div><p>Now, it&rsquo;s time to take a deep dive into the inner workings of the <code>Elf64_Phdr</code> struct</p>
 <h3 id="1-p_type">1. p_type</h3>
 <p>Just like <code>sh_type</code>, this member tells the type of the segment. Whether the segment will be loaded in the memory or is it just used to store notes.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L25
-</span></span><span class="line"><span class="cl">*/
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">/*</span>
+</span></span><span class="line"><span class="cl"><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elixir</span><span class="o">.</span><span class="n">bootlin</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">uapi</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">elf</span><span class="o">.</span><span class="n">h</span><span class="c1">#L25</span>
+</span></span><span class="line"><span class="cl"><span class="o">*/</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">/* These constants are for the segment types stored in the image headers */
-</span></span><span class="line"><span class="cl">#define PT_NULL    0
-</span></span><span class="line"><span class="cl">#define PT_LOAD    1
-</span></span><span class="line"><span class="cl">#define PT_DYNAMIC 2
-</span></span><span class="line"><span class="cl">#define PT_INTERP  3
-</span></span><span class="line"><span class="cl">#define PT_NOTE    4
-</span></span><span class="line"><span class="cl">#define PT_SHLIB   5
-</span></span><span class="line"><span class="cl">#define PT_PHDR    6
-</span></span><span class="line"><span class="cl">#define PT_TLS     7               /* Thread local storage segment */
-</span></span><span class="line"><span class="cl">#define PT_LOOS    0x60000000      /* OS-specific */
-</span></span><span class="line"><span class="cl">#define PT_HIOS    0x6fffffff      /* OS-specific */
-</span></span><span class="line"><span class="cl">#define PT_LOPROC  0x70000000
-</span></span><span class="line"><span class="cl">#define PT_HIPROC  0x7fffffff
-</span></span><span class="line"><span class="cl">#define PT_GNU_EH_FRAME	(PT_LOOS + 0x474e550)
-</span></span><span class="line"><span class="cl">#define PT_GNU_STACK	(PT_LOOS + 0x474e551)
-</span></span><span class="line"><span class="cl">#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
-</span></span><span class="line"><span class="cl">#define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">These</span> <span class="n">constants</span> <span class="n">are</span> <span class="k">for</span> <span class="n">the</span> <span class="n">segment</span> <span class="n">types</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">image</span> <span class="n">headers</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_NULL    0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOAD    1</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_DYNAMIC 2</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_INTERP  3</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_NOTE    4</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_SHLIB   5</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_PHDR    6</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_TLS     7               /* Thread local storage segment */</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOOS    0x60000000      /* OS-specific */</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_HIOS    0x6fffffff      /* OS-specific */</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOPROC  0x70000000</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_HIPROC  0x7fffffff</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_EH_FRAME	(PT_LOOS + 0x474e550)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_STACK	(PT_LOOS + 0x474e551)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)</span>
 </span></span></code></pre></div><h3 id="2-p_flags">2. p_flags</h3>
 <p>This is quite similar to the the <code>(r)ead</code>, <code>(w)rite</code> and <code>e(x)ecute</code> permissions we are familiar with. This member specifies the permissions for the given segment.</p>
 <p>Usually the segment containing the <code>.text</code> section will have <code>(r)ead</code> and <code>e(x)ecute</code> permissions.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L243
-</span></span><span class="line"><span class="cl">*/
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">/*</span>
+</span></span><span class="line"><span class="cl"><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elixir</span><span class="o">.</span><span class="n">bootlin</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">uapi</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">elf</span><span class="o">.</span><span class="n">h</span><span class="c1">#L243</span>
+</span></span><span class="line"><span class="cl"><span class="o">*/</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">/* These constants define the permissions on sections in the program
-</span></span><span class="line"><span class="cl">   header, p_flags. */
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">These</span> <span class="n">constants</span> <span class="n">define</span> <span class="n">the</span> <span class="n">permissions</span> <span class="n">on</span> <span class="n">sections</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">program</span>
+</span></span><span class="line"><span class="cl">   <span class="n">header</span><span class="p">,</span> <span class="n">p_flags</span><span class="o">.</span> <span class="o">*/</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#define PF_R    0x4
-</span></span><span class="line"><span class="cl">#define PF_W    0x2
-</span></span><span class="line"><span class="cl">#define PF_X    0x1
+</span></span><span class="line"><span class="cl"><span class="c1">#define PF_R    0x4</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PF_W    0x2</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#define PF_X    0x1</span>
 </span></span></code></pre></div><h3 id="3-p_offset">3. p_offset</h3>
 <p>This holds the offset from the beginning of the file, where the first byte of the first section in this segment is located.</p>
 <h3 id="4-p_vaddr">4. p_vaddr</h3>

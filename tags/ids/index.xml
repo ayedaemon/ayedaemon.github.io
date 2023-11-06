@@ -24,13 +24,13 @@
 <p><em>But there are other HIDS tools that can do this for you. Like,</em> <a href="https://www.splunk.com/"><em>Splunk</em></a> <em>and</em> <a href="https://www.ossec.net/"><em>OSSEC</em></a><em>.</em></p>
 <p>AIDE have provided a <a href="https://aide.github.io/doc/">pretty simple documentation</a> to undertand and get familiar with it.</p>
 <h3 id="how-to-install-it">How to install it?</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Check what repo will provide you aide tool.  
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># Check what repo will provide you aide tool.  </span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">yum whatprovides aide  
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">whatprovides</span> <span class="n">aide</span>  
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># And then install it, if available.  
+</span></span><span class="line"><span class="cl"><span class="c1"># And then install it, if available.  </span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">yum install aide -y
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">aide</span> <span class="o">-</span><span class="n">y</span>
 </span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"  />
 </p>
 <h3 id="next-step-">Next step ..??</h3>
@@ -100,9 +100,9 @@
 </p>
 <p>This rule is a regular expression rule and will match the complete path of any file starting from /fun-with-aide, so this will include the files inside this folder.</p>
 <p>Now some simple steps to follow:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">* aide --init
-</span></span><span class="line"><span class="cl">* cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-</span></span><span class="line"><span class="cl">* aide --check
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">init</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">cp</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">gz</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">gz</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">check</span>
 </span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"  />
 </p>
 <p>What if we tinker with the file /fun-with-aide/file1?</p>

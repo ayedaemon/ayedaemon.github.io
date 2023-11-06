@@ -256,28 +256,28 @@ Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>pri
 <li><code>init array</code></li>
 </ul>
 <p>We&rsquo;ll add our custom <code>c level global constructor</code> and <code>init array</code> function in below code(<code>pre-main.c</code>)&hellip;. and complie it with <code>gcc pre-main.c -o pre-main.out</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">#include &lt;stdio.h&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">void</span> <span class="n">init</span><span class="p">(</span><span class="ne">int</span> <span class="n">argc</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"> <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">void</span>  <span class="nf">__attribute__</span> <span class="p">((</span><span class="n">constructor</span><span class="p">))</span> <span class="nf">constructor</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">void</span>  <span class="n">__attribute__</span> <span class="p">((</span><span class="n">constructor</span><span class="p">))</span> <span class="n">constructor</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"> <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nf">__attribute__</span><span class="p">((</span><span class="nf">section</span><span class="p">(</span><span class="s">&#34;.init_array&#34;</span><span class="p">)))</span> <span class="nf">typeof</span><span class="p">(</span><span class="n">init</span><span class="p">)</span> <span class="o">*</span><span class="n">__init</span> <span class="o">=</span> <span class="n">init</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">__attribute__</span><span class="p">((</span><span class="n">section</span><span class="p">(</span><span class="s2">&#34;.init_array&#34;</span><span class="p">)))</span> <span class="nb">typeof</span><span class="p">(</span><span class="n">init</span><span class="p">)</span> <span class="o">*</span><span class="n">__init</span> <span class="o">=</span> <span class="n">init</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="ne">int</span> <span class="n">main</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Hello main&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;Hello main&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>This will give output as below</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">constructor
-</span></span><span class="line"><span class="cl">init
-</span></span><span class="line"><span class="cl">Hello main
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">constructor</span>
+</span></span><span class="line"><span class="cl"><span class="n">init</span>
+</span></span><span class="line"><span class="cl"><span class="n">Hello</span> <span class="n">main</span>
 </span></span></code></pre></div><h3 id="after-main-">After main ??</h3>
 <p>As we have in the diagram, after <code>main</code>, <code>exit</code> function is called&hellip; which calls multiple functions in the below order:-</p>
 <ol>
