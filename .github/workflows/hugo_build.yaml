@@ -1,0 +1,53 @@
+name: Build the Hugo website
+on:
+  push:
+    branches:
+      - main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.120.2
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v2
+        with:
+          path: "public"
+          ref: gh-pages
+
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+
+      - name: Build the site
+        run: hugo version && hugo
+
+       # Hugo builds to `./public` by default, which is where the gh-branch is checked out to
+      - name: Check for changes
+        id: diff
+        working-directory: ./public
+        run: |
+          if [[ "$(git status --porcelain)" == "" ]]
+          then
+            echo '::set-output name=changes::none'
+          else
+            echo '::set-output name=changes::some'
+          fi
+      - name: Commit changes to gh-pages branch
+        working-directory: ./public
+        if: steps.diff.outputs.changes != 'none'
+        # TODO perhaps reuse the commit message from the original commit
+        run: |
+          git add --all
+          git config user.name "GitHub Actions"
+          git config user.email "<>"
+          git add --all && git commit -m "Update blog" && git push

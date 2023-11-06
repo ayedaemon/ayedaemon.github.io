@@ -1,0 +1,4 @@
+*.pyc
+hugo2medium/*
+.hugo_build.lock
+public/
