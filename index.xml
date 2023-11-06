@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Connected</title>
+    <link>https://ayedaemon.github.io/</link>
+    <description>Recent content on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ELF Chronicles: Program Headers</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</link>
+      <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</guid>
+      <description>In preceding articles, we&amp;rsquo;ve delved into the details of ELF file headers and section headers. Section headers provide insight into how data and instructions are organized based on their characteristics and grouped into distinct sections. These sections remain distinct due to variations in their types and permissions (&amp;hellip; and few other things).
+Up to this point, our focus has been on the aspects of the ELF file as it resides on-disk.</description>
+    </item>
+    <item>
+      <title>ELF Chronicles: Section Headers</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</link>
+      <pubDate>Thu, 19 Oct 2023 00:24:06 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</guid>
+      <description>Intro Assuming you&amp;rsquo;ve got ELF headers like Elf64_Ehdr or Elf32_Ehdr at your fingertips, and you&amp;rsquo;re armed with the know-how and tools to decipher their contents effortlessly.
+For this article I&amp;rsquo;ll be using the below C code to generate the ELF file.
+/* file: hello_world.c */ #include &amp;lt;stdio.h&amp;gt; // A macro #define HELLO_MSG1 &amp;#34;Hello World1&amp;#34; // A global variable char HELLO_MSG2[] = &amp;#34;Hello World2&amp;#34;; // main function int main() { // local variable for main char HELLO_MSG3[] = &amp;#34;Hello World3&amp;#34;; // Print messages printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG1); printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG2); printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG3); return 0; } You can get the ELF binary by compiling this code.</description>
+    </item>
+    <item>
+      <title>ELF Chronicles: ELF file Header</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</link>
+      <pubDate>Wed, 18 Oct 2023 13:34:57 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</guid>
+      <description>Hexdumps In the fascinating world of computers, we&amp;rsquo;re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we&amp;rsquo;ve come up with our own nifty number system - &amp;ldquo;hexadecimal&amp;rdquo; or &amp;ldquo;hex&amp;rdquo; for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It&amp;rsquo;s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-4</title>
+      <link>https://ayedaemon.github.io/post/2023/05/intro-to-re-part-4/</link>
+      <pubDate>Mon, 01 May 2023 02:34:50 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/05/intro-to-re-part-4/</guid>
+      <description>When an operating system (OS) runs a program, the program is first loaded into main memory. Memory is utilized for both program&amp;rsquo;s machine instructions and program&amp;rsquo;s data&amp;hellip;this includes parameters, dynamic variables, (un)initialized variables, and so on.
+Most computers today use paged memory allocations, which allow the amount of memory assigned to a program to increase/decrease as the needs of the application change. Memory is allocated to the program and reclaimed by the operating system in fixed-size chunks known as pages.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task 7</title>
+      <link>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</link>
+      <pubDate>Mon, 01 May 2023 02:32:12 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</guid>
+      <description>This is Task 07 of the Eudyptula Challenge ------------------------------------------ Great work with that misc device driver. Isn&amp;#39;t that a nice and simple way to write a character driver? Just when you think this challenge is all about writing kernel code, this task is a throwback to your second one. Yes, that&amp;#39;s right, building kernels. Turns out that&amp;#39;s what most developers end up doing, tons and tons of rebuilds, not writing new code.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : A Simple Calculator</title>
+      <link>https://ayedaemon.github.io/post/2023/04/intro-to-re-simple-calculator/</link>
+      <pubDate>Mon, 03 Apr 2023 21:59:48 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/04/intro-to-re-simple-calculator/</guid>
+      <description>We covered a wide range of topics in earlier articles that were helpful in comprehending how many lower-level processes operate. This blog will concentrate on applying those ideas to recreate C program after reverse engineering a simple calculator binary.
+It is always a good idea to observe how the target software responds to various inputs. This gives you a sense of the internal logic that might be operating.
+If we run this program without any arguments, we will get an error message stating that we need to pass more arguments as well as the usage guide is printed.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-3</title>
+      <link>https://ayedaemon.github.io/post/2023/04/intro-to-re-part-3/</link>
+      <pubDate>Sat, 01 Apr 2023 21:59:33 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/04/intro-to-re-part-3/</guid>
+      <description>In the previous blog, I discussed some of the basic C program&amp;rsquo;s disassembly structures, concentrating on the variables and their memory layouts. This article, a follow-up to the previous one, focuses on basic operations and functions in C programs.
+In the previous blogs, we have seen what an empty C program looks like
+void main() {} Disassembly:
+main: push rbp mov rbp, rsp nop pop rbp ret Arithmatic operators Now if we want to work with operations, we&amp;rsquo;ll have to add 2 local variables to the function.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-2</title>
+      <link>https://ayedaemon.github.io/post/2023/03/intro-to-re-part-2/</link>
+      <pubDate>Sun, 19 Mar 2023 22:07:39 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/03/intro-to-re-part-2/</guid>
+      <description>Reverese engineering is a powerful tool for any software developer. However, as with any tool, it is only as good as the person using it. Understanding reverse engineering and how to use it is essential for both novices and seasoned developers.
+According to wikipedia,
+Reverse engineering, also called back engineering, is the process by which a man-made object is deconstructed to reveal its designs, architecture, or to extract knowledge from the object; similar to scientific research, the only difference being that scientific research is about a natural phenomenon.</description>
+    </item>
+    <item>
+      <title>Pluggable Authentication Modules - Linux</title>
+      <link>https://ayedaemon.github.io/post/2022/12/pluggable-authentication-modules-linux/</link>
+      <pubDate>Tue, 27 Dec 2022 23:25:23 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/12/pluggable-authentication-modules-linux/</guid>
+      <description>PAM - What and Why Authenticating a user to a service used to be a time-consuming process. The application had to be aware of all possible authentication mechanisms and had to be rebuilt every time a new authentication method was introduced&amp;hellip; As a result, there was a significant amount of code repetition. Naturally, it was disliked by everyone!!
+As a result, the concept of a middle-ware application responsible for user authentication to a service arose.</description>
+    </item>
+    <item>
+      <title>Recording system events with auditd</title>
+      <link>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</link>
+      <pubDate>Sun, 11 Dec 2022 21:15:13 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</guid>
+      <description>Audits are critical for system administrators to detect security violations and track security-relevant information on their systems. Anyone concerned about the security, stability, and proper operation of their Linux servers should conduct an audit.
+How to do auditing in linux One simple way is to use the history command to observe the shell&amp;rsquo;s history, but this has many limitations. One of them is that this command is only applicable to the current user.</description>
+    </item>
+    <item>
+      <title>Fun with Master Boot Record</title>
+      <link>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</link>
+      <pubDate>Wed, 28 Sep 2022 01:10:18 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</guid>
+      <description>Malware has been used numerous times by attackers to destroy a computer&amp;rsquo;s Master Boot Record, rendering it inoperable. By erasing the MBR, the machine is unable to load the operating system. There is no easy way to rewrite the Master Boot Record into place without an operating system, and the machine becomes completely useless and unrecoverable. In addition, many ransomwares infect the master boot record by overwriting it with malicious code.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-1</title>
+      <link>https://ayedaemon.github.io/post/2022/09/intro-to-re/</link>
+      <pubDate>Wed, 21 Sep 2022 01:10:18 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/intro-to-re/</guid>
+      <description>Steps to generate a binary When we write a program using a language like C, it is not C source code which really gets executed. This C code passes through many steps and finally a binary file is generated out of it. This binary file is what gets executed on any computer.
+There are many steps through which a C code is converted into a binary file:-
+Pre-processing Compilation Assemble Linking Let&amp;rsquo;s follow these steps one by one to understand what they do to the C code and how a binary is generated via this.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task 6</title>
+      <link>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</link>
+      <pubDate>Sun, 18 Sep 2022 13:57:01 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</guid>
+      <description>This is Task 06 of the Eudyptula Challenge ------------------------------------------ Nice job with the module loading macros, those are tricky, but a very valuable skill to know about, especially when running across them in real kernel code. Speaking of real kernel code, let&amp;#39;s write some! The task this time is this: - Take the kernel module you wrote for task 01, and modify it to be a misc char device driver. The misc interface is a very simple way to be able to create a character device, without having to worry about all of the sysfs and character device registration mess.</description>
+    </item>
+    <item>
+      <title>Analyzing Simple Powershell Malware</title>
+      <link>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</link>
+      <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</guid>
+      <description>What is a malware? Malware, a portmanteu meaning malicious software, refers to any program that was created with the specific goal of doing harm. Your digital environment is vulnerable to a variety of terrible things, including attempts to compromise your computer or network, leak confidential data, and gain illegal access. These issues can occasionally be brought on by common software defects, but when malware is to blame, it poses a major risk to online users and businesses.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task5</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</link>
+      <pubDate>Wed, 22 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</guid>
+      <description>This is Task 05 of the Eudyptula Challenge ------------------------------------------ Yeah, you survived the coding style mess! Now, on to some &amp;#34;real&amp;#34; things, as I know you are getting bored by these so far. So, simple task this time around: - take the kernel module you wrote for task 01, and modify it so that when a USB keyboard is plugged in, the module will be automatically loaded by the correct userspace hotplug tools (which are implemented by depmod / kmod / udev / mdev / systemd, depending on what distro you are using.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task4</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</link>
+      <pubDate>Fri, 17 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</guid>
+      <description>This is Task 04 of the Eudyptula Challenge ------------------------------------------ Wonderful job in making it this far, I hope you have been having fun. Oh, you&amp;#39;re getting bored, just booting and installing kernels? Well, time for some pedantic things to make you feel that those kernel builds are actually fun! Part of the job of being a kernel developer is recognizing the proper Linux kernel coding style. The full description of this coding style can be found in the kernel itself, in the Documentation/CodingStyle file.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task3</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</link>
+      <pubDate>Thu, 16 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</guid>
+      <description>This is Task 03 of the Eudyptula Challenge ------------------------------------------ Now that you have your custom kernel up and running, it&amp;#39;s time to modify it! The tasks for this round is: - take the kernel git tree from Task 02 and modify the Makefile to and modify the EXTRAVERSION field. Do this in a way that the running kernel (after modifying the Makefile, rebuilding, and rebooting) has the characters &amp;#34;-eudyptula&amp;#34; in the version string.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task2</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</link>
+      <pubDate>Wed, 01 Jun 2022 15:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</guid>
+      <description>This is Task 02 of the Eudyptula Challenge ------------------------------------------ Now that you have written your first kernel module, it&amp;#39;s time to take off the training wheels and move on to building a custom kernel. No more distro kernels for you, for this task you must run your own kernel. And use git! Exciting isn&amp;#39;t it! No, oh, ok... The tasks for this round is: - download Linus&amp;#39;s latest git tree from git.</description>
+    </item>
+    <item>
+      <title>Hands-on Intro to SBOM</title>
+      <link>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</link>
+      <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</guid>
+      <description>The concept of a Bill Of Materials (BOM) is well-established in traditional manufacturing as part of supply chain management. A manufacturer uses a BOM to track the parts it uses to create a product. If defects are later found in a specific part, the BOM makes it easy to locate affected products. In software industry, this concept is fairly new and is used to keep track of all the ingredients of the software.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task1</title>
+      <link>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</link>
+      <pubDate>Wed, 25 May 2022 15:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</guid>
+      <description>What is this? The Eudyptula Challenge is a series of programming exercises for the Linux kernel, that start from a very basic “Hello world” kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree.
+Unfortunately, this project is not accepting any new applicants right now. So I decided to gather tasks details from other online sources and complete them locally.
+Task-1 This is Task 01 of the Eudyptula Challenge ------------------------------------------ Write a Linux kernel module, and stand-alone Makefile, that when loaded prints to the kernel debug log level, &amp;#34;Hello World!</description>
+    </item>
+    <item>
+      <title>File-less malwares: what and how</title>
+      <link>https://ayedaemon.github.io/post/2022/02/fileless-malwares-how-and-why/</link>
+      <pubDate>Sat, 26 Feb 2022 23:43:01 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/02/fileless-malwares-how-and-why/</guid>
+      <description>What are file-less malwares? How do they work on linux?
+According to Wikipedia, file-less malware is a variant of computer related malicious software that exists exclusively as a computer memory-based artifact i.e. in RAM.
+In other words, the malware/program is never written to harddisk but directly loaded in memory.
+To get a better understanding of how that happens in linux, we need to understand how a normal program loads itself into memory and executes itself.</description>
+    </item>
+    <item>
+      <title>Git Form Inside Out</title>
+      <link>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</link>
+      <pubDate>Thu, 25 Feb 2021 23:07:04 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Inside out approach to learn git&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>Keylogger for Linux</title>
+      <link>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</link>
+      <pubDate>Tue, 02 Feb 2021 14:47:26 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Developing a low level keylogger for linux using C.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>Debugging C Code</title>
+      <link>https://ayedaemon.github.io/post/2022/01/debugging-c-code/</link>
+      <pubDate>Wed, 27 Jan 2021 14:58:51 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/01/debugging-c-code/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;How your x86 program starts up in linux&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>Advanced Intrusion Detection Environment</title>
+      <link>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</link>
+      <pubDate>Sat, 19 Dec 2020 14:25:28 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Host-based intrusion detection system (HIDS) for checking the integrity of files.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>LUKS Disk Encryption</title>
+      <link>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</link>
+      <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>About me</title>
+      <link>https://ayedaemon.github.io/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://ayedaemon.github.io/about/</guid>
+      <description>Hey there,
+I&amp;rsquo;m an Information Security Engineer from India who is interested in DevOps culture and non-Excel-based security practices. I spend most of the time working on SOAR automations and rest of the times I try to play with malwares.
+[more TBD]
+Find my resume here -&amp;gt; https://ayedaemon.github.io/extra/rishabh_umrao_secops.pdf</description>
+    </item>
+    <item>
+      <title>Archives</title>
+      <link>https://ayedaemon.github.io/archives/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://ayedaemon.github.io/archives/</guid>
+      <description>archives</description>
+    </item>
+    <item>
+      <title>Links</title>
+      <link>https://ayedaemon.github.io/links/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://ayedaemon.github.io/links/</guid>
+      <description> Online Account URL mastadon https://social.linux.pizza/@ayedaemon Twitter https://twitter.com/ayedaemon Linkedin https://linkedin.com/in/ayedaemon Email mailto://ayedaemon@gmail.com Medium https://ayedaemon.medium.com Github https://github.com/ayedaemon Stackoverflow https://stackoverflow.com/users/8110523/ayedaemon the chief io https://thechief.io/c/ayedaemon/ </description>
+    </item>
+    <item>
+      <title>Search</title>
+      <link>https://ayedaemon.github.io/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://ayedaemon.github.io/search/</guid>
+      <description>search</description>
+    </item>
+    <item>
+      <title>Series</title>
+      <link>https://ayedaemon.github.io/series/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://ayedaemon.github.io/series/</guid>
+      <description>Series</description>
+    </item>
+  </channel>
+</rss>

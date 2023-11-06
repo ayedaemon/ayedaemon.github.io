@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>git on Connected</title>
+    <link>https://ayedaemon.github.io/tags/git/</link>
+    <description>Recent content in git on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 25 Feb 2021 23:07:04 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git Form Inside Out</title>
+      <link>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</link>
+      <pubDate>Thu, 25 Feb 2021 23:07:04 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Inside out approach to learn git&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+  </channel>
+</rss>

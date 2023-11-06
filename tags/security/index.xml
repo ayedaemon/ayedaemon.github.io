@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Security on Connected</title>
+    <link>https://ayedaemon.github.io/tags/security/</link>
+    <description>Recent content in Security on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 27 Dec 2022 23:25:23 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pluggable Authentication Modules - Linux</title>
+      <link>https://ayedaemon.github.io/post/2022/12/pluggable-authentication-modules-linux/</link>
+      <pubDate>Tue, 27 Dec 2022 23:25:23 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/12/pluggable-authentication-modules-linux/</guid>
+      <description>PAM - What and Why Authenticating a user to a service used to be a time-consuming process. The application had to be aware of all possible authentication mechanisms and had to be rebuilt every time a new authentication method was introduced&amp;hellip; As a result, there was a significant amount of code repetition. Naturally, it was disliked by everyone!!
+As a result, the concept of a middle-ware application responsible for user authentication to a service arose.</description>
+    </item>
+    <item>
+      <title>Recording system events with auditd</title>
+      <link>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</link>
+      <pubDate>Sun, 11 Dec 2022 21:15:13 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</guid>
+      <description>Audits are critical for system administrators to detect security violations and track security-relevant information on their systems. Anyone concerned about the security, stability, and proper operation of their Linux servers should conduct an audit.
+How to do auditing in linux One simple way is to use the history command to observe the shell&amp;rsquo;s history, but this has many limitations. One of them is that this command is only applicable to the current user.</description>
+    </item>
+    <item>
+      <title>Hands-on Intro to SBOM</title>
+      <link>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</link>
+      <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</guid>
+      <description>The concept of a Bill Of Materials (BOM) is well-established in traditional manufacturing as part of supply chain management. A manufacturer uses a BOM to track the parts it uses to create a product. If defects are later found in a specific part, the BOM makes it easy to locate affected products. In software industry, this concept is fairly new and is used to keep track of all the ingredients of the software.</description>
+    </item>
+    <item>
+      <title>File-less malwares: what and how</title>
+      <link>https://ayedaemon.github.io/post/2022/02/fileless-malwares-how-and-why/</link>
+      <pubDate>Sat, 26 Feb 2022 23:43:01 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/02/fileless-malwares-how-and-why/</guid>
+      <description>What are file-less malwares? How do they work on linux?
+According to Wikipedia, file-less malware is a variant of computer related malicious software that exists exclusively as a computer memory-based artifact i.e. in RAM.
+In other words, the malware/program is never written to harddisk but directly loaded in memory.
+To get a better understanding of how that happens in linux, we need to understand how a normal program loads itself into memory and executes itself.</description>
+    </item>
+    <item>
+      <title>Advanced Intrusion Detection Environment</title>
+      <link>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</link>
+      <pubDate>Sat, 19 Dec 2020 14:25:28 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Host-based intrusion detection system (HIDS) for checking the integrity of files.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>LUKS Disk Encryption</title>
+      <link>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</link>
+      <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+  </channel>
+</rss>

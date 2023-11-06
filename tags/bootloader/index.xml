@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bootloader on Connected</title>
+    <link>https://ayedaemon.github.io/tags/bootloader/</link>
+    <description>Recent content in bootloader on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 28 Sep 2022 01:10:18 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/bootloader/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fun with Master Boot Record</title>
+      <link>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</link>
+      <pubDate>Wed, 28 Sep 2022 01:10:18 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</guid>
+      <description>Malware has been used numerous times by attackers to destroy a computer&amp;rsquo;s Master Boot Record, rendering it inoperable. By erasing the MBR, the machine is unable to load the operating system. There is no easy way to rewrite the Master Boot Record into place without an operating system, and the machine becomes completely useless and unrecoverable. In addition, many ransomwares infect the master boot record by overwriting it with malicious code.</description>
+    </item>
+  </channel>
+</rss>

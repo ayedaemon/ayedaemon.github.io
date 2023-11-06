@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on Connected</title>
+    <link>https://ayedaemon.github.io/tags/docker/</link>
+    <description>Recent content in docker on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 27 May 2022 22:56:22 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hands-on Intro to SBOM</title>
+      <link>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</link>
+      <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</guid>
+      <description>The concept of a Bill Of Materials (BOM) is well-established in traditional manufacturing as part of supply chain management. A manufacturer uses a BOM to track the parts it uses to create a product. If defects are later found in a specific part, the BOM makes it easy to locate affected products. In software industry, this concept is fairly new and is used to keep track of all the ingredients of the software.</description>
+    </item>
+  </channel>
+</rss>

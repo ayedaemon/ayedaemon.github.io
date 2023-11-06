@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>audit on Connected</title>
+    <link>https://ayedaemon.github.io/tags/audit/</link>
+    <description>Recent content in audit on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 11 Dec 2022 21:15:13 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/audit/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Recording system events with auditd</title>
+      <link>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</link>
+      <pubDate>Sun, 11 Dec 2022 21:15:13 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/12/recording_system_events_with_auditd/</guid>
+      <description>Audits are critical for system administrators to detect security violations and track security-relevant information on their systems. Anyone concerned about the security, stability, and proper operation of their Linux servers should conduct an audit.
+How to do auditing in linux One simple way is to use the history command to observe the shell&amp;rsquo;s history, but this has many limitations. One of them is that this command is only applicable to the current user.</description>
+    </item>
+  </channel>
+</rss>

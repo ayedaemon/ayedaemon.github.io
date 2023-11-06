@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eudyptula on Connected</title>
+    <link>https://ayedaemon.github.io/tags/eudyptula/</link>
+    <description>Recent content in Eudyptula on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 May 2023 02:32:12 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/eudyptula/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Eudyptula Task 7</title>
+      <link>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</link>
+      <pubDate>Mon, 01 May 2023 02:32:12 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</guid>
+      <description>This is Task 07 of the Eudyptula Challenge ------------------------------------------ Great work with that misc device driver. Isn&amp;#39;t that a nice and simple way to write a character driver? Just when you think this challenge is all about writing kernel code, this task is a throwback to your second one. Yes, that&amp;#39;s right, building kernels. Turns out that&amp;#39;s what most developers end up doing, tons and tons of rebuilds, not writing new code.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task 6</title>
+      <link>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</link>
+      <pubDate>Sun, 18 Sep 2022 13:57:01 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</guid>
+      <description>This is Task 06 of the Eudyptula Challenge ------------------------------------------ Nice job with the module loading macros, those are tricky, but a very valuable skill to know about, especially when running across them in real kernel code. Speaking of real kernel code, let&amp;#39;s write some! The task this time is this: - Take the kernel module you wrote for task 01, and modify it to be a misc char device driver. The misc interface is a very simple way to be able to create a character device, without having to worry about all of the sysfs and character device registration mess.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task5</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</link>
+      <pubDate>Wed, 22 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</guid>
+      <description>This is Task 05 of the Eudyptula Challenge ------------------------------------------ Yeah, you survived the coding style mess! Now, on to some &amp;#34;real&amp;#34; things, as I know you are getting bored by these so far. So, simple task this time around: - take the kernel module you wrote for task 01, and modify it so that when a USB keyboard is plugged in, the module will be automatically loaded by the correct userspace hotplug tools (which are implemented by depmod / kmod / udev / mdev / systemd, depending on what distro you are using.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task4</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</link>
+      <pubDate>Fri, 17 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</guid>
+      <description>This is Task 04 of the Eudyptula Challenge ------------------------------------------ Wonderful job in making it this far, I hope you have been having fun. Oh, you&amp;#39;re getting bored, just booting and installing kernels? Well, time for some pedantic things to make you feel that those kernel builds are actually fun! Part of the job of being a kernel developer is recognizing the proper Linux kernel coding style. The full description of this coding style can be found in the kernel itself, in the Documentation/CodingStyle file.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task3</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</link>
+      <pubDate>Thu, 16 Jun 2022 16:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</guid>
+      <description>This is Task 03 of the Eudyptula Challenge ------------------------------------------ Now that you have your custom kernel up and running, it&amp;#39;s time to modify it! The tasks for this round is: - take the kernel git tree from Task 02 and modify the Makefile to and modify the EXTRAVERSION field. Do this in a way that the running kernel (after modifying the Makefile, rebuilding, and rebooting) has the characters &amp;#34;-eudyptula&amp;#34; in the version string.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task2</title>
+      <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</link>
+      <pubDate>Wed, 01 Jun 2022 15:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</guid>
+      <description>This is Task 02 of the Eudyptula Challenge ------------------------------------------ Now that you have written your first kernel module, it&amp;#39;s time to take off the training wheels and move on to building a custom kernel. No more distro kernels for you, for this task you must run your own kernel. And use git! Exciting isn&amp;#39;t it! No, oh, ok... The tasks for this round is: - download Linus&amp;#39;s latest git tree from git.</description>
+    </item>
+    <item>
+      <title>Eudyptula Task1</title>
+      <link>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</link>
+      <pubDate>Wed, 25 May 2022 15:14:27 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</guid>
+      <description>What is this? The Eudyptula Challenge is a series of programming exercises for the Linux kernel, that start from a very basic “Hello world” kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree.
+Unfortunately, this project is not accepting any new applicants right now. So I decided to gather tasks details from other online sources and complete them locally.
+Task-1 This is Task 01 of the Eudyptula Challenge ------------------------------------------ Write a Linux kernel module, and stand-alone Makefile, that when loaded prints to the kernel debug log level, &amp;#34;Hello World!</description>
+    </item>
+  </channel>
+</rss>

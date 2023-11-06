@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>keylogger on Connected</title>
+    <link>https://ayedaemon.github.io/tags/keylogger/</link>
+    <description>Recent content in keylogger on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Feb 2021 14:47:26 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/keylogger/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Keylogger for Linux</title>
+      <link>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</link>
+      <pubDate>Tue, 02 Feb 2021 14:47:26 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Developing a low level keylogger for linux using C.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+  </channel>
+</rss>

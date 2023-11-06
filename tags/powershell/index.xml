@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>powershell on Connected</title>
+    <link>https://ayedaemon.github.io/tags/powershell/</link>
+    <description>Recent content in powershell on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 30 Aug 2022 17:55:02 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analyzing Simple Powershell Malware</title>
+      <link>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</link>
+      <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</guid>
+      <description>What is a malware? Malware, a portmanteu meaning malicious software, refers to any program that was created with the specific goal of doing harm. Your digital environment is vulnerable to a variety of terrible things, including attempts to compromise your computer or network, leak confidential data, and gain illegal access. These issues can occasionally be brought on by common software defects, but when malware is to blame, it poses a major risk to online users and businesses.</description>
+    </item>
+  </channel>
+</rss>

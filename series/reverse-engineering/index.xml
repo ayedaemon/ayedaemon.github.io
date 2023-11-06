@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reverse Engineering on Connected</title>
+    <link>https://ayedaemon.github.io/series/reverse-engineering/</link>
+    <description>Recent content in Reverse Engineering on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 May 2023 02:34:50 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/series/reverse-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Intro to Re: C : part-4</title>
+      <link>https://ayedaemon.github.io/post/2023/05/intro-to-re-part-4/</link>
+      <pubDate>Mon, 01 May 2023 02:34:50 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/05/intro-to-re-part-4/</guid>
+      <description>When an operating system (OS) runs a program, the program is first loaded into main memory. Memory is utilized for both program&amp;rsquo;s machine instructions and program&amp;rsquo;s data&amp;hellip;this includes parameters, dynamic variables, (un)initialized variables, and so on.
+Most computers today use paged memory allocations, which allow the amount of memory assigned to a program to increase/decrease as the needs of the application change. Memory is allocated to the program and reclaimed by the operating system in fixed-size chunks known as pages.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : A Simple Calculator</title>
+      <link>https://ayedaemon.github.io/post/2023/04/intro-to-re-simple-calculator/</link>
+      <pubDate>Mon, 03 Apr 2023 21:59:48 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/04/intro-to-re-simple-calculator/</guid>
+      <description>We covered a wide range of topics in earlier articles that were helpful in comprehending how many lower-level processes operate. This blog will concentrate on applying those ideas to recreate C program after reverse engineering a simple calculator binary.
+It is always a good idea to observe how the target software responds to various inputs. This gives you a sense of the internal logic that might be operating.
+If we run this program without any arguments, we will get an error message stating that we need to pass more arguments as well as the usage guide is printed.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-3</title>
+      <link>https://ayedaemon.github.io/post/2023/04/intro-to-re-part-3/</link>
+      <pubDate>Sat, 01 Apr 2023 21:59:33 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/04/intro-to-re-part-3/</guid>
+      <description>In the previous blog, I discussed some of the basic C program&amp;rsquo;s disassembly structures, concentrating on the variables and their memory layouts. This article, a follow-up to the previous one, focuses on basic operations and functions in C programs.
+In the previous blogs, we have seen what an empty C program looks like
+void main() {} Disassembly:
+main: push rbp mov rbp, rsp nop pop rbp ret Arithmatic operators Now if we want to work with operations, we&amp;rsquo;ll have to add 2 local variables to the function.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-2</title>
+      <link>https://ayedaemon.github.io/post/2023/03/intro-to-re-part-2/</link>
+      <pubDate>Sun, 19 Mar 2023 22:07:39 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/03/intro-to-re-part-2/</guid>
+      <description>Reverese engineering is a powerful tool for any software developer. However, as with any tool, it is only as good as the person using it. Understanding reverse engineering and how to use it is essential for both novices and seasoned developers.
+According to wikipedia,
+Reverse engineering, also called back engineering, is the process by which a man-made object is deconstructed to reveal its designs, architecture, or to extract knowledge from the object; similar to scientific research, the only difference being that scientific research is about a natural phenomenon.</description>
+    </item>
+    <item>
+      <title>Intro to Re: C : part-1</title>
+      <link>https://ayedaemon.github.io/post/2022/09/intro-to-re/</link>
+      <pubDate>Wed, 21 Sep 2022 01:10:18 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2022/09/intro-to-re/</guid>
+      <description>Steps to generate a binary When we write a program using a language like C, it is not C source code which really gets executed. This C code passes through many steps and finally a binary file is generated out of it. This binary file is what gets executed on any computer.
+There are many steps through which a C code is converted into a binary file:-
+Pre-processing Compilation Assemble Linking Let&amp;rsquo;s follow these steps one by one to understand what they do to the C code and how a binary is generated via this.</description>
+    </item>
+  </channel>
+</rss>

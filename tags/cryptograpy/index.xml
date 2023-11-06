@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cryptograpy on Connected</title>
+    <link>https://ayedaemon.github.io/tags/cryptograpy/</link>
+    <description>Recent content in cryptograpy on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 19 Dec 2020 13:15:55 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/cryptograpy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LUKS Disk Encryption</title>
+      <link>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</link>
+      <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+  </channel>
+</rss>

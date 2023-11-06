@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C on Connected</title>
+    <link>https://ayedaemon.github.io/tags/c/</link>
+    <description>Recent content in C on Connected</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ELF Chronicles: Program Headers</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</link>
+      <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</guid>
+      <description>In preceding articles, we&amp;rsquo;ve delved into the details of ELF file headers and section headers. Section headers provide insight into how data and instructions are organized based on their characteristics and grouped into distinct sections. These sections remain distinct due to variations in their types and permissions (&amp;hellip; and few other things).
+Up to this point, our focus has been on the aspects of the ELF file as it resides on-disk.</description>
+    </item>
+    <item>
+      <title>ELF Chronicles: Section Headers</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</link>
+      <pubDate>Thu, 19 Oct 2023 00:24:06 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</guid>
+      <description>Intro Assuming you&amp;rsquo;ve got ELF headers like Elf64_Ehdr or Elf32_Ehdr at your fingertips, and you&amp;rsquo;re armed with the know-how and tools to decipher their contents effortlessly.
+For this article I&amp;rsquo;ll be using the below C code to generate the ELF file.
+/* file: hello_world.c */ #include &amp;lt;stdio.h&amp;gt; // A macro #define HELLO_MSG1 &amp;#34;Hello World1&amp;#34; // A global variable char HELLO_MSG2[] = &amp;#34;Hello World2&amp;#34;; // main function int main() { // local variable for main char HELLO_MSG3[] = &amp;#34;Hello World3&amp;#34;; // Print messages printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG1); printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG2); printf(&amp;#34;%s\n&amp;#34;, HELLO_MSG3); return 0; } You can get the ELF binary by compiling this code.</description>
+    </item>
+    <item>
+      <title>ELF Chronicles: ELF file Header</title>
+      <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</link>
+      <pubDate>Wed, 18 Oct 2023 13:34:57 +0530</pubDate>
+      <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</guid>
+      <description>Hexdumps In the fascinating world of computers, we&amp;rsquo;re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we&amp;rsquo;ve come up with our own nifty number system - &amp;ldquo;hexadecimal&amp;rdquo; or &amp;ldquo;hex&amp;rdquo; for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It&amp;rsquo;s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!</description>
+    </item>
+  </channel>
+</rss>
