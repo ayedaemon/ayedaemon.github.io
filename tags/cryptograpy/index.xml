@@ -1,21 +1,180 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>cryptograpy on Connected</title>
     <link>https://ayedaemon.github.io/tags/cryptograpy/</link>
     <description>Recent content in cryptograpy on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Dec 2020 13:15:55 +0530</lastBuildDate>
-    <atom:link href="https://ayedaemon.github.io/tags/cryptograpy/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Dec 2020 13:15:55 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/cryptograpy/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LUKS Disk Encryption</title>
       <link>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</link>
       <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
+      
       <guid>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
 &lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>Linux Unified Key Encryption — Disk Encryption</p>
+</blockquote>
+<p><strong>cryptsetup</strong> — <em>manage plain dm-crypt and LUKS encrypted volumes</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup &lt;OPTIONS&gt; &lt;action&gt; &lt;action-specific-options&gt; &lt;device&gt; &lt;dmname&gt;
+</span></span></code></pre></div><p>An encrypted blockdevice is protected by a key. A key is either:</p>
+<ul>
+<li>a passphrase, or</li>
+<li>a keyfile</li>
+</ul>
+<h3 id="what-the">What the..?</h3>
+<p>Ok.. If you are new to encryption world, then it’s time to get a bit familiar data encryption.</p>
+<p>There are 2 methods to encrypt your data:</p>
+<ul>
+<li><strong>Filesystem stacked level encryption</strong> : Form of disk encryption where individual files or directories are encrypted by the file system itself. <a href="https://en.wikipedia.org/wiki/Filesystem-level_encryption">read more here</a></li>
+<li><strong>Block device level encryption</strong> : The entire partition or disk, in which the file system resides, is encrypted.</li>
+</ul>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*bg4VTXG8Lp6jq9aC.gif" alt=""  />
+</p>
+<p>Before things go really technical and scary, let me show you how your data is stored in a harddisk.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*2cy1Ut_NVLQof_vTZWoLAQ.png" alt=""  />
+</p>
+<p>Above diagram shows how your data is stored in a harddisk.</p>
+<ul>
+<li>You create files (I am calling it data chunks) and insert your data in it.</li>
+<li>These files are stored in a very systematic and managed system called <strong>File System</strong>.</li>
+<li>Partitions are formatted to carry a file system on it.</li>
+<li>Harddisks are divided into Partitions. (<a href="https://askleo.com/should_i_partition_my_hard_disk/">Wanna know why? — ask Leo!</a>)</li>
+</ul>
+<p>Now when you know how your data is exactly stored in a harddisk. Let’s see how a <strong>Block device level encryption</strong> works.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*2easqwhcymbcCSp6fHSZ6g.png" alt=""  />
+</p>
+<p>Here, a new layer is added in the usual thing.</p>
+<ul>
+<li>We attach a harddisk to our system.</li>
+<li>Create partitions on it.</li>
+<li>Encrypt the complete partition (make it password protected) 🔐</li>
+<li>Create filesystem (NTFS, EXT4, XFS, etc) on the encrypted partition.</li>
+<li>Write/save your data chunks.</li>
+</ul>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*rcPPu_6o2rOgW2bS.gif" alt=""  />
+</p>
+<hr>
+<h3 id="just-do-it-now-">Just Do It now ✔️</h3>
+<h3 id="installing-required-tools">Installing required tools</h3>
+<p>I am using a RHEL based OS which uses yum/dnf package managers.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum install cryptsetup -y
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">or
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">dnf install -y cryptsetup
+</span></span></code></pre></div><h3 id="creating-the-partition">Creating the partition</h3>
+<p><code>lsblk</code> - check the device name for the harddisk (sdb)</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*4c6x1UUNyksMWLCc-Yqyaw.png" alt=""  />
+</p>
+<p><code>fdisk</code> - partitioning tool</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*k_dPP7Hb4tGu7ARPeVLvOg.png" alt=""  />
+
+<img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*LEOYgsQ-9juROPCikHX42g.png" alt=""  />
+</p>
+<h3 id="formating-with-luks">formating with luks</h3>
+<p><code>cryptsetup -y -v luksFormat /dev/sdb1</code> - encrypt the partition</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*SETeIxieb0fOBPCuX7aHNg.png" alt=""  />
+</p>
+<p><code>lsblk -f</code> - check the encrypted partition</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*pBN1T2AcoQyo5B8FucJV2g.png" alt=""  />
+</p>
+<p><code>cryptsetup -v luksOpen /dev/sdb1 myencrypt</code> - map the encrypted partition to &lsquo;myencrypt&rsquo;.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*zcUCmHHyDkU9YpBL5Zg5ZQ.png" alt=""  />
+</p>
+<p><code>lsblk -f</code> - check it</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*5SKWOXd-lSX468LhgJNiZQ.png" alt=""  />
+</p>
+<h3 id="creating-a-file-system">creating a file system</h3>
+<p><code>mkfs.xfs /dev/mapper/myencrypt</code> - create a file system on top of the encrypted partition.</p>
+<p><code>lsblk -f</code> - Check the layering and filesystem associated.</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*ch_byQVfsZexQP7O7O7dag.png" alt=""  />
+</p>
+<h3 id="creating-a-mountpoint">creating a mountpoint</h3>
+<p><code>mkdir -p /mnt/my_encrypted_backup mount -v /dev/mapper/myencrypt /mnt/my_encrypted_backup/</code></p>
+<p><em>If you face such issues - SELinux lables blah blah blah</em></p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GtzHhCp6CPR8YWBTOz-yqQ.png" alt=""  />
+</p>
+<p><em>Type this on magic terminal —</em> <em>restorecon -vvRF /mnt/my_encrypted_backup/</em> <em>- This will restore the SELinux context back to defaults for the destination directory.</em></p>
+<h3 id="checking-luks-dumps">Checking luks dumps</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksDump /dev/sdb1
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*tWyJ8XLcwJuyRG-aUl8BZA.png" alt=""  />
+</p>
+<h3 id="adding-new-key">Adding new key</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir /etc/luks-keys/; dd if=/dev/random of=/etc/luks-keys/mybackup\_key bs=32 count=1
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*fE51gnVtgYGkSOeASgrzfQ.png" alt=""  />
+</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksAddKey /dev/sdb1 /etc/luks-keys/mybackup\_key
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*FBkoDsoqSHZ9AWw73ICg2Q.png" alt=""  />
+</p>
+<p>Checking the dumps again</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*7pWmoHcrHZmLXtGISkrCZQ.png" alt=""  />
+</p>
+<p>Now here are 2 slots available.</p>
+<ul>
+<li>one with the initial key I entered at the time of setting it up.</li>
+<li>another, just in the above step.</li>
+</ul>
+<h4 id="at-this-particular-moment-there-are-few-questions-in-my-mind">At this particular moment, there are few questions in my mind.</h4>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*-Pngs8QCzMnlwKVv.gif" alt=""  />
+</p>
+<p>You should know them too.</p>
+<ol>
+<li>If you want to unmount and remove the harddisk. You’ll have to follow the steps:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">umount /mountpoints/sdb cryptsetup luksClose myencrypt
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*6JplORU1iMFii5fwR4Reqg.png" alt=""  />
+
+<img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*TZ8IkBpyRwkufkvyPkIT2g.png" alt=""  />
+</p>
+<ol start="2">
+<li>If you want to open the luks partition with keyfile instead of the passphrase.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup -v luksOpen /dev/sdb1 myencrypt --key-file=/etc/luks-keys/mybackup\_key
+</span></span></code></pre></div><ol start="3">
+<li>What if someone changes the content of the keyfile?</li>
+</ol>
+<p>Creating a new key</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*SuPXbF7MvbIufvP8qAikTw.png" alt=""  />
+</p>
+<p>Add the key to the slots</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*gJ41bDkh1J5UyNGIQjZJww.png" alt=""  />
+</p>
+<p>Use key</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*bykTB3_3rLa3w5AODyKA-w.png" alt=""  />
+</p>
+<p>So the content inside the keyfile do matter; You can’t change it and expect things to work just fine for you.</p>
+<h3 id="time-for-some-automation">Time for some Automation</h3>
+<p>Get the UUID of the encrypted partition</p>
+<p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*wasZr_6cKCRIibLohoPJvQ.png" alt=""  />
+</p>
+<p>And make the below entry in <code>/etc/crypttab</code> file. (Check the UUID for your device - Don&rsquo;t copy mine!!)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">myencrypt    UUID=48a20857-6f26-4352-89d5-e778f2d98950     /etc/luks-keys/mybackup\_key    luks
+</span></span></code></pre></div><p>The above line is a combination of 4 fields:</p>
+<ul>
+<li>name of the mapped device.</li>
+<li>uuid of the encrypted partition</li>
+<li>keyfile to unlock the partiotion</li>
+<li>type of encryption used — luks</li>
+</ul>
+<p>And then make below entry in <code>/etc/fstab</code> file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/dev/mapper/myencrypt /mountpoints/sdb xfs defaults 0 0
+</span></span></code></pre></div><p><em>Want to learn more about</em> <a href="https://linux.die.net/man/5/crypttab"><em>crypttab</em></a> <em>and</em> <a href="https://linux.die.net/man/5/fstab"><em>fstab</em></a></p>
+<p>Last step to verify if the above steps worked fine or not.</p>
+<ul>
+<li>Remount and verify (using mount command with &lsquo;a&rsquo; and &lsquo;v&rsquo; flags for clarity)</li>
+<li>Reboot the system and check if everything works after reboot. (Trust me, things betray sometimes after reboot)</li>
+</ul>
+<hr>
+<p>Want to <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption">read more</a> about dm-crypt or device encryption?</p>
+<hr>
+<p><img loading="lazy" src="https://miro.medium.com/max/480/0*IZmFYignS8jVnoSE.gif" alt=""  />
+</p>]]></content:encoded>
     </item>
+    
   </channel>
 </rss>

@@ -1,19 +1,453 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>mbr on Connected</title>
     <link>https://ayedaemon.github.io/tags/mbr/</link>
     <description>Recent content in mbr on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Sep 2022 01:10:18 +0530</lastBuildDate>
-    <atom:link href="https://ayedaemon.github.io/tags/mbr/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 Sep 2022 01:10:18 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/mbr/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Fun with Master Boot Record</title>
       <link>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</link>
       <pubDate>Wed, 28 Sep 2022 01:10:18 +0530</pubDate>
+      
       <guid>https://ayedaemon.github.io/post/2022/09/fun-with-mbr/</guid>
-      <description>Malware has been used numerous times by attackers to destroy a computer&amp;rsquo;s Master Boot Record, rendering it inoperable. By erasing the MBR, the machine is unable to load the operating system. There is no easy way to rewrite the Master Boot Record into place without an operating system, and the machine becomes completely useless and unrecoverable. In addition, many ransomwares infect the master boot record by overwriting it with malicious code.</description>
+      <description>Analysis of bootloader and partition table; And some fun with Master Boot Record</description>
+      <content:encoded><![CDATA[<p>Malware has been used numerous times by attackers to destroy a computer&rsquo;s Master Boot Record, rendering it inoperable. By erasing the MBR, the machine is unable to load the operating system. There is no easy way to rewrite the Master Boot Record into place without an operating system, and the machine becomes completely useless and unrecoverable. In addition, many ransomwares infect the master boot record by overwriting it with malicious code. The system is then automatically restarted to allow the infection to take place. When the system restarts, the user is locked out, and the ransomware displays a note demanding payment. Simple money!</p>
+<p>To understand how all of this is possible, and how an attacker can achieve it, we must first understand the MBR and the process of its execution.</p>
+<h2 id="the-boot-process">The boot process</h2>
+<p>The booting procedure of a system has become simpler over time, but this does not always imply that it is any easier. Every computer, big or small, goes through a start-up procedure known as the &ldquo;Boot&rdquo; process. Because different types of hardware operate in different ways, the boot procedure is heavily influenced by the type of CPU architecture and other hardware components.</p>
+<p>To avoid confusion, I won&rsquo;t go into great detail about each stage of the booting process. However, a typical linux booting procedure involves the following phases at a higher level:</p>
+<ol>
+<li>
+<p><strong>Power Up</strong></p>
+<p>This is the step where you press the power button. This triggers the <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> from motherboard&rsquo;s flash memory to start executing it&rsquo;s functions.</p>
+</li>
+<li>
+<p><strong>Power On Self Test</strong></p>
+<p>After BIOS is up and running, it initiates a quick self test to know if all the required hardware components are in working condition.</p>
+</li>
+<li>
+<p><strong>Find a boot device</strong></p>
+<p>This step finds all the bootable devices from the earlier detected hard drives. The way this works is by checking the MBR (Master Boot Record) for each detected devices. MBR is refered to the first 512 bytes of any bootable device.</p>
+</li>
+<li>
+<p><strong>Load the MBR</strong></p>
+<p>MBR is the first 512 bytes. These 512 bytes contains a bootloader, partition table and the magic number. This is loaded into ram and is responsible to read data from drives and start the operating system.</p>
+</li>
+<li>
+<p><strong>Load GRUB</strong></p>
+<p>This is a boot loader program which works in 2 stages. First stage is a small machine code binary on MBR. Its sole job is to locate the second stage boot loader and load it in memory. Once the second stage boot loader is in the memory, it presents the user with a graphical screen showing the different operating systems to choose from.</p>
+</li>
+<li>
+<p><strong>Kernel</strong></p>
+<p>The above OS selection decides what kernel and optional initramfs is to be loaded into memory. The kernel then initializes and configures the computer&rsquo;s memory and configures the various hardware attached to the system, including all the I/O subsystems. After some more operations, the kernel is completely loaded into memory and is operational. It&rsquo;s time to set up the user environment.</p>
+</li>
+<li>
+<p><strong>init</strong></p>
+<p>This is the first userspace program that is started by kernel. Now this starts and manages all the userspace processes like your web browser, file manager, web servers, etc.</p>
+</li>
+</ol>
+<h2 id="mbr-and-other-little-things">MBR and other little things</h2>
+<p>Now that we are aware of how the boot procedure works, we can go on to the article&rsquo;s main objective, the <a href="https://en.wikipedia.org/wiki/Master_boot_record">Master Boot Record</a>. (but not this <a href="https://www.youtube.com/c/MasterBootRecord">Master Boot Record</a>)</p>
+<p>If you&rsquo;re not already aware, this is how a typical hard drive appears from the outside.</p>
+<p><img loading="lazy" src="https://external-preview.redd.it/MNhQwTRxl_vXaEKZikrhbSz0A_vSK0zMzRFH5g7ZvOM.jpg?auto=webp&amp;s=7ac34d2a3701d51967d02fab59eea9bb2db7f1da#center" alt="source: reddit"  />
+</p>
+<p>There are numerous components inside this small semi-metallic box that aid in its proper operation.</p>
+<p><img loading="lazy" src="https://www.researchgate.net/profile/Mostafa-Sabbaghi/publication/317472565/figure/fig2/AS:613957429645317@1523390266281/Intact-HDD-with-the-cover-removed-left-and-exploded-image-of-a-HDD-showing-individual.png#center" alt="source: researchgate.net"  />
+</p>
+<p>But we don&rsquo;t need to know about all of these components; instead, we&rsquo;ll concentrate on the disc-like structure in the centre. This is known as a <strong>platter</strong>. A platter is a single recording disc. A hard disc drive may have one or more platters.</p>
+<p><img loading="lazy" src="https://safemode.com.au/wp-content/uploads/2020/01/hard-drive-parts-min.png#center" alt="source: safemode.com"  />
+</p>
+<p>Each platter is divided into several circular tracks, and each track is further divided into several sectors. Each sector on a hard disc drive typically stores 512 bytes of user-accessible data.</p>
+<p><img loading="lazy" src="https://qph.fs.quoracdn.net/main-qimg-0763e88136c511a9f93c49ce3e84360f#center" alt="source: quora"  />
+</p>
+<p>The first 512 bytes (or first sector) of a hard drive is where the MBR is located. And since everything in Linux is a &ldquo;file&rdquo;, if we want to extract MBR data, all we have to do is to read the first 512 bytes of our bootable hard disk file and then write that content to another local file for further analysis. In most of the linux platforms, we can do this by <a href="https://www.man7.org/linux/man-pages/man1/dd.1.html"><code>dd</code></a> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">dd if=/dev/sda of=mbr.sample bs=512 count=1
+</span></span></code></pre></div><p>The above command will read a 512-byte block (once) from <code>/dev/sda</code> and save it in the <code>mbr.sample</code> file. Then we can the check the type of this file using <code>file</code> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">file mbr.sample
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Output</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mbr.sample: x86 boot sector; partition 1: ID=0x83, active, starthead 32, startsector 2048, 2097152 sectors; partition 2: ID=0x8e, starthead 170, startsector 2099200, 41191424 sectors, code offset 0x63</span>
+</span></span></code></pre></div><p>An x86 boot sector is recognised in this file. Interestingly, it also lists the start head, start sector, total number of sectors, offset, and IDs of all the partitions. This was sufficient reason for me to dig up the file&rsquo;s hexdump and understand how <code>file</code> command is able to gather all this information.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">hexdump -C mbr.sample
+</span></span></code></pre></div><p>Output:-</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">00000000  eb 63 90 10 8e d0 bc 00  b0 b8 00 00 8e d8 8e c0  |.c..............|
+</span></span><span class="line"><span class="cl">00000010  fb be 00 7c bf 00 06 b9  00 02 f3 a4 ea 21 06 00  |...|.........!..|
+</span></span><span class="line"><span class="cl">00000020  00 be be 07 38 04 75 0b  83 c6 10 81 fe fe 07 75  |....8.u........u|
+</span></span><span class="line"><span class="cl">00000030  f3 eb 16 b4 02 b0 01 bb  00 7c b2 80 8a 74 01 8b  |.........|...t..|
+</span></span><span class="line"><span class="cl">00000040  4c 02 cd 13 ea 00 7c 00  00 eb fe 00 00 00 00 00  |L.....|.........|
+</span></span><span class="line"><span class="cl">00000050  00 00 00 00 00 00 00 00  00 00 00 80 01 00 00 00  |................|
+</span></span><span class="line"><span class="cl">00000060  00 00 00 00 ff fa 90 90  f6 c2 80 74 05 f6 c2 70  |...........t...p|
+</span></span><span class="line"><span class="cl">00000070  74 02 b2 80 ea 79 7c 00  00 31 c0 8e d8 8e d0 bc  |t....y|..1......|
+</span></span><span class="line"><span class="cl">00000080  00 20 fb a0 64 7c 3c ff  74 02 88 c2 52 be 05 7c  |. ..d|&lt;.t...R..||
+</span></span><span class="line"><span class="cl">00000090  b4 41 bb aa 55 cd 13 5a  52 72 3d 81 fb 55 aa 75  |.A..U..ZRr=..U.u|
+</span></span><span class="line"><span class="cl">000000a0  37 83 e1 01 74 32 31 c0  89 44 04 40 88 44 ff 89  |7...t21..D.@.D..|
+</span></span><span class="line"><span class="cl">000000b0  44 02 c7 04 10 00 66 8b  1e 5c 7c 66 89 5c 08 66  |D.....f..\|f.\.f|
+</span></span><span class="line"><span class="cl">000000c0  8b 1e 60 7c 66 89 5c 0c  c7 44 06 00 70 b4 42 cd  |..`|f.\..D..p.B.|
+</span></span><span class="line"><span class="cl">000000d0  13 72 05 bb 00 70 eb 76  b4 08 cd 13 73 0d 5a 84  |.r...p.v....s.Z.|
+</span></span><span class="line"><span class="cl">000000e0  d2 0f 83 de 00 be 85 7d  e9 82 00 66 0f b6 c6 88  |.......}...f....|
+</span></span><span class="line"><span class="cl">000000f0  64 ff 40 66 89 44 04 0f  b6 d1 c1 e2 02 88 e8 88  |d.@f.D..........|
+</span></span><span class="line"><span class="cl">00000100  f4 40 89 44 08 0f b6 c2  c0 e8 02 66 89 04 66 a1  |.@.D.......f..f.|
+</span></span><span class="line"><span class="cl">00000110  60 7c 66 09 c0 75 4e 66  a1 5c 7c 66 31 d2 66 f7  |`|f..uNf.\|f1.f.|
+</span></span><span class="line"><span class="cl">00000120  34 88 d1 31 d2 66 f7 74  04 3b 44 08 7d 37 fe c1  |4..1.f.t.;D.}7..|
+</span></span><span class="line"><span class="cl">00000130  88 c5 30 c0 c1 e8 02 08  c1 88 d0 5a 88 c6 bb 00  |..0........Z....|
+</span></span><span class="line"><span class="cl">00000140  70 8e c3 31 db b8 01 02  cd 13 72 1e 8c c3 60 1e  |p..1......r...`.|
+</span></span><span class="line"><span class="cl">00000150  b9 00 01 8e db 31 f6 bf  00 80 8e c6 fc f3 a5 1f  |.....1..........|
+</span></span><span class="line"><span class="cl">00000160  61 ff 26 5a 7c be 80 7d  eb 03 be 8f 7d e8 34 00  |a.&amp;Z|..}....}.4.|
+</span></span><span class="line"><span class="cl">00000170  be 94 7d e8 2e 00 cd 18  eb fe 47 52 55 42 20 00  |..}.......GRUB .|
+</span></span><span class="line"><span class="cl">00000180  47 65 6f 6d 00 48 61 72  64 20 44 69 73 6b 00 52  |Geom.Hard Disk.R|
+</span></span><span class="line"><span class="cl">00000190  65 61 64 00 20 45 72 72  6f 72 0d 0a 00 bb 01 00  |ead. Error......|
+</span></span><span class="line"><span class="cl">000001a0  b4 0e cd 10 ac 3c 00 75  f4 c3 00 00 00 00 00 00  |.....&lt;.u........|
+</span></span><span class="line"><span class="cl">000001b0  00 00 00 00 00 00 00 00  70 7e 04 00 00 00 80 20  |........p~..... |
+</span></span><span class="line"><span class="cl">000001c0  21 00 83 aa 28 82 00 08  00 00 00 00 20 00 00 aa  |!...(....... ...|
+</span></span><span class="line"><span class="cl">000001d0  29 82 8e fe ff ff 00 08  20 00 00 88 74 02 00 00  |)....... ...t...|
+</span></span><span class="line"><span class="cl">000001e0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+</span></span><span class="line"><span class="cl">000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|
+</span></span><span class="line"><span class="cl">00000200
+</span></span></code></pre></div><p><img loading="lazy" src="https://media.giphy.com/media/3o6MbbwX2g2GA4MUus/giphy.gif#center" alt=""  />
+</p>
+<h3 id="dissecting-the-master-boot-record">Dissecting the Master Boot Record</h3>
+<p>Without any knowledge of layout, simply looking at the <code>hexdump</code> output is not particularly helpful. Therefore, it is now necessary to understand the MBR layout.</p>
+<p>MBR consists of 3 parts - <strong>bootloader</strong>, <strong>partition table</strong>, and <strong>magic number</strong>.</p>
+<p>The magic number is found in the final two bytes, as opposed to the regular userspace files. It is <code>55AA</code> in the file, but be mindful of the processor&rsquo;s endianness. Since my CPU is little endian, the leftmost bytes are read first. As a result, <code>AA55</code> will become the magic number.</p>
+<p>After that is subtracted, we are left with <code>512-2 = 510</code> bytes. Out of these, the bootloader is stored in the first <code>446</code> bytes, and the partition tables are stored in the remaining <code>64</code> bytes. To evaluate these components separately, let&rsquo;s extract them into distinct files using the same old <code>dd</code> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">## Bootlaoder</span>
+</span></span><span class="line"><span class="cl">dd <span class="k">if</span><span class="o">=</span>mbr.sample <span class="nv">of</span><span class="o">=</span>mbr.bootloader <span class="nv">bs</span><span class="o">=</span><span class="m">1</span> <span class="nv">count</span><span class="o">=</span><span class="m">446</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Partition table (skip first 446 bytes)</span>
+</span></span><span class="line"><span class="cl">dd <span class="k">if</span><span class="o">=</span>mbr.sample <span class="nv">of</span><span class="o">=</span>mbr.partition_table <span class="nv">bs</span><span class="o">=</span><span class="m">1</span> <span class="nv">count</span><span class="o">=</span><span class="m">64</span> <span class="nv">skip</span><span class="o">=</span><span class="m">446</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## magic (skip first 510 bytes)</span>
+</span></span><span class="line"><span class="cl">dd <span class="k">if</span><span class="o">=</span>mbr.sample <span class="nv">of</span><span class="o">=</span>mbr.magic <span class="nv">bs</span><span class="o">=</span><span class="m">1</span> <span class="nv">count</span><span class="o">=</span><span class="m">2</span> <span class="nv">skip</span><span class="o">=</span><span class="m">510</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Check file types</span>
+</span></span><span class="line"><span class="cl">file *
+</span></span><span class="line"><span class="cl"><span class="c1">## Output</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mbr.bootloader:      data</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mbr.magic:           BIOS (ia32) ROM Ext.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mbr.partition_table: 8086 relocatable (Microsoft)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># mbr.sample:          x86 boot sector; partition 1: ID=0x83, active, starthead 32, startsector 2048, 2097152 sectors; partition 2: ID=0x8e, starthead 170, startsector 2099200, 41191424 sectors, code offset 0x63</span>
+</span></span></code></pre></div><p>It&rsquo;s fantastic that the file command can recognise each of these MBR components separately. Now with separate files, we can carefully examine the partition table and determine what data it can give us.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">hexdump -C -v  mbr.partition_table
+</span></span></code></pre></div><p>Output:-</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">00000000  80 20 21 00 83 aa 28 82  00 08 00 00 00 00 20 00  |. !...(....... .|
+</span></span><span class="line"><span class="cl">00000010  00 aa 29 82 8e fe ff ff  00 08 20 00 00 88 74 02  |..)....... ...t.|
+</span></span><span class="line"><span class="cl">00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+</span></span><span class="line"><span class="cl">00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+</span></span></code></pre></div><p>The MBR system only supports 4 primary partitions since partition tables actually only contain 4 records. We must divide a primary partition into smaller partitions and keep a separate partition table inside of that primary partition if we want to construct more than four partitions. The term &ldquo;Expanded partitions&rdquo; is in fact used to describe these extended partitions. We can see from the result above that there are a total of 64 bytes, giving us a total of <code>64/4 = 16</code> bytes for each record. Let&rsquo;s understand the layout of these 16 bytes and then we can analyze the partition table data using <code>hexdump</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Size (in bytes)</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Boot indicator (0x80 for active and 0x00 for inactive)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition start: head</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition start: sector</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition start: cylinder</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Partition ID</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition end: head</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition end: sector</td>
+</tr>
+<tr>
+<td>1</td>
+<td>partition end: cylinder</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Number of sectors before the beginning of this partition (sectors_before)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Number of sectors in this partition (number_of_sectors)</td>
+</tr>
+</tbody>
+</table>
+<p>There are 16 bytes in all of that. Now we know where the information that the <code>file</code> command was displaying previously comes from.</p>
+<p>Based on the information we have now, we can figure out few things on our own&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">00000000  80 20 21 00 83 aa 28 82  00 08 00 00 00 00 20 00  |. !...(....... .|
+</span></span><span class="line"><span class="cl">00000010  00 aa 29 82 8e fe ff ff  00 08 20 00 00 88 74 02  |..)....... ...t.|
+</span></span><span class="line"><span class="cl">00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+</span></span><span class="line"><span class="cl">00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+</span></span></code></pre></div><p>For example, this disk only has 2 partitions because the final 2 records are all zeros. Due to the &lsquo;0x80&rsquo; byte in the first records, the first partition is bootable. And the ID for that partition is <code>83</code>. While the second partition is non bootable partition, and the ID of that partition is <code>82</code>. If you want, you can even calculate the size of each partition with the help of other information present in these records.</p>
+<p>We are now down to the first <code>446</code> bytes, which include the bootloader.
+The bootloader is simply a software that reads and loads other applications from the bootable partition.GRUB typically loads the second stage of itself from disk, however this is not a condition.There are bootloaders that load the kernel directly into memory or, even better, some of them are <a href="https://forum.osdev.org/viewtopic.php?f=2&amp;t=18763">full-fledged application that just works</a>. <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+<p><em>Note:- Although I won&rsquo;t be discussing it today, you can use the <code>ndisasm</code> disassembler to disassemble the bootloader image.This will require for some knowledge of the interrupts and memory management in the BIOS, which is outside the scope of this blog.</em></p>
+<p>That settles it; now that we are aware of what is contained within an MBR, why don&rsquo;t we attempt to construct one?</p>
+<p><img loading="lazy" src="https://media.giphy.com/media/R459x856IfF6w/giphy.gif#center" alt=""  />
+</p>
+<h2 id="creating-your-own-bootloader">Creating your own bootloader</h2>
+<p>To start, we&rsquo;ll make a simple raw binary file and put <code>AA55</code> in it. Keep in mind that this is the <strong>magic number</strong> that belongs in an MBR.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">dw</span> <span class="mi">0xAA55</span>
+</span></span></code></pre></div><p>Save this file as <code>custom bootloader.asm</code>. After compiling it with the <code>nasm</code> compiler, the results should look like this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">## Compile custom_bootloader.asm</span>
+</span></span><span class="line"><span class="cl">nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Check the file type</span>
+</span></span><span class="line"><span class="cl">file rhel_magic_number custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Output</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># rhel_magic_number:     ISO-8859 text, with no line terminators</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># custom_bootloader.bin: ISO-8859 text, with no line terminators</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Check hexdump</span>
+</span></span><span class="line"><span class="cl">hexdump -C custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Ouput</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000000  55 aa                                             |U.|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000002</span>
+</span></span></code></pre></div><p>We now have a 2 byte file containing the magic number. However, because the MBR is 512 bytes long, we must fill 510 more bytes. For the time being, let&rsquo;s just fill it with zeros and see if it&rsquo;s a valid MBR file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">times</span> <span class="mi">510</span> <span class="no">db</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="nf">dw</span> <span class="mi">0xAA55</span>
+</span></span></code></pre></div><p>The above code will write <code>0</code> 510 times and then write <code>AA55</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">## Compile custom_bootloader.asm</span>
+</span></span><span class="line"><span class="cl">nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Check the file type</span>
+</span></span><span class="line"><span class="cl">file rhel_mbr custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Ouput</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># rhel_mbr:              DOS/MBR boot sector</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># custom_bootloader.bin: DOS/MBR boot sector</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Check hexdump</span>
+</span></span><span class="line"><span class="cl">hexdump -C custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Ouput</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># *</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000200</span>
+</span></span></code></pre></div><p>This is, as expected, a valid MBR file with no information about the partition table or the bootloader. Can we, however, use this to boot the system?</p>
+<p>Let&rsquo;s make an attempt.</p>
+<p>I first tried without any mbr data to see what errors I would get when it fails.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">qemu-system-x86_64
+</span></span></code></pre></div><p>And, as I was expecting, it said &ldquo;no bootable device.&rdquo;</p>
+<p><img loading="lazy" src="https://i.imgur.com/wMCYSoo.png#center" alt=""  />
+</p>
+<p>Let&rsquo;s run the test again, but this time with the MBR file we made.</p>
+<p><img loading="lazy" src="https://i.imgur.com/DJS9nN2.png#center" alt=""  />
+</p>
+<p>It did not give me the error this time. That must imply that our MBR is functional. Since it lacks bootloader code, it does nothing. However, it is not returning the same previous error.</p>
+<p>We can now add new instructions to our assembly file. However, we must keep in mind that we do not exceed the file&rsquo;s 512-byte limit. That means we&rsquo;ll have to take care of the zeros we&rsquo;re padding with. Because this is a very simple problem, there are special characters that can assist us in calculating the memory address of the beginning of the file and the current address in the file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">times</span> <span class="mi">510</span><span class="p">-(</span><span class="no">$-$$</span><span class="p">)</span> <span class="no">db</span> <span class="mi">0</span>       <span class="c1">;$ - Start addr; $$ - current addr
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">dw</span> <span class="mi">0xAA55</span>
+</span></span></code></pre></div><p>We can calculate the exact number of zeros required for padding using these special characters. Let&rsquo;s compile it and put it to the test.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">qemu-system-x86_64 custom_bootloader.bin
+</span></span></code></pre></div><p>This produces the same results as before, and the output file size remains 512 bytes. Let&rsquo;s add some more instructions to help us write some text on the screen.</p>
+<p>Unlike userspace and kernelspace programs, we do not have any helper functions that can take a string and automatically print it to the screen. We&rsquo;ll have to tell the BIOS to do what we want here. And the only way I&rsquo;m aware of is through <strong>interrupts</strong>. It is the same facility that operating systems and application programmes use to access BIOS functions.</p>
+<p><a href="https://en.wikipedia.org/wiki/BIOS_interrupt_call#Interrupt_table">Here</a> is a list of common BIOS interrupts. Not all BIOS (especially older ones) support all of these interrupts. The basic idea of using interrupts is we place proper values in some specific registers, and then trigger the interrupt. The interrupt routine will then fetch the values from those registers and based on that, it&rsquo;ll perform some action.</p>
+<p>Anyway, using the above table, I determined that we needed to use interrupt vector <code>10h</code> (or 0x10) with interrupt vector <code>03h</code> (or 0x03) in <code>AH</code> register. Consider it as invoking the 10h function with the parameter value 03h. This returns the cursor&rsquo;s current position and shape.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mov ah, 0x03;
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>We can see that some initial bytes are written to the binary file after compiling and inspecting the hexdump&hellip;. And, thanks to <code>$</code> and <code>$$</code>, the file size remains 512 bytes.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Compiling the binary</span>
+</span></span><span class="line"><span class="cl">nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Checking hexdump</span>
+</span></span><span class="line"><span class="cl">hexdump -C custom_bootloader.bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## Output</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000000  b8 03 00 cd 10 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># *</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 00000200</span>
+</span></span></code></pre></div><p>This switches the BIOS to TTY mode, allowing me to print characters using the same interrupt <code>10h</code> but with a different value in the <code>ah</code> register.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mov ah, 0x03
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov ah, 0xE
+</span></span><span class="line"><span class="cl">mov al, &#39;H&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov al, &#39;E&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov al, &#39;Y&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>When we compile and run this with qemu, we get the message &ldquo;HEY&rdquo; printed on the screen.</p>
+<p><img loading="lazy" src="https://i.imgur.com/9YAcZ03.png#center" alt=""  />
+</p>
+<p>Now that we know how to write characters on the screen, let&rsquo;s make a string and loop through it until the end, printing each character on the screen one by one using the same interrupt combination.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">; Setup TTY mode
+</span></span><span class="line"><span class="cl">mov ax, 0x03
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov si, msg      ; si register now points to msg
+</span></span><span class="line"><span class="cl">mov ah, 0Eh      ; Use write function from 10h interrupt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">.loop:
+</span></span><span class="line"><span class="cl">    lodsb          ; load first char from msg and point to next char
+</span></span><span class="line"><span class="cl">    or al, al      ; Check if end of string
+</span></span><span class="line"><span class="cl">    jz halt        ; if end of string, jump to halt
+</span></span><span class="line"><span class="cl">    int 10h        ; else, print char via interrupt
+</span></span><span class="line"><span class="cl">    jmp .loop      ; loop
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">halt:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">msg: db &#34;Hack the world&#34;, 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>Unfortunately, testing the above code does not produce the desired results, but instead produces some garbage values.</p>
+<p><img loading="lazy" src="https://i.imgur.com/LUbZu5D.png#center" alt=""  />
+</p>
+<p>Further investigation revealed that our bootloader in memory is not properly aligned. This led me down another rabbit hole, this time about how the contents of the computer&rsquo;s physical memory look when the BIOS jumps to my bootloader code. Here is a <a href="https://wiki.osdev.org/Memory_Map_(x86)">dedicated page</a> on the same topic here which covers a lot of details about it.</p>
+<p>For us, we need to add a few more instructions to our code to properly align it. Finally, our code will look like this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bits 16      ; BIOS works in 16 bit mode
+</span></span><span class="line"><span class="cl">org 0x7c00   ; MBR is loaded at 0x7c00 memory location
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov ax, 0x03
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov si, msg
+</span></span><span class="line"><span class="cl">mov ah, 0Eh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">.loop:
+</span></span><span class="line"><span class="cl">    lodsb
+</span></span><span class="line"><span class="cl">    or al, al
+</span></span><span class="line"><span class="cl">    jz halt
+</span></span><span class="line"><span class="cl">    int 10h
+</span></span><span class="line"><span class="cl">    jmp .loop
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">halt:
+</span></span><span class="line"><span class="cl">cli     ; disable further interrupts
+</span></span><span class="line"><span class="cl">hlt     ; halt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">msg: db &#34;Hack the world!!&#34;, 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>This time we get the desired result after compiling and testing the above.
+<img loading="lazy" src="https://i.imgur.com/6eV40TA.png#center" alt=""  />
+</p>
+<p>We successfully created a bootloader that prints some message on the screen.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>We know that a MBR sector is comprised of 3 parts:</p>
+<ul>
+<li>bootloader (446 bytes)</li>
+<li>partition table (64 bytes)</li>
+<li>magic number (2 bytes)</li>
+</ul>
+<p>And each component can be extracted separately and treated as a regular binary file. This means that we can create backups of only partition tables if necessary. Alternatively, we can <strong>replace the bootloader code</strong> with another code without affecting the partition table.(<em>Obviously for fun; like a friendly joke, nothing malicious</em>) 😈 😈</p>
+<p><img loading="lazy" src="https://imgs.xkcd.com/comics/fight.png#center" alt=""  />
+</p>
+<p>We know our above &ldquo;Hack the World!!&rdquo; code does not use all 510 bytes, so why not shrink it a little to fit in 446 bytes? This way we can protect the original partition table.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">bits</span> <span class="mi">16</span>      
+</span></span><span class="line"><span class="cl"><span class="no">org</span> <span class="mi">0x7c00</span>   
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="no">mov</span> <span class="no">ax</span><span class="p">,</span> <span class="mi">0x03</span>
+</span></span><span class="line"><span class="cl"><span class="nf">int</span> <span class="mi">10</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="no">si</span><span class="p">,</span> <span class="no">msg</span>
+</span></span><span class="line"><span class="cl"><span class="nf">mov</span> <span class="no">ah</span><span class="p">,</span> <span class="mi">0</span><span class="no">Eh</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nl">.loop:</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">lodsb</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">or</span> <span class="no">al</span><span class="p">,</span> <span class="no">al</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">jz</span> <span class="no">halt</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">int</span> <span class="mi">10</span><span class="no">h</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">jmp</span> <span class="no">.loop</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nl">halt:</span>
+</span></span><span class="line"><span class="cl"><span class="nf">cli</span>     
+</span></span><span class="line"><span class="cl"><span class="no">hlt</span>    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="no">msg</span><span class="p">:</span> <span class="no">db</span> <span class="err">&#34;</span><span class="no">Hack</span> <span class="no">the</span> <span class="no">world</span><span class="p">!!</span><span class="err">&#34;</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">times</span> <span class="mi">446</span><span class="p">-(</span><span class="no">$-$$</span><span class="p">)</span> <span class="no">db</span> <span class="mi">0</span>         <span class="c1">; Just change 510 to 446 :)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">dw</span> <span class="mi">0xAA55</span>
+</span></span></code></pre></div><p>This will generate the raw data file containing the bootloader program, which we can quickly test in a virtual machine.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">&#34;2&#34;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&#34;archlinux/archlinux&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_check_update</span> <span class="o">=</span> <span class="kp">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="s2">&#34;virtualbox&#34;</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vb</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kp">true</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vb</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="s2">&#34;512&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provision</span> <span class="s2">&#34;shell&#34;</span><span class="p">,</span> <span class="ss">inline</span><span class="p">:</span> <span class="s">&lt;&lt;-SHELL
+</span></span></span><span class="line"><span class="cl"><span class="s"></span>    <span class="c1"># Backup the original bootloader</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dd</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="o">=</span><span class="sr">/dev/s</span><span class="n">da</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">of</span><span class="o">=</span><span class="sr">/vagrant/</span><span class="n">backedup_bootloader</span><span class="o">.</span><span class="n">bin</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">bs</span><span class="o">=</span><span class="mi">1</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">count</span><span class="o">=</span><span class="mi">446</span>
+</span></span><span class="line"><span class="cl">	 
+</span></span><span class="line"><span class="cl">    <span class="c1"># Copy the fun bootloader to first 446 bytes of sda</span>
+</span></span><span class="line"><span class="cl">    <span class="n">dd</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="o">=</span><span class="sr">/vagrant/</span><span class="n">custom_bootloader</span><span class="o">.</span><span class="n">bin</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">of</span><span class="o">=</span><span class="sr">/dev/s</span><span class="n">da</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">bs</span><span class="o">=</span><span class="mi">1</span> <span class="p">\</span>
+</span></span><span class="line"><span class="cl">      <span class="n">count</span><span class="o">=</span><span class="mi">446</span>
+</span></span><span class="line"><span class="cl">	 	
+</span></span><span class="line"><span class="cl">    <span class="c1"># Reboot the system to see the effect</span>
+</span></span><span class="line"><span class="cl">    <span class="n">reboot</span>
+</span></span><span class="line"><span class="cl">  <span class="no">SHELL</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span></code></pre></div><p>The <a href="https://www.vagrantup.com/intro"><code>Vagrantfile</code></a> above will launch a quick test VM. We just need to sit back and relax.</p>
+<p><img loading="lazy" src="https://media.giphy.com/media/8ynPshGnD8WnS/giphy.gif#center" alt=""  />
+</p>
+<p>After successful bootup and reboot, It displayed the expected message.</p>
+<p><img loading="lazy" src="https://i.imgur.com/6eV40TA.png#center" alt=""  />
+</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://en.wikipedia.org/wiki/BIOS">https://en.wikipedia.org/wiki/BIOS</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.man7.org/linux/man-pages/man1/dd.1.html">https://www.man7.org/linux/man-pages/man1/dd.1.html</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://forum.osdev.org/viewtopic.php?f=2&amp;t=18763">https://forum.osdev.org/viewtopic.php?f=2&amp;t=18763</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content:encoded>
     </item>
+    
   </channel>
 </rss>
