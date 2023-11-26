@@ -17,9 +17,98 @@ description: "Exploring ELF symbol tables"
 ---
 
 
-When writing a program, we often use names to reference objects in our code, like function names and variable names. These names are commonly referred to as symbols. (yeah, deal with it now!)
+## ... prologue
 
-Creating multiple small programs for this article will provide a clearer and more comprehensive understanding of the topic.
+At this point I hope you have a general idea of how a C program goes through multiple stages/passes and finally an ELF file is generated. Below is a diagram to jog your memory on this
+
+```
+
+  ┌──────────────────┐
+  │                  │
+  │    hello.c       │  // C source
+  │                  │
+  └────────┬─────────┘
+           │
+           │
+           │ /* Compile */
+           │
+           │
+           │
+           ▼
+  ┌──────────────────┐
+  │                  │
+  │    hello.s       │  // assembler source
+  │                  │
+  └────────┬─────────┘
+           │
+           │
+           │ /* assemble */
+           │
+           │
+           ▼
+  ┌──────────────────┐
+  │                  │
+  │     hello.o      │  // Assembled program (ELF - relocatable)
+  │                  │
+  └────────┬─────────┘
+           │
+           │
+           │ /* link */
+           │
+           │
+           ▼
+  ┌──────────────────┐
+  │                  │
+  │      hello       │  // Executable binary (ELF - executable)
+  │                  │
+  └──────────────────┘
+```
+
+Creating a simple *hello* program is very straight-forward, let me show you how this flow works when we are building something that has more than 1 source file. This is generally what most of the "real-world" projects do, they create multiple files with different functionalities and then merge them together to complete the program with the desired features only.
+
+
+```
+
+
+     ┌────────────────────┐                        ┌─────────────────┐         ┌─────────────────┐
+     │                    │                        │                 │         │                 │
+     │   libarithmatic.c  │                        │ libarithmatic.h ├───────► │     main.c      │
+     │                    │                        │                 │         │                 │
+     └─────────┬──────────┘                        └─────────────────┘         └────────┬────────┘
+               │                                                                        │
+               │                                                                        │
+               │ /* Compile + assemble */                                               │ /* Compile + assemble */
+               │                                                                        │
+               │                                                                        │
+               ▼                                                                        ▼
+    ┌─────────────────────┐                                                   ┌────────────────────┐
+    │                     │                                                   │                    │
+    │   libarithmatic.o   │                                                   │       main.o       │
+    │                     │                                                   │                    │
+    └─────────┬───────────┘                                                   └──────────┬─────────┘
+              │                                                                          │
+              │                                                                          │
+              │                                                                          │
+              │                                                                          │
+              │                          /* Linking Magic */                             │
+              └───────────────────────────────────┬──────────────────────────────────────┘
+                                                  │
+                                                  │
+                                                  │
+                                                  │
+                                                  │
+                                                  │
+                                                  ▼
+                                           ┌────────────────┐
+                                           │                │
+                                           │     calc       │
+                                           │                │
+                                           └────────────────┘
+
+
+```
+
+
 
 ```c
 /*
@@ -107,27 +196,7 @@ int main() {
 
 ```
 
-
-This is generally what most of the real-world projects do, they create multiple files with different functionalities and then merge them together to complete the program with the desired features only.
-
-This is our first time so far writing multiple files for a program. So let's take some time to understand how this works in C.
-
-First, we create a `libarithmatic.c` file with all of the required arithmatic functions. Since this file contains these functions (function definitions), the intermediate object file for this file will have related information as well.
-
-Then comes the `main.c` file, where we have declared the `main` function. Inside the main function, we have used other functions which are not defined in the `main.c` file. These are defined by the header files - `<stdio.h>` and `"libarithmatic.h"`.
-
-
-Now the process to create these object files and combining them is quite simple... There are 3 phases involved:
-
-1. **Compilation**: Read source code and generate assembly code from it.
-2. **Assembling**: Reads the assembly code and generates machine code from it.
-3. **Linking**: Reads the machine code and links objects in correct places & order.
-
-
-Now if you perform steps 1&2 on both files individually to get separate object files and then use those object files to perform step 3, you'll get a single ELF executable binary that has all of the functionality in one file.
-
-Luckily `gcc` provides some features, that helps us to make this even easier.
-
+Luckily gcc provides some features, that helps us to make this process easier.
 ```
 ❯ gcc --help
 Usage: gcc [options] file...
@@ -136,13 +205,13 @@ Options:
   -E                       Preprocess only; do not compile, assemble or link.
   -S                       Compile only; do not assemble or link.
   -c                       Compile and assemble, but do not link.
+
 ```
 
-![](https://media.giphy.com/media/9wG8hpQRkHMoDbCqzu/giphy.gif#center)
+So if you follow these commands, you’ll be fine
 
-So if you follow these commands, you'll get the desired files
 
-```sh
+```
 # Compile + assemble -> generates main.o
 gcc -c main.c
 
@@ -154,9 +223,67 @@ gcc main.o libarithmatic.o -o calc
 ```
 
 
+![](https://media.giphy.com/media/9wG8hpQRkHMoDbCqzu/giphy.gif#center)
 
-## Symbol tables
-Before we start our analysis, it's important to understand what we're about to examine. Unlike string tables, symbol tables have a well-defined structure, and both Glibc and the Linux kernel define a struct for this (`Elf64_Sym` for 64-bit files).
+
+
+This is our first time so far writing multiple files for a program. So let's take a moment to understand how this works.
+
+First, we create a `libarithmatic.c` file with all of the required arithmatic functions - `addFunc`, `subFunc`, `mulFunc`, and `divFunc`. Since this file contains these functions (function definitions), the intermediate object file for this file will have related information as well.
+
+
+Then comes the `main.c` file, where we have declared the `main` function. Inside the main function, we have used arithmatic functions which are not defined in this file. This will give an error at compilation time when those functions will not be found, so as a promise we give a declaration that these functions are present somewhere and they will be found in later steps by linker. Here those definitions are present in `libarithmatic.h` file -- header file for `libarithmatic.c`.
+
+
+So when we are compiling `libarithmatic.c`, it'll create a `libarithmatic.o` file which will have 4 arithmatic functions as defined. On the other hand, `main.c` will generate a `main.o` file that will have a `main` function which will be trying to call the arithmatic functions - `addFunc`, `subFunc`, `mulFunc`, and `divFunc`.
+
+
+**Question** - How did `main.o` call these functions when the address of these functions is not known to the compiler??
+
+**Answer** - Compiler takes `main.c` and `libarithmatic.h` (a promise that these will be present when linking), and then generates the `main.o` with all of the `call` instructions... but because of the fact that it does not know the address of the functions to be called these addresses are left blank. These blanks will be filled by linker during `relocation` process.
+
+Here is a proof that all of them are empty before linking and have all of the addresses fixed up after linking
+
+```
+## Before linking - main.o
+❯ objdump -M intel -D -j .text main.o | grep call
+ 26:        e8 00 00 00 00          call   2b <main+0x2b>
+ 49:        e8 00 00 00 00          call   4e <main+0x4e>
+ 86:        e8 00 00 00 00          call   8b <main+0x8b>
+ a3:        e8 00 00 00 00          call   a8 <main+0xa8>
+ c0:        e8 00 00 00 00          call   c5 <main+0xc5>
+ dd:        e8 00 00 00 00          call   e2 <main+0xe2>
+ f5:        e8 00 00 00 00          call   fa <main+0xfa>
+123:        e8 00 00 00 00          call   128 <main+0x128>
+13c:        e8 00 00 00 00          call   141 <main+0x141>
+
+## After linking - calc
+❯ objdump -M intel -D -j .text calc | grep call
+1138:       e8 63 ff ff ff          call   10a0 <_start+0x30>
+118f:       e8 bc fe ff ff          call   1050 <printf@plt>
+11b2:       e8 a9 fe ff ff          call   1060 <__isoc99_scanf@plt>
+11ef:       e8 b8 00 00 00          call   12ac <addFunc>
+120c:       e8 b5 00 00 00          call   12c6 <subFunc>
+1229:       e8 b2 00 00 00          call   12e0 <mulFunc>
+1246:       e8 af 00 00 00          call   12fa <divFunc>
+125e:       e8 cd fd ff ff          call   1030 <puts@plt>
+128c:       e8 bf fd ff ff          call   1050 <printf@plt>
+12a5:       e8 96 fd ff ff          call   1040 <__stack_chk_fail@plt>
+```
+
+
+
+## Symbols and symbol tables
+
+**Now the question is that how does linker know which blanks to fill and how to fill them??** ...here comes the role of *symbols* and *symbol tables*.
+
+
+When writing a program, we often use "names" to reference "objects" in our code, like function "names" and variable "names". These "names" are commonly referred to as `symbols`. (*yeah, deal with it now!*)
+
+
+Keep in mind that not all "names" are symbols. For example, a local variables to a function won't be treated as symbols. If you think it through, you don't need linker to handle that data so what's the point of adding that info as a symbol, right?
+
+Another worth noting thing is that unlike string tables, symbol tables have a well-defined structure, and both Glibc and the Linux kernel define a struct for this (`Elf64_Sym` for 64-bit files).
 
 
 ```c
@@ -191,19 +318,21 @@ typedef struct elf64_sym {
 
 ```
 
+Let's see what each member of this struct resembles
+
 ### st_name
 
-Similar to other name fields in the ELF specification, this member stores the index or offset in the associated string table.
+Similar to other name fields in the ELF specification, this member stores the **index** or **offset** in the associated string table.
 
 ### st_info
 
 This member represents a combined value derived from two different but related attributes: `bind` and `type`.
 
-Both, [Kernel](https://elixir.bootlin.com/linux/v6.5.8/source/include/uapi/linux/elf.h#L136) and [glibc](https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=2bd00179885928fd95fcabfafc50e7b5c6e660d2#l572) provide definitions and macros to work with this member.
+Both, [Linux Kernel](https://elixir.bootlin.com/linux/v6.5.8/source/include/uapi/linux/elf.h#L136) and [glibc](https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=2bd00179885928fd95fcabfafc50e7b5c6e660d2#l572) provide definitions and macros to work with this member.
 
 #### 1. Bind
 
-The "bind" bits provide information about where this symbol can be seen and used.. There are 3 kinds of binding defined by linux kernel
+The "bind" bits provide information about where this symbol can be seen and used... There are 3 kinds of binding defined by linux kernel
 
 ```c
 /*
@@ -235,7 +364,7 @@ Kernel and glibc both provide a macro to extract the `bind` value from the provi
 
 #### 2. Type
 
-`type` bits tells about the type of symbol - function, file, variable, etc. A general classification for the symbol.
+`type` bits tells about the type of symbol - function, file, variable, etc. One could say -- A general classification for the symbol.
 
 Linux kernel defines total 7 types
 
@@ -280,7 +409,7 @@ Kernel and glibc both provide a macro to extract the `type` value from the provi
 
 ### st_other
 
-If you examine the `Elf64_Sym` struct in both the kernel and Glibc source code, you'll notice that the kernel doesn't currently have any use case for this field and marks it as such. However, Glibc uses this field to track the visibility of the symbol.
+If you examine the `Elf64_Sym` struct in both the kernel and Glibc *source code*, you'll notice that the kernel doesn't currently have any use case for this field and marks it as such. However, Glibc uses this field to track the visibility of the symbol.
 
 ```
 /*
@@ -294,25 +423,21 @@ https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=2bd00179885928fd95
 
 From what I understand, **symbol visibility** (*yup, this is what glibc calls `st_other`*) extends the concept of **symbol binding** and provides more control over symbol access.
 
-Let's use an example to grasp this concept better. Imagine we create an `addFunc` function in both the `main.c` file and the `libarithmatic.c` file, then **compile** and **assemble** the code separately. This scenario leads to symbol clashes.
-
-*While I understand this example might not be highly practical, it illustrates the need for more precise control beyond what the `st_info`'s "**bind**" bits can offer. This is where the `st_other` visibility attribute becomes crucial.*
-
-You can read more from [here](https://developer.ibm.com/articles/au-aix-symbol-visibility/)[^ibm_sym_vis] and [here](https://unix.stackexchange.com/questions/472660/what-are-difference-between-the-elf-symbol-visibility-levels)[^so_sym_vis]
+You can read more about this member from [here](https://developer.ibm.com/articles/au-aix-symbol-visibility/) [^ibm_sym_vis] and [here](https://unix.stackexchange.com/questions/472660/what-are-difference-between-the-elf-symbol-visibility-levels) [^so_sym_vis].
 
 
 [^ibm_sym_vis]: https://developer.ibm.com/articles/au-aix-symbol-visibility/
 
 [^so_sym_vis]: https://unix.stackexchange.com/questions/472660/what-are-difference-between-the-elf-symbol-visibility-levels
 
-### st_shndx
 
+### st_shndx
 
 This attribute indicates the section associated with this symbol. It holds the section index corresponding to the sections in the section header.
 
 ### st_value
 
-Indeed, each symbol should have both a name and an associated value. This member holds the value associated with the symbol.
+Indeed, each symbol should have both a name and an associated value. This member holds the value associated with the respective symbol.
 
 ### st_size
 
@@ -324,54 +449,173 @@ Many symbols come with associated sizes, for function type symbols this will be 
 
 ## Analysis
 
-Now that we have a foundational understanding, we can apply this knowledge to analyze our previous files
+Now that we have a foundational understanding, we can apply this knowledge to analyze our previous files.
 
 ### 1. `libarithmatic.o`
 
-To keep things straightforward, I'll begin by listing all the sections in the `libarithmatic.o` file.
+To keep things straightforward, I'll begin by listing all the sections in the `libarithmatic.o` file. (*This is the output from my parser, you can use hexdumps or any other parser of your choice...*)
 
-In addition to the typical `.shstrtab`, this file also contains a `.strab` (another string table) that holds the names of functions defined in `libarithmatic.c`.
+```
+[ 00 ] Section Name:                            Type: 0x0       Flags: 0x0      Addr: 0x0       Offset: 0x0             Size: 0         Link: 0         Info: 0x0       Addralign: 0x0          Entsize: 0
+[ 01 ] Section Name: .text                      Type: 0x1       Flags: 0x6      Addr: 0x0       Offset: 0x40            Size: 130       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+[ 02 ] Section Name: .data                      Type: 0x1       Flags: 0x3      Addr: 0x0       Offset: 0xc2            Size: 0         Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+[ 03 ] Section Name: .bss                       Type: 0x8       Flags: 0x3      Addr: 0x0       Offset: 0xc2            Size: 0         Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+[ 04 ] Section Name: .comment                   Type: 0x1       Flags: 0x30     Addr: 0x0       Offset: 0xc2            Size: 28        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 1
+[ 05 ] Section Name: .note.GNU-stack            Type: 0x1       Flags: 0x0      Addr: 0x0       Offset: 0xde            Size: 0         Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+[ 06 ] Section Name: .note.gnu.property         Type: 0x7       Flags: 0x2      Addr: 0x0       Offset: 0xe0            Size: 48        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
+[ 07 ] Section Name: .eh_frame                  Type: 0x1       Flags: 0x2      Addr: 0x0       Offset: 0x110           Size: 152       Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
+[ 08 ] Section Name: .rela.eh_frame             Type: 0x4       Flags: 0x40     Addr: 0x0       Offset: 0x288           Size: 96        Link: 9         Info: 0x7       Addralign: 0x8          Entsize: 24
+[ 09 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x1a8           Size: 168       Link: 10        Info: 0x3       Addralign: 0x8          Entsize: 24
+[ 10 ] Section Name: .strtab                    Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x250           Size: 49        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+[ 11 ] Section Name: .shstrtab                  Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x2e8           Size: 103       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+```
+
+
+
+Now we can easily filter out the symbol table from this (`Type: 0x2`)
 
 
 ```
-[ 10 ] Section Name: .strtab        Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x250           Size: 49        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-     [    0 ]
-     [    1 ] libarithmatic.c
-     [   17 ] addFunc
-     [   25 ] subFunc
-     [   33 ] mulFunc
-     [   41 ] divFunc
+[ 09 ] Section Name: .symtab     Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x1a8           Size: 168       Link: 10        Info: 0x3       Addralign: 0x8          Entsize: 24
 ```
 
-Names alone can be quite limited in terms of usefulness. To make sense of them, you typically need more information, and this additional data is stored in symbol tables.
+If you go back and revisit the article about section headers and check the explaination about members, you'll be able to conclude this -- `.symtab` section is linked to `.strtab` section. So the offset values from `st_name` of symbol table can be resolved to proper strings using this string table.
 
-Here is the symbol table for above mentioned names.
-
-Question: How do I know this is the symbol table for the above string table.
-
-Answer: Check the `sh_link` value on symbol table section, this points to section `10` (`.strtab`).
 
 ```
-[ 09 ] Section Name: .symtab        Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x1a8           Size: 168       Link: 10        Info: 0x3       Addralign: 0x8          Entsize: 24
-     [  0 ] Name:                       Info: 0x00 (Bind: 0x0 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
-     [  1 ] Name: libarithmatic.c       Info: 0x04 (Bind: 0x0 | Type: 0x4)      Other: 0x0      Shndx: 0xfff1   Value: 0x000000000000   Size: 0x0
-     [  2 ] Name:                       Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x0
-     [  3 ] Name: addFunc               Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x1a
-     [  4 ] Name: subFunc               Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x00000000001a   Size: 0x1a
-     [  5 ] Name: mulFunc               Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000034   Size: 0x1a
-     [  6 ] Name: divFunc               Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x00000000004e   Size: 0x34
+
+
+           ┌─────────────────────────────────┐
+           │                                 │
+           │ [ 09 ] Section Name: .symtab    │
+           │           Type: 0x2             │
+           │           Flags: 0x0            │
+           │           Addr: 0x0             │
+           │           Offset: 0x1a8         │
+           │           Size: 168             │
+      ┌────┼────────── Link: 10              │
+      │    │           Info: 0x3             │
+      │    │           Addralign: 0x8        │
+      │    │           Entsize: 24           │
+      │    │                                 │
+      │    │                                 │
+      │    └─────────────────────────────────┘
+      │
+      │
+      │
+      │
+      │    ┌─────────────────────────────────┐
+      │    │                                 │
+      └────┤► [ 10 ] Section Name: .strtab   │
+           │            Type: 0x3            │
+           │            Flags: 0x0           │
+           │            Addr: 0x0            │
+           │            Offset: 0x250        │
+           │            Size: 49             │
+           │            Link: 0              │
+           │            Info: 0x0            │
+           │            Addralign: 0x1       │
+           │            Entsize: 0           │
+           │                                 │
+           │                                 │
+           └─────────────────────────────────┘
+
+
 ```
 
-If you're using tools like `xxd` or `hexdump` that display the raw values from the file, you'll see indices to the names rather than the actual names. To determine which section holds the strings for these indices, you can inspect the "Link" value in this section.
-
-*Modifying this value can lead to confusion and misguidance for anybody reading it, even your computer* 😈
 
 
+
+Now we can begin with the interesting stuff and the first step will be to pull out the `.symtab` section and parse it.
+
+
+
+```
+
+############ Explaination #################
+#
+# xxd
+#   -s 0x1a8            # start point (Offset: 0x1a8)
+#   -l 168              # total length (Size: 168)
+#   -c 24               # bytes per line (Entsize: 24) - I wanted to get each entry in a single line for uniformity
+#   libarithmatic.o     # filename
+#   | nl -v0            # line numbers starting from 0
+#
+#############################################
+
+❯ xxd -s 0x1a8 -l 168 -c 24 libarithmatic.o | nl -v0
+    0  000001a8: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  ........................
+    1  000001c0: 0100 0000 0400 f1ff 0000 0000 0000 0000 0000 0000 0000 0000  ........................
+    2  000001d8: 0000 0000 0300 0100 0000 0000 0000 0000 0000 0000 0000 0000  ........................
+    3  000001f0: 1100 0000 1200 0100 0000 0000 0000 0000 1a00 0000 0000 0000  ........................
+    4  00000208: 1900 0000 1200 0100 1a00 0000 0000 0000 1a00 0000 0000 0000  ........................
+    5  00000220: 2100 0000 1200 0100 3400 0000 0000 0000 1a00 0000 0000 0000  !.......4...............
+    6  00000238: 2900 0000 1200 0100 4e00 0000 0000 0000 3400 0000 0000 0000  ).......N.......4.......
+
+```
+
+
+If we parse this data using the struct `Elf64_Sym`, we'll get something like this
+
+
+```
+
+                             typedef struct {
+
+  +------------------------------Elf64_Word    st_name;
+  |
+  |        +---------------------unsigned char st_info;
+  |        |
+  |        |     +---------------unsigned char st_other;
+  |        |     |
+  |        |     |    +----------Elf64_Section st_shndx;
+  |        |     |    |
+  |        |     |    |          Elf64_Addr    st_value;----+
+  |        |     |    |                                     |
+  |        |     |    |          Elf64_Xword   st_size;-----+-----------------+
+  |        |     |    |                                     |                 |
+  |        |     |    |      } Elf64_Sym;                   |                 |
+  |        |     |    |                                     |                 |
+  |        |     |    |                                     |                 |
+  |        |     |    +-------------------+                 |                 |
+  |        |     |                        |                 |                 |
+  |        |     +------------------+     |                 |                 |
+  |        |                        |     |                 |                 |
+  |        +-------------------+    |     |                 |                 |
+  |                            |    |     |                 |                 |
+  +-------------------+        |    |     |                 |                 |
+                      |        |    |     |                 |                 |
+                      v        v    v     v                 v                 v
+Index |  Offset  |
+    0 | 000001a8:| 0000 0000 | 00 | 00 | 0000 | 0000 0000 0000 0000 | 0000 0000 0000 0000 |
+    1 | 000001c0:| 0100 0000 | 04 | 00 | f1ff | 0000 0000 0000 0000 | 0000 0000 0000 0000 |
+    2 | 000001d8:| 0000 0000 | 03 | 00 | 0100 | 0000 0000 0000 0000 | 0000 0000 0000 0000 |
+    3 | 000001f0:| 1100 0000 | 12 | 00 | 0100 | 0000 0000 0000 0000 | 1a00 0000 0000 0000 |
+    4 | 00000208:| 1900 0000 | 12 | 00 | 0100 | 1a00 0000 0000 0000 | 1a00 0000 0000 0000 |
+    5 | 00000220:| 2100 0000 | 12 | 00 | 0100 | 3400 0000 0000 0000 | 1a00 0000 0000 0000 |
+    6 | 00000238:| 2900 0000 | 12 | 00 | 0100 | 4e00 0000 0000 0000 | 3400 0000 0000 0000 |
+
+```
+
+
+From my parser, I got this result
+
+```
+[  0 ] Name:                   Info: 0x00 (Bind: 0x0 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+[  1 ] Name: libarithmatic.c   Info: 0x04 (Bind: 0x0 | Type: 0x4)      Other: 0x0      Shndx: 0xfff1   Value: 0x000000000000   Size: 0x0
+[  2 ] Name:                   Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x0
+[  3 ] Name: addFunc           Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x1a
+[  4 ] Name: subFunc           Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x00000000001a   Size: 0x1a
+[  5 ] Name: mulFunc           Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000034   Size: 0x1a
+[  6 ] Name: divFunc           Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x00000000004e   Size: 0x34
+```
+
+![](https://media.giphy.com/media/S5tVD09nBR2nJWJMen/giphy.gif#center)
 
 For the sake of simplicity and the scope of this article, I'll focus on discussing the four functions in this table and leave the rest for you to explore and learn.
 
 
-We can observe that the `st_info` value for all of these symbols is the same, which implies that their "**bind**" and "**type**" values are identical (*duhh*). According to the information we've gathered, these symbols are `GLOBAL` (bind=0x1) and of `FUNC` (type=0x2) type. This indicates that these symbols can be called from other files as well.
+We can observe that the `st_info` value for all of these symbols is the same, which implies that their "**bind**" and "**type**" values are identical (*duhh*). According to the information we've gathered, these symbols are `GLOBAL` (bind=0x1) and of `FUNC` (type=0x2) type. This indicates that these symbols are basically global functions and can be called from other files as well.
 
 
 It's worth noting that there's a very cool tool called ["**ftrace**" by elfmaster](https://github.com/elfmaster/ftrace/), which utilizes [this information](https://github.com/elfmaster/ftrace/blob/master/ftrace.c#L441) to trace function calls, specifically focusing on function calls and not other symbols.
@@ -380,13 +624,11 @@ It's worth noting that there's a very cool tool called ["**ftrace**" by elfmaste
 
 Furthermore, the `st_other` field is empty for these members, indicating `default` symbol visibility. There's nothing noteworthy to discuss here.
 
-Now, let's move on to the `sh_shndx` (section index) member. This member tells us that all of these symbols are associated with section `0x1` (which is `.text`, and that does make sense -- Code of these functions should be in `.text` section only).
+So we move on to the `sh_shndx` (section index) member. This member tells us that all of these symbols are associated with section `0x1` (which is `.text`, and that does make sense -- Code of these functions should be in `.text` section only).
 
 The `st_value` field indicates the offset within the `.text` section at which these functions begin. So, if you start executing instructions from offset `0x34` in the `.text` section, you'll be running the `mulFunc` function. *Makes sense??*
 
-
-Interestingly, there's a complete phase in the process where these symbols are replaced with their respective values after further processing. At some point, we will no longer need the string "mulFunc." Instead, every instance in the code where this function is used is replaced with the processed value, and this process is referred to as `relocation`. (This topic will be discussed in greater detail in upcoming articles.)
-
+The linker will perform `relocation` on the object files and generate a final executable binary that will have all the values in correct places. At that point we won't need the `mulFunc` string in our ELF file.
 
 Last but not least, the `st_size` field provides the size of the function. This helps the magical entity reading the code determine when to stop and understand the boundaries of the function.
 
@@ -421,10 +663,10 @@ You'll notice that these symbols are global, but they don't have any associated 
 
 Now, you'll also notice the presence of `printf` and `puts` symbols. This may raise a question: "**I didn't use puts in my code, so why is it there?**"
 
-Answer: It's compiler magic! The compiler observed that the line `printf("Enter equation (9 * 6): ");` could be expressed as `puts("Enter equation (9 * 6): ");`, so it made this conversion during compilation. To confirm this, you can generate the compiled code using `gcc -S`.
+Answer: It's compiler magic! The compiler observed that the line `printf("Enter equation (9 * 6): ");` could be expressed as `puts("Enter equation (9 * 6): ");`, so it made this conversion during compilation. To confirm this, you can generate the compiled code using `gcc -S` and check the `call` to `puts` function.
 
 
-Now, let's examine our mighty `main` symbol. The `st_info` indicates that it's a `GLOBAL` `function` (with `bind=0x1` and `type=0x2`). This function is located in the 1st section (`sh_shndx: 0x1`) of `main.o`, which in this case is the `.text` section. The function begins at offset `0x0`, and its size is `0x143`. *Pretty simple, right?*
+Now, let's examine our mighty `main` symbol. The `st_info` indicates that it's a `GLOBAL` `function` (with `bind=0x1` and `type=0x2`). This function is located in the 1st section (`sh_shndx: 0x1`) of `main.o`, which in our case is the `.text` section. The function begins at offset `0x0`, and its size is `0x143`. *Pretty simple, right?*
 
 (Note: I'm leaving `__isoc99_scanf` and `__stack_chk_fail` for you. Google them!)
 
@@ -432,7 +674,7 @@ Now, let's examine our mighty `main` symbol. The `st_info` indicates that it's a
 
 ### 3. `calc`
 
-This represents the ultimate outcome of the entire compilation, assembly, and linking process—the final ELF executable binary. However, the process to obtain its **symbol table** remains same.
+This represents the ultimate outcome of the entire compilation, assembly, and linking process -- the final ELF executable binary. However, the process to obtain its **symbol table** remains same.
 
 Here is the `symtab` for this ELF binary
 ```
@@ -488,14 +730,14 @@ These are the symbols we defined ourselves...
 [ 26 ] Name: main                            Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0xe      Value: 0x000000001169   Size: 0x143
 ```
 
-We can observe the similarities in various members between `libarithmatic.o` and `main.o`. The notable difference I can identify is the `sh_shndx` value, which has changed but still points to the `.text` section of `calc`. The crucial point is that it should reference the `.text` section, regardless of the section index value.
+We can observe the similarities in various members between `libarithmatic.o` and `main.o`. The notable difference I can identify is the `sh_shndx` value, which has changed but still points to the `.text` section of `calc` file. The important point is that it should reference the `.text` section, regardless of the section index value.
 
 Another difference is in the `st_value`. With the addition of numerous new symbols in this file, the positions of these symbols have shifted. Initially, we had the `main` function in `main.o` and `addFunc` in `libarithmatic.o`, both at offset `0x0`. However, when combining them into a single file, one of them had to adjust its offset to make room for the other. This is precisely what occurred here, and there are also other symbols (of function type) that occupied the initial offsets, causing our defined functions to compromise on their offsets.
 
-One more intriguing detail is the `_start` symbol, which has an offset of `0x000000001070`. This offset serves as the entry point of our ELF executable binary. You can verify this using `readelf` or any method you prefer.
+One more intriguing detail is the `_start` symbol, which has an offset of `0x000000001070`. This offset serves as the **entry point** of our ELF executable binary. You can verify this using `readelf` or any method you prefer. If you happen to overwrite the `entrypoint` value in `ELF file headers`, you'll be calling some other function instead of `_start` function of `glibc`. Since `_start` function performs some startup actions for C runtime environment, so the modified binary may or may not work as intended.
 
 
-I'm done for today now, ta-ta!
+I'm sure that's enough for today, ta-ta!
 
 
 ![](https://media.giphy.com/media/mP8GermRyOFWV8PQeq/giphy.gif#center)
