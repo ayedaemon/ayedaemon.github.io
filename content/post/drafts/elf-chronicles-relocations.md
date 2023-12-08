@@ -15,3 +15,5 @@ description: "Exploring general concept of ELF relocations"
 # searchHidden: true
 # hideMeta: true
 ---
+
+From last 2 articles we got to know there are [string tables]({{<ref "/post/drafts/elf-chronicles-string-tables.md" >}}) and there are [symbol tables]({{<ref "/post/drafts/elf-chronicles-symbol-tables.md">}}) .... But none of them serves any significant purpose in execution of the compiled binary executable.
