@@ -16,7 +16,8 @@ description: "Exploring general concept of ELF relocations"
 # hideMeta: true
 ---
 
-In previous article about Symbol Tables, we talked about the below diagram
+
+In previous article about Symbol Tables, we talked about the below diagram ....
 
 
 ```
@@ -59,10 +60,12 @@ In previous article about Symbol Tables, we talked about the below diagram
 
 ```
 
-And that raised a question, **How did `main.o` call these functions when the address of these functions is not known to the compiler??** - *short answer* -- relocations.
 
-(Note:- If you have not read the last article about symbol tables, I strongly suggest to give it a read before reading this one)
+...and how the compiler was unaware of the final addresses for many symbols. When things get a bit confusing for the compiler, it takes the easy route by putting zeros in the addresses and creating relocation entries for the linker/loader to sort out.
 
+The linker combines all the `.o` files, causing changes to the positions of different parts. For example, the `main` function in `main.o` and `addFunc` in `libarithmatic.o` both start off at position `0x0`. But when you link these files, this setup causes issues, so some tweaks are needed.
+
+In this situation, the compiler and assembler team up to produce the `.o` file, but they don't know for sure where each part will end up in the eventual `calc` binary. So, they play it safe by leaving these spots empty and make notes in the relocations section. This tells the linker that these positions need some adjustments later on.
 
 ## Relocations
 
@@ -71,7 +74,8 @@ According to [ELF specification (version 1.2)](https://refspecs.linuxbase.org/el
 >> Relocation is the process of connecting symbolic references with symbolic definitions.
 
 
-The idea of relocation is pretty simple: write programs separately and then link them together. In last article we saw the below snippet that shows us the before v/s after for the `main` function.
+
+Relocation is a straightforward concept in coding. When you're compiling code, the compiler doesn't always know the exact addresses for everything in the program. ELF relocations become important when the addresses of symbols are uncertain during compilation, often because the final addresses are determined by the linker or loader at a later stage. It's similar to arranging pieces in a puzzle without having all the details upfront.
 
 
 ```
@@ -102,20 +106,18 @@ The idea of relocation is pretty simple: write programs separately and then link
 
 ```
 
+Now, there are three essential elements needed for relocation to take place:
 
-So what happens here is that the `compiler+assembler` creates the `.o` file but are not sure of where these symbol definitions will be located in the final `calc` binary. So, it leaves the entries as zeroes and makes an entry in `relocations` section to inform the linker that these locations needs some fixups.
+1. The spot where the adjustment needs to be made.
+2. The symbol that's part of the adjustment.
+3. An algorithm specifying how to calculate and apply the necessary fix.
 
-Now here are 3 things that is required for a relocation to happen:
+The compiler stores all this information in a special section identified by type - either `REL` (0x9) or `RELA` (0x4).
 
-- location where this fix is to be made
-- The symbol that is involved in the fix
-- An algorithm that is to be used to calculate and apply the fixup.
+- `REL` is used for basic relocation entries.
+- `RELA` is essentially the same as `REL`, but with an extra addend value. *This doesn't significantly impact the concept, though.*
 
-
-In ELF files, relocations are recorded in a separate section with type - `REL` (0x9) or `RELA` (0x4).
-
-
-You can easily identify these sections using `readelf`
+You can easily identify these sections using `readelf`;...
 
 ```
 ❯ readelf --section-headers --wide main.o
@@ -179,7 +181,7 @@ My parser gives me the same results... (with different looks)
 
 
 
-Either ways, you can easily identify the relocation sections from here.
+In any case, identifying the relocation sections is straightforward -- REL (0x9) or RELA (0x4).
 
 ```
 # From readelf
@@ -195,10 +197,9 @@ Either ways, you can easily identify the relocation sections from here.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```
 
-(Note:- I'm totally ignoring the `.rela.eh_frame` for the sanity of this article and our brains, we shall see that some other time)
+(Note: To keep things clear in this article and to maintain simplicity, we're going to ignore the `.rela.eh_frame`. We can dive into that particular aspect another time.)
 
-We can use information from above to find the actual data of relocation section
-
+We can use the details shared earlier to pinpoint the real data of the relocation section. This means we'll be finding the section data by using the section header entry -- a process we've gone through multiple times before.
 
 ```
 
@@ -232,22 +233,29 @@ We can use information from above to find the actual data of relocation section
     12  00000500: 3d01 0000 0000 0000 0400 0000 0c00 0000 fcff ffff ffff ffff  =.......................
 ```
 
-
-That gives us 12 relocation entries, if we process them usign the below structure, we'll get some decent results
-
+Linux kernel has some specific structures to define `REL` and `RELA` entries....
 
 ```c
-/* https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L182 */
+/* https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L171 */
+typedef struct elf64_rel {
+  Elf64_Addr r_offset;	/* Location at which to apply the action */
+  Elf64_Xword r_info;	/* index and type of relocation */
+} Elf64_Rel;
 
+/* https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L182 */
 typedef struct elf64_rela {
   Elf64_Addr r_offset;	/* Location at which to apply the action */
   Elf64_Xword r_info;	/* index and type of relocation */
   Elf64_Sxword r_addend;	/* Constant addend used to compute value */
 } Elf64_Rela;
+
+/* https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L163 */
+#define ELF64_R_SYM(i)			((i) >> 32)
+#define ELF64_R_TYPE(i)			((i) & 0xffffffff)
 ```
 
 
-After parsing this section's data, I got below results.
+After parsing this section's data, I got following results.
 
 ```
 [ 02 ] Section Name: .rela.text        Type: 0x4       Flags: 0x40     Addr: 0x0       Offset: 0x3e0           Size: 312       Link: 11        Info: 0x1       Addralign: 0x8          Entsize: 24
@@ -266,82 +274,36 @@ After parsing this section's data, I got below results.
      [ 12 ] Offset: 0x13d        Info: 0x000c00000004 (Sym: 0xc | Type: 0x4)     Addend: -4
 ```
 
-Let's take a moment to understand what each member of this structure is and how it will help the linker in relocation process.
+Let's pause for a moment to grasp the significance of each member in this structure and how it aids the linker in the relocation process.
 
 (👇 *Shamelessly stolen from [`man 5 elf`](https://www.man7.org/linux/man-pages/man5/elf.5.html)* 👇)
+
 ### r_offset
 This member gives the location at which to apply the relocation.
 - For a relocatable file, the value is the byte offset from the beginning of the section where relocation is to be applied.
 - For an executable file or shared object, the value is the virtual address of the storage unit affected by the relocation.
 
 ### r_info
-This member gives both the symbol table index with respect to which the relocation must be made and the type of relocation to apply.
+This member gives both the symbol table index with respect to which the relocation must be made and the type of relocation to apply. (Linux kernel provides a macro to filter these values out from it - `ELF64_R_SYM` and `ELF64_R_TYPE`)
 
 ### r_addend
 This member specifies a constant addend used to compute the value to be stored into the relocatable field.
 
 ## Analysis
-Now with the theoretical knowledge, let's try to understand how linker uses these values to perform a relocation. Let's start with the first relocation entry
-
+Now armed with the theoretical knowledge, let's delve into how the linker utilizes this information to perform a relocation. We'll begin by examining the details of the first relocation entry.
 
 ```
 [  0 ] Offset: 0x1a         Info: 0x000300000002 (Sym: 0x3 | Type: 0x2)     Addend: -4
 ```
 
-It's `r_offset` value is `0x1a`. As the definition says, this is the beginning of the section where relocation is to be applied. But which section these relocations apply to??
 
-Answer >> To identify that, you just have to check `sh_info` member from the section header entry. For relocation type section headers entry, this member points to the section to which the relocations apply.
+Now there are 2 things I want you to think about before we even start with the relocation process...
 
-
-```
-          ┌────────────────────────────────────┐
-          │  [ 02 ] Section Name: .rela.text   │
-          │          Type: 0x4                 │
-          │          Flags: 0x40               │
-          │          Addr: 0x0                 │
-          │          Offset: 0x3e0             │
-          │          Size: 312                 │
-          │          Link: 11                  │
-  ┌───────┼───────── Info: 0x1                 │
-  │       │          Addralign: 0x8            │
-  │       │          Entsize: 24               │
-  │       │                                    │
-  │       └────────────────────────────────────┘
-  │
-  │
-  │
-  │
-  │       ┌───────────────────────────────────┐
-  └──────►│   [ 01 ] Section Name: .text      │
-          │           Type: 0x1               │
-          │           Flags: 0x6              │
-          │           Addr: 0x0               │
-          │           Offset: 0x40            │
-          │           Size: 323               │
-          │           Link: 0                 │
-          │           Info: 0x0               │
-          │           Addralign: 0x1          │
-          │           Entsize: 0              │
-          │                                   │
-          └───────────────────────────────────┘
-```
+1. We know `r_offset` holds the offset from beginning of the section where relocation is to be applied. **Which section is that here??**
+2. And `ELF64_R_SYM` from `r_info` stores the index in symbol table. But we can obviously have more than 1 symbol table, so **Which symbol table we are talking about here??**
 
 
-Next thing is the `r_info` member, which is a combination of 2 things - Associated `Symbol` and its `Type`.
-
-
-In linux kernel, this is defined as
-```c
-/* `i` is `r_info` */
-#define ELF64_R_SYM(i)			((i) >> 32)
-#define ELF64_R_TYPE(i)			((i) & 0xffffffff)
-```
-
-
-But wait, there can be more than one symbol table in the ELF file... which symbol table we are supposed to look at for the associated symbol?
-
-
-Answer >> Look again at the `sh_link` member of the relocation. This member points to the associated symbol table.
+Answer >> To identify that, you just have to check `sh_info` and `sh_link` members from the section header entry.
 
 
 
@@ -400,9 +362,11 @@ In our case, the associated symbol table and the section where relocations will 
              └───────────────────────────────────┘
 ```
 
-By tradition, the naming scheme chosen for the relocation section is such that it indicates the section where relocations are to be applied. But this is just a tradition and not a strict requirement... Never rely on that information!!
+Traditionally, the chosen naming scheme for the relocation section indicates the section where relocations are intended to be applied. For example, if relocations are to be applied on `.text` section, then the relocation entries will be under `.rela.text` or `.rel.text`. However, it's crucial to note that this is merely a tradition and not a strict requirement.
 
+*In the wisdom of ancient gods, it is advised not to depend solely on names.*
 
+![](https://media.giphy.com/media/Y3ptrXcCeZZdj0yPZH/giphy.gif#center)
 
 Now that you know where to apply relocation and where to look for symbols... let's look at the relocation entry we started with
 
@@ -417,100 +381,149 @@ We can now understand that:
 - The symbol associated with this relocation is 3rd symbol in `.symtab` section.
 
 
-So if you want to look at the whole picture
+So, if you want to see the big picture,
 
 
 ```
 
 
-         ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-         │ [ 11 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x248           Size: 312       Link: 12        Info: 0x4       Addralign: 0x8 │
-         │      [  0 ] Name:                                        Info: 0x00 (Bind: 0x0 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-         │      [  1 ] Name: main.c                                 Info: 0x04 (Bind: 0x0 | Type: 0x4)      Other: 0x0      Shndx: 0xfff1   Value: 0x000000000000   Size: 0x0                     │
-         │      [  2 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x0                     │
-   ┌─────┼────► [  3 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x5      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [  4 ] Name: main                                   Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x143                   │
-   │     │      [  5 ] Name: printf                                 Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [  6 ] Name: __isoc99_scanf                         Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [  7 ] Name: addFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [  8 ] Name: subFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [  9 ] Name: mulFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [ 10 ] Name: divFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [ 11 ] Name: puts                                   Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │      [ 12 ] Name: __stack_chk_fail                       Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
-   │     │                                                                                                                                                                                        │
-   │     └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-   │
-   └────────────────────────────────────────────────────────────────────────────────────┐
-                                                                                        │
-                                                                                        │
-                                                                                        │
-                                                                                        │
-                                                                                        │
-                               [  0 ] Offset: 0x1a         Info: 0x000300000002 (Sym: 0x3 | Type: 0x2)     Addend: -4
-                                                │
-                                                │
-                                                │
-                                                │
-                                                │
-                                                │
-                                                │
-               ┌────────────────────────────────┼───────────────────────────────────────────────────┐
-               │                                │                                                   │
-               │   Disassembly of section .text:│                                                   │
-               │                                │                                                   │
-               │   0000000000000000 <main>:     │                                                   │
-               │      0:   55                   │  push   rbp                                       │
-               │      1:   48 89 e5             │  mov    rbp,rsp                                   │
-               │      4:   48 83 ec 20          │  sub    rsp,0x20                                  │
-               │      8:   64 48 8b 04 25 28 00 │  mov    rax,QWORD PTR fs:0x28                     │
-               │      f:   00 00             ┌──┘                                                   │
-               │     11:   48 89 45 f8       ▼     mov    QWORD PTR [rbp-0x8],rax                   │
-               │     15:   31 c0   ┌───────────┐   xor    eax,eax                                   │
-               │     17:   48 8d 05│00 00 00 00│   lea    rax,[rip+0x0]        # 1e <main+0x1e>     │
-               │     1e:   48 89 c7└───────────┘   mov    rdi,rax                                   │
-               │     21:   b8 00 00 00 00          mov    eax,0x0                                   │
-               │     26:   e8 00 00 00 00          call   2b <main+0x2b>                            │
-               │     2b:   48 8d 4d f0             lea    rcx,[rbp-0x10]                            │
-               │                                                                                    │
-               └────────────────────────────────────────────────────────────────────────────────────┘
+
+
+              ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+              │ [ 11 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x248           Size: 312       Link: 12        Info: 0x4       Addralign: 0x8 │
+              │      [  0 ] Name:                                        Info: 0x00 (Bind: 0x0 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+              │      [  1 ] Name: main.c                                 Info: 0x04 (Bind: 0x0 | Type: 0x4)      Other: 0x0      Shndx: 0xfff1   Value: 0x000000000000   Size: 0x0                     │
+              │      [  2 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x0                     │
+        ┌─────┼────► [  3 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x5      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [  4 ] Name: main                                   Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x143                   │
+        │     │      [  5 ] Name: printf                                 Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [  6 ] Name: __isoc99_scanf                         Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [  7 ] Name: addFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [  8 ] Name: subFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [  9 ] Name: mulFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [ 10 ] Name: divFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [ 11 ] Name: puts                                   Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │      [ 12 ] Name: __stack_chk_fail                       Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0                     │
+        │     │                                                                                                                                                                                        │
+        │     └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+        │
+        └──────────────────────────────────────────────────────────┐
+                                                                   │
+                                                                   │
+                                                                   │
+                                                                   │
+                                                                   │
+          [  0 ] Offset: 0x1a         Info: 0x000300000002 (Sym: 0x3 | Type: 0x2)     Addend: -4
+                           │
+                           │
+                           │
+                           │
+                           └─────────────────────────┐
+                                                     │
+                                                     │
+                    ┌────────────────────────────────┼───────────────────────────────────────────────────┐
+                    │                                │                                                   │
+                    │   Disassembly of section .text:│                                                   │
+                    │                                │                                                   │
+                    │   0000000000000000 <main>:     │                                                   │
+                    │      0:   55                   │  push   rbp                                       │
+                    │      1:   48 89 e5             │  mov    rbp,rsp                                   │
+                    │      4:   48 83 ec 20          │  sub    rsp,0x20                                  │
+                    │      8:   64 48 8b 04 25 28 00 │  mov    rax,QWORD PTR fs:0x28                     │
+                    │      f:   00 00             ┌──┘                                                   │
+                    │     11:   48 89 45 f8       ▼     mov    QWORD PTR [rbp-0x8],rax                   │
+                    │     15:   31 c0   ┌───────────┐   xor    eax,eax                                   │
+                    │     17:   48 8d 05│00 00 00 00│   lea    rax,[rip+0x0]        # 1e <main+0x1e>     │
+                    │     1e:   48 89 c7└───────────┘   mov    rdi,rax                                   │
+                    │     21:   b8 00 00 00 00          mov    eax,0x0                                   │
+                    │     26:   e8 00 00 00 00          call   2b <main+0x2b>                            │
+                    │     2b:   48 8d 4d f0             lea    rcx,[rbp-0x10]                            │
+                    │                                                                                    │
+                    └────────────────────────────────────────────────────────────────────────────────────┘
 
 ```
 
 
-I know things are looking a bit complex and tangled... and they are actually, atleast at first, but you'll get a hang of it with some practice.
+I get that things might look like a mess, a real puzzle at first. But trust me, with a bit of experience, you'll start to figure it out.
 
 
-Now we know the symbol and the location where relocation will take place... it's time to identify what algorithm we are going to use. That can be picked up from the `Type` part of `r_info`. For our case, that's `0x2`.
+Now that we've uncovered the secret behind the symbol and pinpointed where the relocation is going to happen, it's time to figure out the algorithm we're going to use for relocation. Just peek into the `Type` part of `r_info`. In our case, it's holding the number `0x2`.
 
-A quick look at gcc source code, I can say that this algorithm is `R_X86_64_PC32`... And another quick look at the source code of `mold` (modern linker -- another linker tool because it seemed easier to read)
+With a quick look at the gcc source code, I can tell you that this algorithm is `R_X86_64_PC32`... And another brief look at the source code of [`mold` (a modern linker)](https://github.com/rui314/mold/) helps me fully comprehend the algorithm...
+
+```c
+/* https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=2bd00179885928fd95fcabfafc50e7b5c6e660d2#l3579 */
+#define R_X86_64_PC32           2       /* PC relative 32 bit signed */
 
 
+/* https://github.com/rui314/mold/blob/main/elf/arch-x86-64.cc#L433C1-L436C13 */
+case R_X86_64_PC32:
+case R_X86_64_PLT32:
+  write32s(S + A - P);
+  break;
 ```
-https://github.com/rui314/mold/blob/main/elf/arch-x86-64.cc#L433C1-L436C13
-
-    case R_X86_64_PC32:
-    case R_X86_64_PLT32:
-      write32s(S + A - P);
-      break;
-```
 
 
-So the algorithm that will be used for the relocation is `S + A - P`.... let's break this down and understand each of these variables..
+Alright, so the magical spell for this relocation is `S + A - P`.... Now, let's break it down
 
 ```
 S = value of symbol
-A = Addend
-P = place of relocation
+A = Addend (r_addend)
+P = place of relocation (r_offset is used to calculate this)
 ```
 
-The linker will combine all `.o` files together and then perform the relocations, so at the time of relocation, the `.rodata` will likely be placed somewhere other than the current position. But the idea is whereever the `.rodata` section is located, pick up the offset and use that as `S` value in algorithm.
+The addend (`A`) is simply `-4`. Why `-4`?? I don't know 🤷 `¯\_(ツ)_/¯` (If you happen to know it, please share your wisdom with this stuppid child... pretty please! 🥺👉👈)
 
-Then the addend is simply `-4`. Why `-4`?? I don't know; If you happen to know it, please share your wisdom with this stupid child... pretty please!
+And the place of relocation (`P`) should be `0x1a`... right? **WRONG!!**... the place of relocation will be location of `.text` section + `0x1a`. Linker will know where `.text` will be after the merge process, so it'll be easy for the linker to get the exact location.
 
-Now the place of relocation is `0x1a`... Super simple, right! This is one of the easiest relocation algorithms, where the position is calculated in relation to program counter (PC), hence the name `......._PC32`.
+Finally, value of symbol (`S`), this one is a bit tricky here... You need to take a look at the symbol table for this
 
-This can all be simplified if you just use the old `readelf` program.
+```
+[ 11 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x248           Size: 312       Link: 12        Info: 0x4       Addralign: 0x8          Entsize: 24
+    [  0 ] Name:                                        Info: 0x00 (Bind: 0x0 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [  1 ] Name: main.c                                 Info: 0x04 (Bind: 0x0 | Type: 0x4)      Other: 0x0      Shndx: 0xfff1   Value: 0x000000000000   Size: 0x0
+    [  2 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x0
+    [  3 ] Name:                                        Info: 0x03 (Bind: 0x0 | Type: 0x3)      Other: 0x0      Shndx: 0x5      Value: 0x000000000000   Size: 0x0
+    [  4 ] Name: main                                   Info: 0x18 (Bind: 0x1 | Type: 0x2)      Other: 0x0      Shndx: 0x1      Value: 0x000000000000   Size: 0x143
+    [  5 ] Name: printf                                 Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [  6 ] Name: __isoc99_scanf                         Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [  7 ] Name: addFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [  8 ] Name: subFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [  9 ] Name: mulFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [ 10 ] Name: divFunc                                Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [ 11 ] Name: puts                                   Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+    [ 12 ] Name: __stack_chk_fail                       Info: 0x16 (Bind: 0x1 | Type: 0x0)      Other: 0x0      Shndx: 0x0      Value: 0x000000000000   Size: 0x0
+```
+
+Just focus on the symbol for our case... index 3.
+
+
+```c
+[  3 ] Name:                                 /* No name for symbol */
+        Info: 0x03 (Bind: 0x0 | Type: 0x3)   /* Bind: STB_LOCAL | Type: STT_SECTION */
+        Other: 0x0                           /* default visibility */
+        Shndx: 0x5                           /* section 5; .rodata in our case */
+        Value: 0x000000000000                /* no value; I wonder what could be the value for "STT_SECTION" type symbol */
+        Size: 0x0                            /* Unknown size */
+```
+
+
+Putting all the pieces together, it's crystal clear now that this symbol is casually pointing towards `.rodata` section. Picture this section as a treasure trove of read-only data. An example? Think of it like a collection of strings that `printf` and its buddies use to sprinkle some magic onto your screen. It's like the VIP lounge for data that's there to be seen but not messed with.
+
+
+looking back at our relocation entry, we can now understand it better
+
+
+```
+[  0 ] Offset: 0x1a         Info: 0x000300000002 (Sym: 0x3 | Type: 0x2)     Addend: -4
+```
+
+- Apply relocation at offset `0x1a` in `.text` section.
+- Use symbol `3` for relocation... that points to `.rodata` section.
+- Relocation algorithm will be `R_X86_64_PC32` (`S + A - P`)
+
+
+There are many tools like `readelf` and `objdump`, that can show you relocation entries with all these things simplified.
 
 ```
 ❯ readelf --relocs  --wide calc/main.o
@@ -531,3 +544,126 @@ Relocation section '.rela.text' at offset 0x3e0 contains 13 entries:
 0000000000000124  0000000500000004 R_X86_64_PLT32         0000000000000000 printf - 4
 000000000000013d  0000000c00000004 R_X86_64_PLT32         0000000000000000 __stack_chk_fail - 4
 ```
+
+```
+❯ objdump -M intel -dr calc/main.o
+
+calc/main.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:   55                      push   rbp
+   1:   48 89 e5                mov    rbp,rsp
+   4:   48 83 ec 20             sub    rsp,0x20
+   8:   64 48 8b 04 25 28 00    mov    rax,QWORD PTR fs:0x28
+   f:   00 00
+  11:   48 89 45 f8             mov    QWORD PTR [rbp-0x8],rax
+  15:   31 c0                   xor    eax,eax
+  17:   48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # 1e <main+0x1e>
+                        1a: R_X86_64_PC32       .rodata-0x4
+  1e:   48 89 c7                mov    rdi,rax
+  21:   b8 00 00 00 00          mov    eax,0x0
+  26:   e8 00 00 00 00          call   2b <main+0x2b>
+                        27: R_X86_64_PLT32      printf-0x4
+  2b:   48 8d 4d f0             lea    rcx,[rbp-0x10]
+  2f:   48 8d 55 eb             lea    rdx,[rbp-0x15]
+  33:   48 8d 45 ec             lea    rax,[rbp-0x14]
+  37:   48 89 c6                mov    rsi,rax
+  3a:   48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # 41 <main+0x41>
+                        3d: R_X86_64_PC32       .rodata+0x15
+  41:   48 89 c7                mov    rdi,rax
+  44:   b8 00 00 00 00          mov    eax,0x0
+  49:   e8 00 00 00 00          call   4e <main+0x4e>
+                        4a: R_X86_64_PLT32      __isoc99_scanf-0x4
+  4e:   0f b6 45 eb             movzx  eax,BYTE PTR [rbp-0x15]
+  52:   0f be c0                movsx  eax,al
+  55:   83 f8 2f                cmp    eax,0x2f
+  58:   74 74                   je     ce <main+0xce>
+  5a:   83 f8 2f                cmp    eax,0x2f
+  5d:   0f 8f 88 00 00 00       jg     eb <main+0xeb>
+  63:   83 f8 2d                cmp    eax,0x2d
+  66:   74 2c                   je     94 <main+0x94>
+  68:   83 f8 2d                cmp    eax,0x2d
+  6b:   7f 7e                   jg     eb <main+0xeb>
+  6d:   83 f8 2a                cmp    eax,0x2a
+  70:   74 3f                   je     b1 <main+0xb1>
+  72:   83 f8 2b                cmp    eax,0x2b
+  75:   75 74                   jne    eb <main+0xeb>
+  77:   f3 0f 10 45 f0          movss  xmm0,DWORD PTR [rbp-0x10]
+  7c:   8b 45 ec                mov    eax,DWORD PTR [rbp-0x14]
+  7f:   0f 28 c8                movaps xmm1,xmm0
+  82:   66 0f 6e c0             movd   xmm0,eax
+  86:   e8 00 00 00 00          call   8b <main+0x8b>
+                        87: R_X86_64_PLT32      addFunc-0x4
+  8b:   66 0f 7e c0             movd   eax,xmm0
+  8f:   89 45 f4                mov    DWORD PTR [rbp-0xc],eax
+  92:   eb 6d                   jmp    101 <main+0x101>
+  94:   f3 0f 10 45 f0          movss  xmm0,DWORD PTR [rbp-0x10]
+  99:   8b 45 ec                mov    eax,DWORD PTR [rbp-0x14]
+  9c:   0f 28 c8                movaps xmm1,xmm0
+  9f:   66 0f 6e c0             movd   xmm0,eax
+  a3:   e8 00 00 00 00          call   a8 <main+0xa8>
+                        a4: R_X86_64_PLT32      subFunc-0x4
+  a8:   66 0f 7e c0             movd   eax,xmm0
+  ac:   89 45 f4                mov    DWORD PTR [rbp-0xc],eax
+  af:   eb 50                   jmp    101 <main+0x101>
+  b1:   f3 0f 10 45 f0          movss  xmm0,DWORD PTR [rbp-0x10]
+  b6:   8b 45 ec                mov    eax,DWORD PTR [rbp-0x14]
+  b9:   0f 28 c8                movaps xmm1,xmm0
+  bc:   66 0f 6e c0             movd   xmm0,eax
+  c0:   e8 00 00 00 00          call   c5 <main+0xc5>
+                        c1: R_X86_64_PLT32      mulFunc-0x4
+  c5:   66 0f 7e c0             movd   eax,xmm0
+  c9:   89 45 f4                mov    DWORD PTR [rbp-0xc],eax
+  cc:   eb 33                   jmp    101 <main+0x101>
+  ce:   f3 0f 10 45 f0          movss  xmm0,DWORD PTR [rbp-0x10]
+  d3:   8b 45 ec                mov    eax,DWORD PTR [rbp-0x14]
+  d6:   0f 28 c8                movaps xmm1,xmm0
+  d9:   66 0f 6e c0             movd   xmm0,eax
+  dd:   e8 00 00 00 00          call   e2 <main+0xe2>
+                        de: R_X86_64_PLT32      divFunc-0x4
+  e2:   66 0f 7e c0             movd   eax,xmm0
+  e6:   89 45 f4                mov    DWORD PTR [rbp-0xc],eax
+  e9:   eb 16                   jmp    101 <main+0x101>
+  eb:   48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # f2 <main+0xf2>
+                        ee: R_X86_64_PC32       .rodata+0x1e
+  f2:   48 89 c7                mov    rdi,rax
+  f5:   e8 00 00 00 00          call   fa <main+0xfa>
+                        f6: R_X86_64_PLT32      puts-0x4
+  fa:   b8 01 00 00 00          mov    eax,0x1
+  ff:   eb 2c                   jmp    12d <main+0x12d>
+ 101:   66 0f ef d2             pxor   xmm2,xmm2
+ 105:   f3 0f 5a 55 f4          cvtss2sd xmm2,DWORD PTR [rbp-0xc]
+ 10a:   66 48 0f 7e d0          movq   rax,xmm2
+ 10f:   66 48 0f 6e c0          movq   xmm0,rax
+ 114:   48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # 11b <main+0x11b>
+                        117: R_X86_64_PC32      .rodata+0x2f
+ 11b:   48 89 c7                mov    rdi,rax
+ 11e:   b8 01 00 00 00          mov    eax,0x1
+ 123:   e8 00 00 00 00          call   128 <main+0x128>
+                        124: R_X86_64_PLT32     printf-0x4
+ 128:   b8 00 00 00 00          mov    eax,0x0
+ 12d:   48 8b 55 f8             mov    rdx,QWORD PTR [rbp-0x8]
+ 131:   64 48 2b 14 25 28 00    sub    rdx,QWORD PTR fs:0x28
+ 138:   00 00
+ 13a:   74 05                   je     141 <main+0x141>
+ 13c:   e8 00 00 00 00          call   141 <main+0x141>
+                        13d: R_X86_64_PLT32     __stack_chk_fail-0x4
+ 141:   c9                      leave
+ 142:   c3                      ret
+```
+
+
+
+## Conclustion
+
+Throughout this article, we explored the significance of relocations in ELF binaries, examining how compilers, assemblers, and linkers collaborate to produce executable files. We delved into the role of relocation sections, uncovering their purpose in accommodating changes to addresses and offsets during both compile-time and link-time.
+
+Here is an amazing talk by [@Anders Schau Knatten](https://no.linkedin.com/in/anders-schau-knatten-34170619) on "[How symbols work and why we need them](https://www.youtube.com/watch?v=iBQo962Sx0g)". This will help you understand more about symbols and relocations.
+
+
+See you next time.
+
+![](https://media.giphy.com/media/xT1R9F8M2RGQtovtni/giphy.gif#center)
