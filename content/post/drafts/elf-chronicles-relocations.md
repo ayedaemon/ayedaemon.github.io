@@ -661,8 +661,15 @@ Disassembly of section .text:
 
 Throughout this article, we explored the significance of relocations in ELF binaries, examining how compilers, assemblers, and linkers collaborate to produce executable files. We delved into the role of relocation sections, uncovering their purpose in accommodating changes to addresses and offsets during both compile-time and link-time.
 
-Here is an amazing talk by [@Anders Schau Knatten](https://no.linkedin.com/in/anders-schau-knatten-34170619) on "[How symbols work and why we need them](https://www.youtube.com/watch?v=iBQo962Sx0g)". This will help you understand more about symbols and relocations.
+Since symbols and relocations combined are a huge topic in itself, I'm adding few links that I think are interesting and will help to better grasp the whole concept in practicality
 
+- @xianeizhang's notes (https://people.cs.pitt.edu/~xianeizhang/notes/Linking.html)
+
+- Understanding the ELF specimen (https://hub.packtpub.com/understanding-elf-specimen/)
+
+- Cloudflare blogs on "How to execute an object file" - [part 1](https://blog.cloudflare.com/how-to-execute-an-object-file-part-1/) and [part 2](https://blog.cloudflare.com/how-to-execute-an-object-file-part-2/)
+
+- An amazing talk by [@Anders Schau Knatten](https://no.linkedin.com/in/anders-schau-knatten-34170619) on "[How symbols work and why we need them](https://www.youtube.com/watch?v=iBQo962Sx0g)" (youtube)
 
 See you next time.
 
