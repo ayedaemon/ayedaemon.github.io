@@ -6,12 +6,12 @@
     <description>Recent content in Debugging on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Jan 2021 14:58:51 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/debugging/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Jan 2021 14:58:51 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/debugging/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Debugging C Code</title>
       <link>https://ayedaemon.github.io/post/2022/01/debugging-c-code/</link>
       <pubDate>Wed, 27 Jan 2021 14:58:51 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/01/debugging-c-code/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;How your x86 program starts up in linux&lt;/p&gt;
@@ -23,16 +23,16 @@
 <h3 id="basic-c-program">Basic C program</h3>
 <p>Let&rsquo;s start with a basic C program&hellip;</p>
 <p><strong>CODE:</strong> (Saving it with <code>simple.c</code>)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Hello main&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>&hellip; and compile it the way we have always done it with <code>gcc</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">gcc simple.c -o simple.out
-</span></span></code></pre></div><p>Now I have got a file <code>simple.out</code> which should be my executable binary.. I have a habit to check the file using <code>file</code> command to be more sure.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    printf(&#34;Hello main&#34;);
+    return 0;
+}
+</code></pre><p>&hellip; and compile it the way we have always done it with <code>gcc</code>.</p>
+<pre tabindex="0"><code>gcc simple.c -o simple.out
+</code></pre><p>Now I have got a file <code>simple.out</code> which should be my executable binary.. I have a habit to check the file using <code>file</code> command to be more sure.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ file simple.out
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">simple.out: ELF 64-bit LSB pie executable, x86-64, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span class="o">[</span>sha1<span class="o">]=</span>11c9b757baf9a3a8271443682135b7488cb04e52, <span class="k">for</span> GNU/Linux 3.2.0, not stripped
@@ -48,44 +48,44 @@
 <p>Maybe. We&rsquo;ll see that later.</p>
 <h3 id="lets-decompile-our-simple-binary">Let&rsquo;s decompile our simple binary.</h3>
 <p>I can check the assembly code of the executable using <code>objdump -d simple.out</code> command on my terminal. It&rsquo;ll give me a lot of output but right now I am concerned about the <code>main()</code> function&hellip; so I&rsquo;ll just <code>grep</code> it.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ objdump -d simple.out | grep -A12 &#39;&lt;main&gt;:&#39;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001139 &lt;main&gt;:
-</span></span><span class="line"><span class="cl">    1139:	55                   	push   %rbp
-</span></span><span class="line"><span class="cl">    113a:	48 89 e5             	mov    %rsp,%rbp
-</span></span><span class="line"><span class="cl">    113d:	48 8d 3d c0 0e 00 00 	lea    0xec0(%rip),%rdi        # 2004 &lt;_IO_stdin_used+0x4&gt;
-</span></span><span class="line"><span class="cl">    1144:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    1149:	e8 e2 fe ff ff       	callq  1030 &lt;printf@plt&gt;
-</span></span><span class="line"><span class="cl">    114e:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    1153:	5d                   	pop    %rbp
-</span></span><span class="line"><span class="cl">    1154:	c3                   	retq
-</span></span><span class="line"><span class="cl">    1155:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
-</span></span><span class="line"><span class="cl">    115c:	00 00 00
-</span></span><span class="line"><span class="cl">    115f:	90                   	nop
-</span></span></code></pre></div><p><em>If you don&rsquo;t understand assembly, I get what you are feeling right now</em></p>
+<pre tabindex="0"><code>$ objdump -d simple.out | grep -A12 &#39;&lt;main&gt;:&#39;
+
+
+0000000000001139 &lt;main&gt;:
+    1139:	55                   	push   %rbp
+    113a:	48 89 e5             	mov    %rsp,%rbp
+    113d:	48 8d 3d c0 0e 00 00 	lea    0xec0(%rip),%rdi        # 2004 &lt;_IO_stdin_used+0x4&gt;
+    1144:	b8 00 00 00 00       	mov    $0x0,%eax
+    1149:	e8 e2 fe ff ff       	callq  1030 &lt;printf@plt&gt;
+    114e:	b8 00 00 00 00       	mov    $0x0,%eax
+    1153:	5d                   	pop    %rbp
+    1154:	c3                   	retq
+    1155:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+    115c:	00 00 00
+    115f:	90                   	nop
+</code></pre><p><em>If you don&rsquo;t understand assembly, I get what you are feeling right now</em></p>
 <p>But you don&rsquo;t need to understand it completely right now. You can look into some syntax and they&rsquo;ll make sense in some time.
 Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>printf()</code> function. And we know before calling a function, you need to pass its arguments on the stack. That means the <code>mov</code> just above the <code>callq</code> statement is my string <code>Hello main</code> (which is the argument passed to <code>printf()</code>)</p>
 <p>Another Question &ndash;&gt; <strong>Is <code>main()</code> really the starting point of execution??</strong></p>
 <p>On further looking into the <code>objdump -d simple.out</code> command output&hellip; I can understand that there is another function<code>_start</code> that calls the <code>main()</code> function.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Disassembly of section .text:
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001040 &lt;_start&gt;:
-</span></span><span class="line"><span class="cl">    1040:	f3 0f 1e fa          	endbr64
-</span></span><span class="line"><span class="cl">    1044:	31 ed                	xor    %ebp,%ebp
-</span></span><span class="line"><span class="cl">    1046:	49 89 d1             	mov    %rdx,%r9
-</span></span><span class="line"><span class="cl">    1049:	5e                   	pop    %rsi
-</span></span><span class="line"><span class="cl">    104a:	48 89 e2             	mov    %rsp,%rdx
-</span></span><span class="line"><span class="cl">    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
-</span></span><span class="line"><span class="cl">    1051:	50                   	push   %rax
-</span></span><span class="line"><span class="cl">    1052:	54                   	push   %rsp
-</span></span><span class="line"><span class="cl">    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
-</span></span><span class="line"><span class="cl">    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
-</span></span><span class="line"><span class="cl">    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
-</span></span><span class="line"><span class="cl">    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
-</span></span><span class="line"><span class="cl">    106e:	f4                   	hlt
-</span></span><span class="line"><span class="cl">    106f:	90                   	nop
-</span></span></code></pre></div><p>It does not call the <code>main()</code> directly.. But it takes <code>main()</code> as an argument and then calls __libc_start_main (from GlibC). Along with <code>main()</code>, it also takes <code>__libc_csu_fini</code> and <code>__libc_csu_init</code> as an argument.</p>
+<pre tabindex="0"><code>Disassembly of section .text:
+
+0000000000001040 &lt;_start&gt;:
+    1040:	f3 0f 1e fa          	endbr64
+    1044:	31 ed                	xor    %ebp,%ebp
+    1046:	49 89 d1             	mov    %rdx,%r9
+    1049:	5e                   	pop    %rsi
+    104a:	48 89 e2             	mov    %rsp,%rdx
+    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+    1051:	50                   	push   %rax
+    1052:	54                   	push   %rsp
+    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
+    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
+    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
+    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
+    106e:	f4                   	hlt
+    106f:	90                   	nop
+</code></pre><p>It does not call the <code>main()</code> directly.. But it takes <code>main()</code> as an argument and then calls __libc_start_main (from GlibC). Along with <code>main()</code>, it also takes <code>__libc_csu_fini</code> and <code>__libc_csu_init</code> as an argument.</p>
 <h3 id="the-whole-picture">The whole picture</h3>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/640/0*HlrnUq2SuCxLLzuH.png" alt="the-whole-picture"  />
 </p>
@@ -102,123 +102,123 @@ Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>pri
 </ol>
 <p>But before getting to <code>_start</code>, it pre-initializes some global variables to help <code>_start</code>. You can create your custom <code>preinit</code> function as well. For this, you&rsquo;ll need the constructor function. And yes, it is not C++ and it has a constructor and destructor. Every executable has a global C level constructor and destructor.</p>
 <p>This is a code (<code>unknown_functions.c</code>) to change the <code>preinit</code> function with my own. I have added 3 <code>printf()</code> statements to <code>preinit()</code> (which should be easy to figure out in assembly now).. I&rsquo;ll compile this code using <code>gcc unknown_functions.c -o unknown_functions.out</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">preinit</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%d , %s , %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;CLI arg : %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nf">__attribute__</span><span class="p">((</span><span class="nf">section</span><span class="p">(</span><span class="s">&#34;.preinit_array&#34;</span><span class="p">)))</span> <span class="nf">typeof</span><span class="p">(</span><span class="n">preinit</span><span class="p">)</span> <span class="o">*</span><span class="n">__preinit</span> <span class="o">=</span> <span class="n">preinit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;This is %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span><span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%d , %s , %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;CLI arg : %s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>On running it with <code>./unknown_functions.out</code>, I get some expected output.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">preinit
-</span></span><span class="line"><span class="cl">1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
-</span></span><span class="line"><span class="cl">CLI arg : (null)
-</span></span><span class="line"><span class="cl">This is main
-</span></span><span class="line"><span class="cl">1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
-</span></span><span class="line"><span class="cl">CLI arg : (null)
-</span></span></code></pre></div><p>And we can also pass CLI argument to the binary like <code>./unknown_functions.out abcd1</code> and then it&rsquo;ll give an output like this-</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">preinit
-</span></span><span class="line"><span class="cl">2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
-</span></span><span class="line"><span class="cl">CLI arg : abcd1
-</span></span><span class="line"><span class="cl">This is main
-</span></span><span class="line"><span class="cl">2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
-</span></span><span class="line"><span class="cl">CLI arg : abcd1
-</span></span></code></pre></div><p>With this, we know that <code>preinit</code> function runs before <code>main()</code>. Let&rsquo;s move forward with <code>_start</code>. This function is responsible to load <code>main()</code> by default. What if we change this function with our custom function and never call <code>main()</code>.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+
+void preinit(int argc, char **argv, char **envp) {
+ printf(&#34;%s\n&#34;, __FUNCTION__);
+ printf(&#34;%d , %s , %s\n&#34;, argc, *argv, *envp);
+ printf(&#34;CLI arg : %s\n&#34;, argv[1]);
+}
+
+__attribute__((section(&#34;.preinit_array&#34;))) typeof(preinit) *__preinit = preinit;
+
+int main(int argc, char **argv, char **envp) {
+    printf(&#34;This is %s\n&#34;,__FUNCTION__);
+    printf(&#34;%d , %s , %s\n&#34;, argc, *argv, *envp);
+    printf(&#34;CLI arg : %s\n&#34;, argv[1]);
+    return 0;
+}
+</code></pre><p>On running it with <code>./unknown_functions.out</code>, I get some expected output.</p>
+<pre tabindex="0"><code>preinit
+1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : (null)
+This is main
+1 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : (null)
+</code></pre><p>And we can also pass CLI argument to the binary like <code>./unknown_functions.out abcd1</code> and then it&rsquo;ll give an output like this-</p>
+<pre tabindex="0"><code>preinit
+2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : abcd1
+This is main
+2 , ./unknown_functions.out , ALACRITTY_LOG=/tmp/Alacritty-161582.log
+CLI arg : abcd1
+</code></pre><p>With this, we know that <code>preinit</code> function runs before <code>main()</code>. Let&rsquo;s move forward with <code>_start</code>. This function is responsible to load <code>main()</code> by default. What if we change this function with our custom function and never call <code>main()</code>.</p>
 <p>I am using below code(<code>nomain.c</code>) and compiling it with a (special flag this time) &ndash; <code>gcc nomain.c -nostartfiles -o nomain.out</code></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#include&lt;stdio.h&gt;
-</span></span><span class="line"><span class="cl">#include&lt;stdlib.h&gt; // For declaration of exit()
-</span></span><span class="line"><span class="cl">void _start()
-</span></span><span class="line"><span class="cl">{
-</span></span><span class="line"><span class="cl">    int x = my_fun(); //calling custom main function
-</span></span><span class="line"><span class="cl">    exit(x);
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">int my_fun() // our custom main function
-</span></span><span class="line"><span class="cl">{
-</span></span><span class="line"><span class="cl">    printf(&#34;Surprise!!\n&#34;);
-</span></span><span class="line"><span class="cl">    return 0;
-</span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">int main()
-</span></span><span class="line"><span class="cl">{
-</span></span><span class="line"><span class="cl">  printf(&#34;Not the main anymore&#34;);
-</span></span><span class="line"><span class="cl">  return 0;
-</span></span><span class="line"><span class="cl">}
-</span></span></code></pre></div><p>On running the binary <code>./nomain.out</code> we get,</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Surprise!!
-</span></span></code></pre></div><p>To understand what just happened, we need to look into the disassembly of this binary. &ndash; <code>objdump -d nomain.out</code></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">nomain.out:     file format elf64-x86-64
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Disassembly of section .plt:
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001000 &lt;.plt&gt;:
-</span></span><span class="line"><span class="cl">    1000:	ff 35 02 30 00 00    	pushq  0x3002(%rip)        # 4008 &lt;_GLOBAL_OFFSET_TABLE_+0x8&gt;
-</span></span><span class="line"><span class="cl">    1006:	ff 25 04 30 00 00    	jmpq   *0x3004(%rip)        # 4010 &lt;_GLOBAL_OFFSET_TABLE_+0x10&gt;
-</span></span><span class="line"><span class="cl">    100c:	0f 1f 40 00          	nopl   0x0(%rax)
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001010 &lt;puts@plt&gt;:
-</span></span><span class="line"><span class="cl">    1010:	ff 25 02 30 00 00    	jmpq   *0x3002(%rip)        # 4018 &lt;puts@GLIBC_2.2.5&gt;
-</span></span><span class="line"><span class="cl">    1016:	68 00 00 00 00       	pushq  $0x0
-</span></span><span class="line"><span class="cl">    101b:	e9 e0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001020 &lt;printf@plt&gt;:
-</span></span><span class="line"><span class="cl">    1020:	ff 25 fa 2f 00 00    	jmpq   *0x2ffa(%rip)        # 4020 &lt;printf@GLIBC_2.2.5&gt;
-</span></span><span class="line"><span class="cl">    1026:	68 01 00 00 00       	pushq  $0x1
-</span></span><span class="line"><span class="cl">    102b:	e9 d0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001030 &lt;exit@plt&gt;:
-</span></span><span class="line"><span class="cl">    1030:	ff 25 f2 2f 00 00    	jmpq   *0x2ff2(%rip)        # 4028 &lt;exit@GLIBC_2.2.5&gt;
-</span></span><span class="line"><span class="cl">    1036:	68 02 00 00 00       	pushq  $0x2
-</span></span><span class="line"><span class="cl">    103b:	e9 c0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Disassembly of section .text:
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001040 &lt;_start&gt;:
-</span></span><span class="line"><span class="cl">    1040:	55                   	push   %rbp
-</span></span><span class="line"><span class="cl">    1041:	48 89 e5             	mov    %rsp,%rbp
-</span></span><span class="line"><span class="cl">    1044:	48 83 ec 10          	sub    $0x10,%rsp
-</span></span><span class="line"><span class="cl">    1048:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    104d:	e8 0d 00 00 00       	callq  105f &lt;my_fun&gt;
-</span></span><span class="line"><span class="cl">    1052:	89 45 fc             	mov    %eax,-0x4(%rbp)
-</span></span><span class="line"><span class="cl">    1055:	8b 45 fc             	mov    -0x4(%rbp),%eax
-</span></span><span class="line"><span class="cl">    1058:	89 c7                	mov    %eax,%edi
-</span></span><span class="line"><span class="cl">    105a:	e8 d1 ff ff ff       	callq  1030 &lt;exit@plt&gt;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">000000000000105f &lt;my_fun&gt;:
-</span></span><span class="line"><span class="cl">    105f:	55                   	push   %rbp
-</span></span><span class="line"><span class="cl">    1060:	48 89 e5             	mov    %rsp,%rbp
-</span></span><span class="line"><span class="cl">    1063:	48 8d 3d 96 0f 00 00 	lea    0xf96(%rip),%rdi        # 2000 &lt;main+0xf8a&gt;
-</span></span><span class="line"><span class="cl">    106a:	e8 a1 ff ff ff       	callq  1010 &lt;puts@plt&gt;
-</span></span><span class="line"><span class="cl">    106f:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    1074:	5d                   	pop    %rbp
-</span></span><span class="line"><span class="cl">    1075:	c3                   	retq
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001076 &lt;main&gt;:
-</span></span><span class="line"><span class="cl">    1076:	55                   	push   %rbp
-</span></span><span class="line"><span class="cl">    1077:	48 89 e5             	mov    %rsp,%rbp
-</span></span><span class="line"><span class="cl">    107a:	48 8d 3d 8a 0f 00 00 	lea    0xf8a(%rip),%rdi        # 200b &lt;main+0xf95&gt;
-</span></span><span class="line"><span class="cl">    1081:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    1086:	e8 95 ff ff ff       	callq  1020 &lt;printf@plt&gt;
-</span></span><span class="line"><span class="cl">    108b:	b8 00 00 00 00       	mov    $0x0,%eax
-</span></span><span class="line"><span class="cl">    1090:	5d                   	pop    %rbp
-</span></span><span class="line"><span class="cl">    1091:	c3                   	retq
-</span></span></code></pre></div><p>This is pretty small as compared to the disassembly of <code>simple.out</code>. The reason here is clear that we have changed the <code>_start</code> and not implemented any of the fancy functions in it. And this reduces the size of my binary as well.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ du nomain.out simple.out
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">16	nomain.out
-</span></span><span class="line"><span class="cl">20	simple.out
-</span></span></code></pre></div><hr>
+<pre tabindex="0"><code>#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt; // For declaration of exit()
+void _start()
+{
+    int x = my_fun(); //calling custom main function
+    exit(x);
+}
+
+int my_fun() // our custom main function
+{
+    printf(&#34;Surprise!!\n&#34;);
+    return 0;
+}
+
+int main()
+{
+  printf(&#34;Not the main anymore&#34;);
+  return 0;
+}
+</code></pre><p>On running the binary <code>./nomain.out</code> we get,</p>
+<pre tabindex="0"><code>Surprise!!
+</code></pre><p>To understand what just happened, we need to look into the disassembly of this binary. &ndash; <code>objdump -d nomain.out</code></p>
+<pre tabindex="0"><code>nomain.out:     file format elf64-x86-64
+
+
+Disassembly of section .plt:
+
+0000000000001000 &lt;.plt&gt;:
+    1000:	ff 35 02 30 00 00    	pushq  0x3002(%rip)        # 4008 &lt;_GLOBAL_OFFSET_TABLE_+0x8&gt;
+    1006:	ff 25 04 30 00 00    	jmpq   *0x3004(%rip)        # 4010 &lt;_GLOBAL_OFFSET_TABLE_+0x10&gt;
+    100c:	0f 1f 40 00          	nopl   0x0(%rax)
+
+0000000000001010 &lt;puts@plt&gt;:
+    1010:	ff 25 02 30 00 00    	jmpq   *0x3002(%rip)        # 4018 &lt;puts@GLIBC_2.2.5&gt;
+    1016:	68 00 00 00 00       	pushq  $0x0
+    101b:	e9 e0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+0000000000001020 &lt;printf@plt&gt;:
+    1020:	ff 25 fa 2f 00 00    	jmpq   *0x2ffa(%rip)        # 4020 &lt;printf@GLIBC_2.2.5&gt;
+    1026:	68 01 00 00 00       	pushq  $0x1
+    102b:	e9 d0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+0000000000001030 &lt;exit@plt&gt;:
+    1030:	ff 25 f2 2f 00 00    	jmpq   *0x2ff2(%rip)        # 4028 &lt;exit@GLIBC_2.2.5&gt;
+    1036:	68 02 00 00 00       	pushq  $0x2
+    103b:	e9 c0 ff ff ff       	jmpq   1000 &lt;.plt&gt;
+
+Disassembly of section .text:
+
+0000000000001040 &lt;_start&gt;:
+    1040:	55                   	push   %rbp
+    1041:	48 89 e5             	mov    %rsp,%rbp
+    1044:	48 83 ec 10          	sub    $0x10,%rsp
+    1048:	b8 00 00 00 00       	mov    $0x0,%eax
+    104d:	e8 0d 00 00 00       	callq  105f &lt;my_fun&gt;
+    1052:	89 45 fc             	mov    %eax,-0x4(%rbp)
+    1055:	8b 45 fc             	mov    -0x4(%rbp),%eax
+    1058:	89 c7                	mov    %eax,%edi
+    105a:	e8 d1 ff ff ff       	callq  1030 &lt;exit@plt&gt;
+
+000000000000105f &lt;my_fun&gt;:
+    105f:	55                   	push   %rbp
+    1060:	48 89 e5             	mov    %rsp,%rbp
+    1063:	48 8d 3d 96 0f 00 00 	lea    0xf96(%rip),%rdi        # 2000 &lt;main+0xf8a&gt;
+    106a:	e8 a1 ff ff ff       	callq  1010 &lt;puts@plt&gt;
+    106f:	b8 00 00 00 00       	mov    $0x0,%eax
+    1074:	5d                   	pop    %rbp
+    1075:	c3                   	retq
+
+0000000000001076 &lt;main&gt;:
+    1076:	55                   	push   %rbp
+    1077:	48 89 e5             	mov    %rsp,%rbp
+    107a:	48 8d 3d 8a 0f 00 00 	lea    0xf8a(%rip),%rdi        # 200b &lt;main+0xf95&gt;
+    1081:	b8 00 00 00 00       	mov    $0x0,%eax
+    1086:	e8 95 ff ff ff       	callq  1020 &lt;printf@plt&gt;
+    108b:	b8 00 00 00 00       	mov    $0x0,%eax
+    1090:	5d                   	pop    %rbp
+    1091:	c3                   	retq
+</code></pre><p>This is pretty small as compared to the disassembly of <code>simple.out</code>. The reason here is clear that we have changed the <code>_start</code> and not implemented any of the fancy functions in it. And this reduces the size of my binary as well.</p>
+<pre tabindex="0"><code>$ du nomain.out simple.out
+
+
+16	nomain.out
+20	simple.out
+</code></pre><hr>
 <h3 id="what-after-_start-">What after _start ??</h3>
 <p>Till now, we have seen that we can pass our values to loader and replace <code>_start</code> with our custom functions&hellip; but this will not start <code>__libc_start_main</code> function.</p>
 <p><strong>Why do we need <code>__libc_start_main</code> to run??</strong></p>
@@ -230,22 +230,22 @@ Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>pri
 </ol>
 <p><a href="https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html">This here</a> is the definition for the <code>__libc_start_main</code> function which is implemented in the <code>libc</code> library.</p>
 <p>As seen in the disassembly (of <code>simple.out</code> binary)&hellip; we can see that while calling (<code>callq</code>) the <code>__libc_start_main</code> function&hellip; we are passing <code>main</code>, <code>__libc_csu_init</code> and <code>__libc_csu_fini</code>&hellip; along with other things.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0000000000001040 &lt;_start&gt;:
-</span></span><span class="line"><span class="cl">    1040:	f3 0f 1e fa          	endbr64
-</span></span><span class="line"><span class="cl">    1044:	31 ed                	xor    %ebp,%ebp
-</span></span><span class="line"><span class="cl">    1046:	49 89 d1             	mov    %rdx,%r9
-</span></span><span class="line"><span class="cl">    1049:	5e                   	pop    %rsi
-</span></span><span class="line"><span class="cl">    104a:	48 89 e2             	mov    %rsp,%rdx
-</span></span><span class="line"><span class="cl">    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
-</span></span><span class="line"><span class="cl">    1051:	50                   	push   %rax
-</span></span><span class="line"><span class="cl">    1052:	54                   	push   %rsp
-</span></span><span class="line"><span class="cl">    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
-</span></span><span class="line"><span class="cl">    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
-</span></span><span class="line"><span class="cl">    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
-</span></span><span class="line"><span class="cl">    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
-</span></span><span class="line"><span class="cl">    106e:	f4                   	hlt
-</span></span><span class="line"><span class="cl">    106f:	90                   	nop
-</span></span></code></pre></div><p><strong>What&rsquo;s next??</strong></p>
+<pre tabindex="0"><code>0000000000001040 &lt;_start&gt;:
+    1040:	f3 0f 1e fa          	endbr64
+    1044:	31 ed                	xor    %ebp,%ebp
+    1046:	49 89 d1             	mov    %rdx,%r9
+    1049:	5e                   	pop    %rsi
+    104a:	48 89 e2             	mov    %rsp,%rdx
+    104d:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
+    1051:	50                   	push   %rax
+    1052:	54                   	push   %rsp
+    1053:	4c 8d 05 76 01 00 00 	lea    0x176(%rip),%r8        # 11d0 &lt;__libc_csu_fini&gt;
+    105a:	48 8d 0d ff 00 00 00 	lea    0xff(%rip),%rcx        # 1160 &lt;__libc_csu_init&gt;
+    1061:	48 8d 3d d1 00 00 00 	lea    0xd1(%rip),%rdi        # 1139 &lt;main&gt;
+    1068:	ff 15 72 2f 00 00    	callq  *0x2f72(%rip)        # 3fe0 &lt;__libc_start_main@GLIBC_2.2.5&gt;
+    106e:	f4                   	hlt
+    106f:	90                   	nop
+</code></pre><p><strong>What&rsquo;s next??</strong></p>
 <p>Next thing that executes is <code>__libc_csu_init</code> which will call all the initializing functions. This phase <em>runs before the <code>main()</code> function</em>. The sequence which is followed(roughly) by the <code>__libc_csu_init</code> function is:</p>
 <ul>
 <li><code>__init</code></li>
@@ -256,29 +256,29 @@ Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>pri
 <li><code>init array</code></li>
 </ul>
 <p>We&rsquo;ll add our custom <code>c level global constructor</code> and <code>init array</code> function in below code(<code>pre-main.c</code>)&hellip;. and complie it with <code>gcc pre-main.c -o pre-main.out</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">#include &lt;stdio.h&gt;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">void</span> <span class="n">init</span><span class="p">(</span><span class="ne">int</span> <span class="n">argc</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">void</span>  <span class="n">__attribute__</span> <span class="p">((</span><span class="n">constructor</span><span class="p">))</span> <span class="n">constructor</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">__attribute__</span><span class="p">((</span><span class="n">section</span><span class="p">(</span><span class="s2">&#34;.init_array&#34;</span><span class="p">)))</span> <span class="nb">typeof</span><span class="p">(</span><span class="n">init</span><span class="p">)</span> <span class="o">*</span><span class="n">__init</span> <span class="o">=</span> <span class="n">init</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="ne">int</span> <span class="n">main</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;Hello main&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>This will give output as below</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">constructor</span>
-</span></span><span class="line"><span class="cl"><span class="n">init</span>
-</span></span><span class="line"><span class="cl"><span class="n">Hello</span> <span class="n">main</span>
-</span></span></code></pre></div><h3 id="after-main-">After main ??</h3>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+
+void init(int argc, char **argv, char **envp) {
+ printf(&#34;%s\n&#34;, __FUNCTION__);
+}
+
+
+void  __attribute__ ((constructor)) constructor() {
+ printf(&#34;%s\n&#34;, __FUNCTION__);
+}
+
+__attribute__((section(&#34;.init_array&#34;))) typeof(init) *__init = init;
+
+int main()
+{
+    printf(&#34;Hello main&#34;);
+    return 0;
+}
+</code></pre><p>This will give output as below</p>
+<pre tabindex="0"><code>constructor
+init
+Hello main
+</code></pre><h3 id="after-main-">After main ??</h3>
 <p>As we have in the diagram, after <code>main</code>, <code>exit</code> function is called&hellip; which calls multiple functions in the below order:-</p>
 <ol>
 <li>at_exit</li>
@@ -286,41 +286,40 @@ Like <code>callq  1030 &lt;printf@plt&gt;</code> - this looks like out <code>pri
 <li>constructor.</li>
 </ol>
 <p>The below code(<code>after-main.c</code>) can be used to demonstrate that.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">fini</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">__attribute__</span> <span class="p">((</span><span class="n">destructor</span><span class="p">))</span> <span class="nf">destructor</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"> <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="nf">__attribute__</span><span class="p">((</span><span class="nf">section</span><span class="p">(</span><span class="s">&#34;.fini_array&#34;</span><span class="p">)))</span> <span class="nf">typeof</span><span class="p">(</span><span class="n">fini</span><span class="p">)</span> <span class="o">*</span><span class="n">__fini</span> <span class="o">=</span> <span class="n">fini</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">do_something_at_end</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Bye bye</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">atexit</span><span class="p">(</span><span class="n">do_something_at_end</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Hello main</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>This will return the below output - which confirms the order of execution.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Hello main
-</span></span><span class="line"><span class="cl">Bye bye
-</span></span><span class="line"><span class="cl">fini
-</span></span><span class="line"><span class="cl">destructor
-</span></span></code></pre></div><p>Here we can see that the <code>atexit</code> function is called before the <code>printf</code> function but in output the <code>atexit</code> output is after the <code>printf</code> is called. The reason here is that here <code>atexit()</code> is simply registering <code>do_something_at_end</code> function to run at exit. It&rsquo;s not responsible to run it right away.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+
+
+void fini() {
+ printf(&#34;%s\n&#34;, __FUNCTION__);
+
+}
+
+void __attribute__ ((destructor)) destructor() {
+ printf(&#34;%s\n&#34;, __FUNCTION__);
+}
+__attribute__((section(&#34;.fini_array&#34;))) typeof(fini) *__fini = fini;
+
+void do_something_at_end()
+{
+    printf(&#34;Bye bye\n&#34;);
+}
+
+int main()
+{
+    atexit(do_something_at_end);
+    printf(&#34;Hello main\n&#34;);
+    return 0;
+}
+</code></pre><p>This will return the below output - which confirms the order of execution.</p>
+<pre tabindex="0"><code>Hello main
+Bye bye
+fini
+destructor
+</code></pre><p>Here we can see that the <code>atexit</code> function is called before the <code>printf</code> function but in output the <code>atexit</code> output is after the <code>printf</code> is called. The reason here is that here <code>atexit()</code> is simply registering <code>do_something_at_end</code> function to run at exit. It&rsquo;s not responsible to run it right away.</p>
 <hr>
 <h3 id="the-end">The end.</h3>
 <p>This is pretty much what happens when we run an ELF binary or a C program in linux. In this article, I haven&rsquo;t talked about a lot of other stuff that happens when a program executes&hellip; like setting up the environments variable for the program, how the memory layout is done or what is procedure linkage table(plt), etc&hellip;</p>
 <p>If you find any information wrongly presented in this article, feel free to correct me. I am still learning this whole stuff and there are a lot of things yet to discover.</p>]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

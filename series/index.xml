@@ -6,36 +6,28 @@
     <description>Recent content in Series on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/series/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/series/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ELF Chronicles</title>
       <link>https://ayedaemon.github.io/series/elf-chronicles/</link>
       <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/series/elf-chronicles/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
-      <title>Reverse Engineering</title>
-      <link>https://ayedaemon.github.io/series/reverse-engineering/</link>
+      <title>RE:C</title>
+      <link>https://ayedaemon.github.io/series/rec/</link>
       <pubDate>Mon, 01 May 2023 02:34:50 +0530</pubDate>
-      
-      <guid>https://ayedaemon.github.io/series/reverse-engineering/</guid>
+      <guid>https://ayedaemon.github.io/series/rec/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula</title>
       <link>https://ayedaemon.github.io/series/eudyptula/</link>
       <pubDate>Mon, 01 May 2023 02:32:12 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/series/eudyptula/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

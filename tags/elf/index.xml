@@ -6,12 +6,12 @@
     <description>Recent content in ELF on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/elf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/elf/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ELF Chronicles: Program Headers</title>
+      <title>ELF Chronicles: Program Headers (3/?)</title>
       <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</link>
       <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/</guid>
       <description>Exploring ELF program Headers</description>
       <content:encoded><![CDATA[<p>In preceding articles, we&rsquo;ve delved into the details of ELF file headers and section headers. Section headers provide insight into how data and instructions are organized based on their characteristics and grouped into distinct sections. These sections remain distinct due to variations in their types and permissions (<em>&hellip; and few other things</em>).</p>
@@ -52,115 +52,115 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Once you have the ELF file, you can get the program header related information from ELF file headers - <code>e_phoff</code>, <code>e_phentsize</code> and <code>e_phnum</code></p>
 <p>I&rsquo;ll use readelf to get this information from the ELF headers. Feel free to use any method of your choice.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ELF Header:
-</span></span><span class="line"><span class="cl">  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">  Class:                             ELF64
-</span></span><span class="line"><span class="cl">  Data:                              2&#39;s complement, little endian
-</span></span><span class="line"><span class="cl">  Version:                           1 (current)
-</span></span><span class="line"><span class="cl">  OS/ABI:                            UNIX - System V
-</span></span><span class="line"><span class="cl">  ABI Version:                       0
-</span></span><span class="line"><span class="cl">  Type:                              DYN (Position-Independent Executable file)
-</span></span><span class="line"><span class="cl">  Machine:                           Advanced Micro Devices X86-64
-</span></span><span class="line"><span class="cl">  Version:                           0x1
-</span></span><span class="line"><span class="cl">  Entry point address:               0x1040
-</span></span><span class="line"><span class="cl">  Start of program headers:          64 (bytes into file)
-</span></span><span class="line"><span class="cl">  Start of section headers:          13496 (bytes into file)
-</span></span><span class="line"><span class="cl">  Flags:                             0x0
-</span></span><span class="line"><span class="cl">  Size of this header:               64 (bytes)
-</span></span><span class="line"><span class="cl">  Size of program headers:           56 (bytes)
-</span></span><span class="line"><span class="cl">  Number of program headers:         13
-</span></span><span class="line"><span class="cl">  Size of section headers:           64 (bytes)
-</span></span><span class="line"><span class="cl">  Number of section headers:         30
-</span></span><span class="line"><span class="cl">  Section header string table index: 29
-</span></span></code></pre></div><p>From the the output above, we can deduce that</p>
+<pre tabindex="0"><code>ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2&#39;s complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x1040
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          13496 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         13
+  Size of section headers:           64 (bytes)
+  Number of section headers:         30
+  Section header string table index: 29
+</code></pre><p>From the the output above, we can deduce that</p>
 <ul>
 <li>the program headers are located at offset of <code>64</code> bytes,</li>
 <li>each of these header entries is <code>56</code> bytes in size,</li>
 <li>and in total, we&rsquo;ve got <code>13</code> entries</li>
 </ul>
 <p>Now we can use xxd to get the data out</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ xxd -s 64 -l $(( 54*13 )) -c 54 build/hello
-</span></span><span class="line"><span class="cl">00000040: 0600 0000 0400 0000 4000 0000 0000 0000 4000 0000 0000 0000 4000 0000 0000 0000 d802 0000 0000 0000 d802 0000 0000 0000 0800 0000 0000  ........@.......@.......@.............................
-</span></span><span class="line"><span class="cl">00000076: 0000 0300 0000 0400 0000 1803 0000 0000 0000 1803 0000 0000 0000 1803 0000 0000 0000 1c00 0000 0000 0000 1c00 0000 0000 0000 0100 0000  ......................................................
-</span></span><span class="line"><span class="cl">000000ac: 0000 0000 0100 0000 0400 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 3006 0000 0000 0000 3006 0000 0000 0000 0010  ....................................0.......0.........
-</span></span><span class="line"><span class="cl">000000e2: 0000 0000 0000 0100 0000 0500 0000 0010 0000 0000 0000 0010 0000 0000 0000 0010 0000 0000 0000 8901 0000 0000 0000 8901 0000 0000 0000  ......................................................
-</span></span><span class="line"><span class="cl">00000118: 0010 0000 0000 0000 0100 0000 0400 0000 0020 0000 0000 0000 0020 0000 0000 0000 0020 0000 0000 0000 b400 0000 0000 0000 b400 0000 0000  ................. ....... ....... ....................
-</span></span><span class="line"><span class="cl">0000014e: 0000 0010 0000 0000 0000 0100 0000 0600 0000 d02d 0000 0000 0000 d03d 0000 0000 0000 d03d 0000 0000 0000 4802 0000 0000 0000 5002 0000  ...................-.......=.......=......H.......P...
-</span></span><span class="line"><span class="cl">00000184: 0000 0000 0010 0000 0000 0000 0200 0000 0600 0000 e02d 0000 0000 0000 e03d 0000 0000 0000 e03d 0000 0000 0000 e001 0000 0000 0000 e001  .....................-.......=.......=................
-</span></span><span class="line"><span class="cl">000001ba: 0000 0000 0000 0800 0000 0000 0000 0400 0000 0400 0000 3803 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000 0000 0000  ......................8.......8.......8.......@.......
-</span></span><span class="line"><span class="cl">000001f0: 4000 0000 0000 0000 0800 0000 0000 0000 0400 0000 0400 0000 7803 0000 0000 0000 7803 0000 0000 0000 7803 0000 0000 0000 4400 0000 0000  @.......................x.......x.......x.......D.....
-</span></span><span class="line"><span class="cl">00000226: 0000 4400 0000 0000 0000 0400 0000 0000 0000 53e5 7464 0400 0000 3803 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000  ..D...............S.td....8.......8.......8.......@...
-</span></span><span class="line"><span class="cl">0000025c: 0000 0000 4000 0000 0000 0000 0800 0000 0000 0000 50e5 7464 0400 0000 1420 0000 0000 0000 1420 0000 0000 0000 1420 0000 0000 0000 2400  ....@...............P.td..... ....... ....... ......$.
-</span></span><span class="line"><span class="cl">00000292: 0000 0000 0000 2400 0000 0000 0000 0400 0000 0000 0000 51e5 7464 0600 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  ......$...............Q.td............................
-</span></span><span class="line"><span class="cl">000002c8: 0000 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 52e5 7464 0400 0000 d02d 0000 0000 0000 d03d 0000 0000 0000 d03d 0000 0000  ........................R.td.....-.......=.......=....
-</span></span></code></pre></div><p>Now we just have to map each of these lines to <code>Elf64_Phdr</code> (since we have a 64Bit file)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L260
-</span></span><span class="line"><span class="cl">*/
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">typedef struct elf64_phdr {
-</span></span><span class="line"><span class="cl">  Elf64_Word p_type;      /* Segment type */
-</span></span><span class="line"><span class="cl">  Elf64_Word p_flags;     /* Segment flags */
-</span></span><span class="line"><span class="cl">  Elf64_Off p_offset;     /* Segment file offset */
-</span></span><span class="line"><span class="cl">  Elf64_Addr p_vaddr;     /* Segment virtual address */
-</span></span><span class="line"><span class="cl">  Elf64_Addr p_paddr;     /* Segment physical address */
-</span></span><span class="line"><span class="cl">  Elf64_Xword p_filesz;   /* Segment size in file */
-</span></span><span class="line"><span class="cl">  Elf64_Xword p_memsz;    /* Segment size in memory */
-</span></span><span class="line"><span class="cl">  Elf64_Xword p_align;    /* Segment alignment, file &amp; memory */
-</span></span><span class="line"><span class="cl">} Elf64_Phdr;
-</span></span></code></pre></div><p>Using my nifty little parser, I got this digestible and user-friendly output for the above dump (Feel free to compare it)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[ + ] Program headers begins at: 0x40
-</span></span><span class="line"><span class="cl"> [ 00 ] Type: 0x6        Flags: 0x4      Offset: 0x0040          vaddr: 0x40     paddr: 0x40     filesz: 0x728           memsz: 0x728            align: 0x8
-</span></span><span class="line"><span class="cl"> [ 01 ] Type: 0x3        Flags: 0x4      Offset: 0x0318          vaddr: 0x318    paddr: 0x318    filesz: 0x28            memsz: 0x28             align: 0x1
-</span></span><span class="line"><span class="cl"> [ 02 ] Type: 0x1        Flags: 0x4      Offset: 0x0000          vaddr: 0x0      paddr: 0x0      filesz: 0x1584          memsz: 0x1584           align: 0x1000
-</span></span><span class="line"><span class="cl"> [ 03 ] Type: 0x1        Flags: 0x5      Offset: 0x1000          vaddr: 0x1000   paddr: 0x1000   filesz: 0x393           memsz: 0x393            align: 0x1000
-</span></span><span class="line"><span class="cl"> [ 04 ] Type: 0x1        Flags: 0x4      Offset: 0x2000          vaddr: 0x2000   paddr: 0x2000   filesz: 0x180           memsz: 0x180            align: 0x1000
-</span></span><span class="line"><span class="cl"> [ 05 ] Type: 0x1        Flags: 0x6      Offset: 0x2dd0          vaddr: 0x3dd0   paddr: 0x3dd0   filesz: 0x584           memsz: 0x592            align: 0x1000
-</span></span><span class="line"><span class="cl"> [ 06 ] Type: 0x2        Flags: 0x6      Offset: 0x2de0          vaddr: 0x3de0   paddr: 0x3de0   filesz: 0x480           memsz: 0x480            align: 0x8
-</span></span><span class="line"><span class="cl"> [ 07 ] Type: 0x4        Flags: 0x4      Offset: 0x0338          vaddr: 0x338    paddr: 0x338    filesz: 0x64            memsz: 0x64             align: 0x8
-</span></span><span class="line"><span class="cl"> [ 08 ] Type: 0x4        Flags: 0x4      Offset: 0x0378          vaddr: 0x378    paddr: 0x378    filesz: 0x68            memsz: 0x68             align: 0x4
-</span></span><span class="line"><span class="cl"> [ 09 ] Type: 0xe553     Flags: 0x4      Offset: 0x0338          vaddr: 0x338    paddr: 0x338    filesz: 0x64            memsz: 0x64             align: 0x8
-</span></span><span class="line"><span class="cl"> [ 10 ] Type: 0xe550     Flags: 0x4      Offset: 0x2014          vaddr: 0x2014   paddr: 0x2014   filesz: 0x36            memsz: 0x36             align: 0x4
-</span></span><span class="line"><span class="cl"> [ 11 ] Type: 0xe551     Flags: 0x6      Offset: 0x0000          vaddr: 0x0      paddr: 0x0      filesz: 0x0             memsz: 0x0              align: 0x10
-</span></span><span class="line"><span class="cl"> [ 12 ] Type: 0xe552     Flags: 0x4      Offset: 0x2dd0          vaddr: 0x3dd0   paddr: 0x3dd0   filesz: 0x560           memsz: 0x560            align: 0x1
-</span></span></code></pre></div><p>Now, it&rsquo;s time to take a deep dive into the inner workings of the <code>Elf64_Phdr</code> struct</p>
+<pre tabindex="0"><code>❯ xxd -s 64 -l $(( 54*13 )) -c 54 build/hello
+00000040: 0600 0000 0400 0000 4000 0000 0000 0000 4000 0000 0000 0000 4000 0000 0000 0000 d802 0000 0000 0000 d802 0000 0000 0000 0800 0000 0000  ........@.......@.......@.............................
+00000076: 0000 0300 0000 0400 0000 1803 0000 0000 0000 1803 0000 0000 0000 1803 0000 0000 0000 1c00 0000 0000 0000 1c00 0000 0000 0000 0100 0000  ......................................................
+000000ac: 0000 0000 0100 0000 0400 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 3006 0000 0000 0000 3006 0000 0000 0000 0010  ....................................0.......0.........
+000000e2: 0000 0000 0000 0100 0000 0500 0000 0010 0000 0000 0000 0010 0000 0000 0000 0010 0000 0000 0000 8901 0000 0000 0000 8901 0000 0000 0000  ......................................................
+00000118: 0010 0000 0000 0000 0100 0000 0400 0000 0020 0000 0000 0000 0020 0000 0000 0000 0020 0000 0000 0000 b400 0000 0000 0000 b400 0000 0000  ................. ....... ....... ....................
+0000014e: 0000 0010 0000 0000 0000 0100 0000 0600 0000 d02d 0000 0000 0000 d03d 0000 0000 0000 d03d 0000 0000 0000 4802 0000 0000 0000 5002 0000  ...................-.......=.......=......H.......P...
+00000184: 0000 0000 0010 0000 0000 0000 0200 0000 0600 0000 e02d 0000 0000 0000 e03d 0000 0000 0000 e03d 0000 0000 0000 e001 0000 0000 0000 e001  .....................-.......=.......=................
+000001ba: 0000 0000 0000 0800 0000 0000 0000 0400 0000 0400 0000 3803 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000 0000 0000  ......................8.......8.......8.......@.......
+000001f0: 4000 0000 0000 0000 0800 0000 0000 0000 0400 0000 0400 0000 7803 0000 0000 0000 7803 0000 0000 0000 7803 0000 0000 0000 4400 0000 0000  @.......................x.......x.......x.......D.....
+00000226: 0000 4400 0000 0000 0000 0400 0000 0000 0000 53e5 7464 0400 0000 3803 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000  ..D...............S.td....8.......8.......8.......@...
+0000025c: 0000 0000 4000 0000 0000 0000 0800 0000 0000 0000 50e5 7464 0400 0000 1420 0000 0000 0000 1420 0000 0000 0000 1420 0000 0000 0000 2400  ....@...............P.td..... ....... ....... ......$.
+00000292: 0000 0000 0000 2400 0000 0000 0000 0400 0000 0000 0000 51e5 7464 0600 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  ......$...............Q.td............................
+000002c8: 0000 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 52e5 7464 0400 0000 d02d 0000 0000 0000 d03d 0000 0000 0000 d03d 0000 0000  ........................R.td.....-.......=.......=....
+</code></pre><p>Now we just have to map each of these lines to <code>Elf64_Phdr</code> (since we have a 64Bit file)</p>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L260
+*/
+
+typedef struct elf64_phdr {
+  Elf64_Word p_type;      /* Segment type */
+  Elf64_Word p_flags;     /* Segment flags */
+  Elf64_Off p_offset;     /* Segment file offset */
+  Elf64_Addr p_vaddr;     /* Segment virtual address */
+  Elf64_Addr p_paddr;     /* Segment physical address */
+  Elf64_Xword p_filesz;   /* Segment size in file */
+  Elf64_Xword p_memsz;    /* Segment size in memory */
+  Elf64_Xword p_align;    /* Segment alignment, file &amp; memory */
+} Elf64_Phdr;
+</code></pre><p>Using my nifty little parser, I got this digestible and user-friendly output for the above dump (Feel free to compare it)</p>
+<pre tabindex="0"><code>[ + ] Program headers begins at: 0x40
+ [ 00 ] Type: 0x6        Flags: 0x4      Offset: 0x0040          vaddr: 0x40     paddr: 0x40     filesz: 0x728           memsz: 0x728            align: 0x8
+ [ 01 ] Type: 0x3        Flags: 0x4      Offset: 0x0318          vaddr: 0x318    paddr: 0x318    filesz: 0x28            memsz: 0x28             align: 0x1
+ [ 02 ] Type: 0x1        Flags: 0x4      Offset: 0x0000          vaddr: 0x0      paddr: 0x0      filesz: 0x1584          memsz: 0x1584           align: 0x1000
+ [ 03 ] Type: 0x1        Flags: 0x5      Offset: 0x1000          vaddr: 0x1000   paddr: 0x1000   filesz: 0x393           memsz: 0x393            align: 0x1000
+ [ 04 ] Type: 0x1        Flags: 0x4      Offset: 0x2000          vaddr: 0x2000   paddr: 0x2000   filesz: 0x180           memsz: 0x180            align: 0x1000
+ [ 05 ] Type: 0x1        Flags: 0x6      Offset: 0x2dd0          vaddr: 0x3dd0   paddr: 0x3dd0   filesz: 0x584           memsz: 0x592            align: 0x1000
+ [ 06 ] Type: 0x2        Flags: 0x6      Offset: 0x2de0          vaddr: 0x3de0   paddr: 0x3de0   filesz: 0x480           memsz: 0x480            align: 0x8
+ [ 07 ] Type: 0x4        Flags: 0x4      Offset: 0x0338          vaddr: 0x338    paddr: 0x338    filesz: 0x64            memsz: 0x64             align: 0x8
+ [ 08 ] Type: 0x4        Flags: 0x4      Offset: 0x0378          vaddr: 0x378    paddr: 0x378    filesz: 0x68            memsz: 0x68             align: 0x4
+ [ 09 ] Type: 0xe553     Flags: 0x4      Offset: 0x0338          vaddr: 0x338    paddr: 0x338    filesz: 0x64            memsz: 0x64             align: 0x8
+ [ 10 ] Type: 0xe550     Flags: 0x4      Offset: 0x2014          vaddr: 0x2014   paddr: 0x2014   filesz: 0x36            memsz: 0x36             align: 0x4
+ [ 11 ] Type: 0xe551     Flags: 0x6      Offset: 0x0000          vaddr: 0x0      paddr: 0x0      filesz: 0x0             memsz: 0x0              align: 0x10
+ [ 12 ] Type: 0xe552     Flags: 0x4      Offset: 0x2dd0          vaddr: 0x3dd0   paddr: 0x3dd0   filesz: 0x560           memsz: 0x560            align: 0x1
+</code></pre><p>Now, it&rsquo;s time to take a deep dive into the inner workings of the <code>Elf64_Phdr</code> struct</p>
 <h3 id="1-p_type">1. p_type</h3>
 <p>Just like <code>sh_type</code>, this member tells the type of the segment. Whether the segment will be loaded in the memory or is it just used to store notes.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">/*</span>
-</span></span><span class="line"><span class="cl"><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elixir</span><span class="o">.</span><span class="n">bootlin</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">uapi</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">elf</span><span class="o">.</span><span class="n">h</span><span class="c1">#L25</span>
-</span></span><span class="line"><span class="cl"><span class="o">*/</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">These</span> <span class="n">constants</span> <span class="n">are</span> <span class="k">for</span> <span class="n">the</span> <span class="n">segment</span> <span class="n">types</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">image</span> <span class="n">headers</span> <span class="o">*/</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_NULL    0</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOAD    1</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_DYNAMIC 2</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_INTERP  3</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_NOTE    4</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_SHLIB   5</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_PHDR    6</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_TLS     7               /* Thread local storage segment */</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOOS    0x60000000      /* OS-specific */</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_HIOS    0x6fffffff      /* OS-specific */</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_LOPROC  0x70000000</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_HIPROC  0x7fffffff</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_EH_FRAME	(PT_LOOS + 0x474e550)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_STACK	(PT_LOOS + 0x474e551)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)</span>
-</span></span></code></pre></div><h3 id="2-p_flags">2. p_flags</h3>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L25
+*/
+
+/* These constants are for the segment types stored in the image headers */
+#define PT_NULL    0
+#define PT_LOAD    1
+#define PT_DYNAMIC 2
+#define PT_INTERP  3
+#define PT_NOTE    4
+#define PT_SHLIB   5
+#define PT_PHDR    6
+#define PT_TLS     7               /* Thread local storage segment */
+#define PT_LOOS    0x60000000      /* OS-specific */
+#define PT_HIOS    0x6fffffff      /* OS-specific */
+#define PT_LOPROC  0x70000000
+#define PT_HIPROC  0x7fffffff
+#define PT_GNU_EH_FRAME	(PT_LOOS + 0x474e550)
+#define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
+#define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
+</code></pre><h3 id="2-p_flags">2. p_flags</h3>
 <p>This is quite similar to the the <code>(r)ead</code>, <code>(w)rite</code> and <code>e(x)ecute</code> permissions we are familiar with. This member specifies the permissions for the given segment.</p>
 <p>Usually the segment containing the <code>.text</code> section will have <code>(r)ead</code> and <code>e(x)ecute</code> permissions.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">/*</span>
-</span></span><span class="line"><span class="cl"><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elixir</span><span class="o">.</span><span class="n">bootlin</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">uapi</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">elf</span><span class="o">.</span><span class="n">h</span><span class="c1">#L243</span>
-</span></span><span class="line"><span class="cl"><span class="o">*/</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">These</span> <span class="n">constants</span> <span class="n">define</span> <span class="n">the</span> <span class="n">permissions</span> <span class="n">on</span> <span class="n">sections</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">program</span>
-</span></span><span class="line"><span class="cl">   <span class="n">header</span><span class="p">,</span> <span class="n">p_flags</span><span class="o">.</span> <span class="o">*/</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">#define PF_R    0x4</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PF_W    0x2</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#define PF_X    0x1</span>
-</span></span></code></pre></div><h3 id="3-p_offset">3. p_offset</h3>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L243
+*/
+
+/* These constants define the permissions on sections in the program
+   header, p_flags. */
+
+#define PF_R    0x4
+#define PF_W    0x2
+#define PF_X    0x1
+</code></pre><h3 id="3-p_offset">3. p_offset</h3>
 <p>This holds the offset from the beginning of the file, where the first byte of the first section in this segment is located.</p>
 <h3 id="4-p_vaddr">4. p_vaddr</h3>
 <p>This member holds the memory/virtual address for the segment.</p>
@@ -179,105 +179,103 @@
 <li>Try to write a program to parse the program headers and display the information in better way.</li>
 <li>Try to write a program that gives the information about what sections are grouped together in a segment. <code>readelf</code> gives this information in below format</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Program Headers:
-</span></span><span class="line"><span class="cl">  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
-</span></span><span class="line"><span class="cl">  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002d8 0x0002d8 R   0x8
-</span></span><span class="line"><span class="cl">  INTERP         0x000318 0x0000000000000318 0x0000000000000318 0x00001c 0x00001c R   0x1
-</span></span><span class="line"><span class="cl">      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2 ]
-</span></span><span class="line"><span class="cl">  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000630 0x000630 R   0x1000
-</span></span><span class="line"><span class="cl">  LOAD           0x001000 0x0000000000001000 0x0000000000001000 0x000189 0x000189 R E 0x1000
-</span></span><span class="line"><span class="cl">  LOAD           0x002000 0x0000000000002000 0x0000000000002000 0x0000b4 0x0000b4 R   0x1000
-</span></span><span class="line"><span class="cl">  LOAD           0x002dd0 0x0000000000003dd0 0x0000000000003dd0 0x000248 0x000250 RW  0x1000
-</span></span><span class="line"><span class="cl">  DYNAMIC        0x002de0 0x0000000000003de0 0x0000000000003de0 0x0001e0 0x0001e0 RW  0x8
-</span></span><span class="line"><span class="cl">  NOTE           0x000338 0x0000000000000338 0x0000000000000338 0x000040 0x000040 R   0x8
-</span></span><span class="line"><span class="cl">  NOTE           0x000378 0x0000000000000378 0x0000000000000378 0x000044 0x000044 R   0x4
-</span></span><span class="line"><span class="cl">  GNU_PROPERTY   0x000338 0x0000000000000338 0x0000000000000338 0x000040 0x000040 R   0x8
-</span></span><span class="line"><span class="cl">  GNU_EH_FRAME   0x002014 0x0000000000002014 0x0000000000002014 0x000024 0x000024 R   0x4
-</span></span><span class="line"><span class="cl">  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x10
-</span></span><span class="line"><span class="cl">  GNU_RELRO      0x002dd0 0x0000000000003dd0 0x0000000000003dd0 0x000230 0x000230 R   0x1
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"> Section to Segment mapping:
-</span></span><span class="line"><span class="cl">  Segment Sections...
-</span></span><span class="line"><span class="cl">   00
-</span></span><span class="line"><span class="cl">   01     .interp
-</span></span><span class="line"><span class="cl">   02     .interp .note.gnu.property .note.gnu.build-id .note.ABI-tag .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt
-</span></span><span class="line"><span class="cl">   03     .init .plt .text .fini
-</span></span><span class="line"><span class="cl">   04     .rodata .eh_frame_hdr .eh_frame
-</span></span><span class="line"><span class="cl">   05     .init_array .fini_array .dynamic .got .got.plt .data .bss
-</span></span><span class="line"><span class="cl">   06     .dynamic
-</span></span><span class="line"><span class="cl">   07     .note.gnu.property
-</span></span><span class="line"><span class="cl">   08     .note.gnu.build-id .note.ABI-tag
-</span></span><span class="line"><span class="cl">   09     .note.gnu.property
-</span></span><span class="line"><span class="cl">   10     .eh_frame_hdr
-</span></span><span class="line"><span class="cl">   11
-</span></span><span class="line"><span class="cl">   12     .init_array .fini_array .dynamic .got
-</span></span></code></pre></div><p>If you want to go extra mile and dig deep,</p>
+<pre tabindex="0"><code>Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002d8 0x0002d8 R   0x8
+  INTERP         0x000318 0x0000000000000318 0x0000000000000318 0x00001c 0x00001c R   0x1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2 ]
+  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000630 0x000630 R   0x1000
+  LOAD           0x001000 0x0000000000001000 0x0000000000001000 0x000189 0x000189 R E 0x1000
+  LOAD           0x002000 0x0000000000002000 0x0000000000002000 0x0000b4 0x0000b4 R   0x1000
+  LOAD           0x002dd0 0x0000000000003dd0 0x0000000000003dd0 0x000248 0x000250 RW  0x1000
+  DYNAMIC        0x002de0 0x0000000000003de0 0x0000000000003de0 0x0001e0 0x0001e0 RW  0x8
+  NOTE           0x000338 0x0000000000000338 0x0000000000000338 0x000040 0x000040 R   0x8
+  NOTE           0x000378 0x0000000000000378 0x0000000000000378 0x000044 0x000044 R   0x4
+  GNU_PROPERTY   0x000338 0x0000000000000338 0x0000000000000338 0x000040 0x000040 R   0x8
+  GNU_EH_FRAME   0x002014 0x0000000000002014 0x0000000000002014 0x000024 0x000024 R   0x4
+  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x10
+  GNU_RELRO      0x002dd0 0x0000000000003dd0 0x0000000000003dd0 0x000230 0x000230 R   0x1
+
+ Section to Segment mapping:
+  Segment Sections...
+   00
+   01     .interp
+   02     .interp .note.gnu.property .note.gnu.build-id .note.ABI-tag .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt
+   03     .init .plt .text .fini
+   04     .rodata .eh_frame_hdr .eh_frame
+   05     .init_array .fini_array .dynamic .got .got.plt .data .bss
+   06     .dynamic
+   07     .note.gnu.property
+   08     .note.gnu.build-id .note.ABI-tag
+   09     .note.gnu.property
+   10     .eh_frame_hdr
+   11
+   12     .init_array .fini_array .dynamic .got
+</code></pre><p>If you want to go extra mile and dig deep,</p>
 <ul>
 <li>Try overwriting the program interpreter with your custom loader program. Things will probably go wrong and then you can dig deep what&rsquo;s the root cause.</li>
 <li>Add a new section (<code>.text</code> type), create it&rsquo;s section header entry, then create it&rsquo;s program header entry such that it is loadable in memory. Then change the ELF entrypoint to the newly created section.</li>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>Alright, buckle up, because we have just seen what segments are, how sections are grouped into segments, and how program headers act as a table to store information about segments which is helpful for runtime. Picture this -</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">  ┌───────────────────────────┐
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │      File Header          │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │     Program Header        │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤  ◄───┐
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │      Section 1            │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤      │ Segment 1
-</span></span><span class="line"><span class="cl">  │      Section 2            │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │      Section 3            │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤  ◄───┤
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │ Segment 2
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │      Section 4            │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │  ◄───┤
-</span></span><span class="line"><span class="cl">  │                           │      │ Segment 3
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤  ◄───┤
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │      Section 5            │      │
-</span></span><span class="line"><span class="cl">  │                           │      │ Segment 4
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤  ◄───┤
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │     Section 6             │      │ Segment 5
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  │                           │      │
-</span></span><span class="line"><span class="cl">  ├───────────────────────────┤  ◄───┘
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │     Section Header        │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  │                           │
-</span></span><span class="line"><span class="cl">  └───────────────────────────┘
-</span></span></code></pre></div>]]></content:encoded>
+<pre tabindex="0"><code>
+  ┌───────────────────────────┐
+  │                           │
+  │      File Header          │
+  │                           │
+  │                           │
+  ├───────────────────────────┤
+  │                           │
+  │     Program Header        │
+  │                           │
+  │                           │
+  ├───────────────────────────┤  ◄───┐
+  │                           │      │
+  │                           │      │
+  │      Section 1            │      │
+  │                           │      │
+  ├───────────────────────────┤      │ Segment 1
+  │      Section 2            │      │
+  ├───────────────────────────┤      │
+  │                           │      │
+  │      Section 3            │      │
+  ├───────────────────────────┤  ◄───┤
+  │                           │      │
+  │                           │      │
+  │                           │      │
+  │                           │      │ Segment 2
+  │                           │      │
+  │      Section 4            │      │
+  │                           │      │
+  │                           │  ◄───┤
+  │                           │      │ Segment 3
+  │                           │      │
+  ├───────────────────────────┤  ◄───┤
+  │                           │      │
+  │                           │      │
+  │      Section 5            │      │
+  │                           │      │ Segment 4
+  │                           │      │
+  │                           │      │
+  ├───────────────────────────┤  ◄───┤
+  │                           │      │
+  │                           │      │
+  │     Section 6             │      │ Segment 5
+  │                           │      │
+  │                           │      │
+  ├───────────────────────────┤  ◄───┘
+  │                           │
+  │                           │
+  │     Section Header        │
+  │                           │
+  │                           │
+  └───────────────────────────┘
+</code></pre>]]></content:encoded>
     </item>
-    
     <item>
-      <title>ELF Chronicles: Section Headers</title>
+      <title>ELF Chronicles: Section Headers (2/?)</title>
       <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</link>
       <pubDate>Thu, 19 Oct 2023 00:24:06 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/</guid>
       <description>Exploring ELF Section Headers</description>
       <content:encoded><![CDATA[<h2 id="intro">Intro</h2>
@@ -305,86 +303,86 @@
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>You can get the ELF binary by compiling this code.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">gcc hello_world.c -o hello_world
-</span></span></code></pre></div><p>Now the task at hand is to read/parse the file and get information regarding the sections (<code>e_shoff</code>, <code>e_shentsize</code>, <code>e_shnum</code>, and <code>e_shstrndx</code>). Mostly I, another <em>mere</em> human, rely on a &ldquo;industry grade&rdquo; tool called <code>readelf</code> to read an ELF file and figure out stuff.</p>
+<pre tabindex="0"><code>gcc hello_world.c -o hello_world
+</code></pre><p>Now the task at hand is to read/parse the file and get information regarding the sections (<code>e_shoff</code>, <code>e_shentsize</code>, <code>e_shnum</code>, and <code>e_shstrndx</code>). Mostly I, another <em>mere</em> human, rely on a &ldquo;industry grade&rdquo; tool called <code>readelf</code> to read an ELF file and figure out stuff.</p>
 <p>Now, the challenge on our hands is to crack open the file and unearth some juicy details about the sections. You already know, things like <code>e_shoff</code>, <code>e_shentsize</code>, <code>e_shnum</code>, and <code>e_shstrndx</code>. I confess, like any other <em>mere</em> human, I often lean on a trusty &ldquo;industry-grade&rdquo; tool called <code>readelf</code> to do the heavy lifting when it comes to ELF file forensics. (But it&rsquo;s always good to know the manual methods for those 1% kind of situations)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ readelf --file-header --wide hello_world
-</span></span><span class="line"><span class="cl">ELF Header:
-</span></span><span class="line"><span class="cl">  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">  Class:                             ELF64
-</span></span><span class="line"><span class="cl">  Data:                              2&#39;s complement, little endian
-</span></span><span class="line"><span class="cl">  Version:                           1 (current)
-</span></span><span class="line"><span class="cl">  OS/ABI:                            UNIX - System V
-</span></span><span class="line"><span class="cl">  ABI Version:                       0
-</span></span><span class="line"><span class="cl">  Type:                              DYN (Position-Independent Executable file)
-</span></span><span class="line"><span class="cl">  Machine:                           Advanced Micro Devices X86-64
-</span></span><span class="line"><span class="cl">  Version:                           0x1
-</span></span><span class="line"><span class="cl">  Entry point address:               0x1050
-</span></span><span class="line"><span class="cl">  Start of program headers:          64 (bytes into file)
-</span></span><span class="line"><span class="cl">  Start of section headers:          13608 (bytes into file)
-</span></span><span class="line"><span class="cl">  Flags:                             0x0
-</span></span><span class="line"><span class="cl">  Size of this header:               64 (bytes)
-</span></span><span class="line"><span class="cl">  Size of program headers:           56 (bytes)
-</span></span><span class="line"><span class="cl">  Number of program headers:         13
-</span></span><span class="line"><span class="cl">  Size of section headers:           64 (bytes)
-</span></span><span class="line"><span class="cl">  Number of section headers:         30
-</span></span><span class="line"><span class="cl">  Section header string table index: 29
-</span></span></code></pre></div><p>Examining the output above, we can deduce a few key details.</p>
+<pre tabindex="0"><code>❯ readelf --file-header --wide hello_world
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2&#39;s complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x1050
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          13608 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         13
+  Size of section headers:           64 (bytes)
+  Number of section headers:         30
+  Section header string table index: 29
+</code></pre><p>Examining the output above, we can deduce a few key details.</p>
 <ul>
 <li>Firstly, the section headers take their grand entrance at a distance of <code>13608</code> bytes (<code>0x3528</code> in the mystical language of hex).</li>
 <li>Each of these header entries is precisely <code>64</code> bytes in size (<code>0x40</code> in hex),</li>
 <li>and in total, we&rsquo;ve got a flourishing population of <code>30</code> sections (<code>1e</code> in hex).</li>
 </ul>
 <p>So, it&rsquo;s like having a treasure map telling us exactly where to dig in the ELF file and how big the treasure chests are!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ xxd -s 13608 -l $(( 64*30 )) -c 64 hello_world
-</span></span><span class="line"><span class="cl">00003528: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  ................................................................
-</span></span><span class="line"><span class="cl">00003568: 1b00 0000 0100 0000 0200 0000 0000 0000 1803 0000 0000 0000 1803 0000 0000 0000 1c00 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  ................................................................
-</span></span><span class="line"><span class="cl">000035a8: 2300 0000 0700 0000 0200 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  #...............8.......8.......@...............................
-</span></span><span class="line"><span class="cl">000035e8: 3600 0000 0700 0000 0200 0000 0000 0000 7803 0000 0000 0000 7803 0000 0000 0000 2400 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  6...............x.......x.......$...............................
-</span></span><span class="line"><span class="cl">00003628: 4900 0000 0700 0000 0200 0000 0000 0000 9c03 0000 0000 0000 9c03 0000 0000 0000 2000 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  I............................... ...............................
-</span></span><span class="line"><span class="cl">00003668: 5700 0000 f6ff ff6f 0200 0000 0000 0000 c003 0000 0000 0000 c003 0000 0000 0000 1c00 0000 0000 0000 0600 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  W......o........................................................
-</span></span><span class="line"><span class="cl">000036a8: 6100 0000 0b00 0000 0200 0000 0000 0000 e003 0000 0000 0000 e003 0000 0000 0000 c000 0000 0000 0000 0700 0000 0100 0000 0800 0000 0000 0000 1800 0000 0000 0000  a...............................................................
-</span></span><span class="line"><span class="cl">000036e8: 6900 0000 0300 0000 0200 0000 0000 0000 a004 0000 0000 0000 a004 0000 0000 0000 a800 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  i...............................................................
-</span></span><span class="line"><span class="cl">00003728: 7100 0000 ffff ff6f 0200 0000 0000 0000 4805 0000 0000 0000 4805 0000 0000 0000 1000 0000 0000 0000 0600 0000 0000 0000 0200 0000 0000 0000 0200 0000 0000 0000  q......o........H.......H.......................................
-</span></span><span class="line"><span class="cl">00003768: 7e00 0000 feff ff6f 0200 0000 0000 0000 5805 0000 0000 0000 5805 0000 0000 0000 4000 0000 0000 0000 0700 0000 0100 0000 0800 0000 0000 0000 0000 0000 0000 0000  ~......o........X.......X.......@...............................
-</span></span><span class="line"><span class="cl">000037a8: 8d00 0000 0400 0000 0200 0000 0000 0000 9805 0000 0000 0000 9805 0000 0000 0000 c000 0000 0000 0000 0600 0000 0000 0000 0800 0000 0000 0000 1800 0000 0000 0000  ................................................................
-</span></span><span class="line"><span class="cl">000037e8: 9700 0000 0400 0000 4200 0000 0000 0000 5806 0000 0000 0000 5806 0000 0000 0000 3000 0000 0000 0000 0600 0000 1700 0000 0800 0000 0000 0000 1800 0000 0000 0000  ........B.......X.......X.......0...............................
-</span></span><span class="line"><span class="cl">00003828: a100 0000 0100 0000 0600 0000 0000 0000 0010 0000 0000 0000 0010 0000 0000 0000 1b00 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................................................................
-</span></span><span class="line"><span class="cl">00003868: 9c00 0000 0100 0000 0600 0000 0000 0000 2010 0000 0000 0000 2010 0000 0000 0000 3000 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 1000 0000 0000 0000  ................ ....... .......0...............................
-</span></span><span class="line"><span class="cl">000038a8: a700 0000 0100 0000 0600 0000 0000 0000 5010 0000 0000 0000 5010 0000 0000 0000 7101 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 0000 0000 0000 0000  ................P.......P.......q...............................
-</span></span><span class="line"><span class="cl">000038e8: ad00 0000 0100 0000 0600 0000 0000 0000 c411 0000 0000 0000 c411 0000 0000 0000 0d00 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................................................................
-</span></span><span class="line"><span class="cl">00003928: b300 0000 0100 0000 0200 0000 0000 0000 0020 0000 0000 0000 0020 0000 0000 0000 1100 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................. ....... ......................................
-</span></span><span class="line"><span class="cl">00003968: bb00 0000 0100 0000 0200 0000 0000 0000 1420 0000 0000 0000 1420 0000 0000 0000 2400 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................. ....... ......$...............................
-</span></span><span class="line"><span class="cl">000039a8: c900 0000 0100 0000 0200 0000 0000 0000 3820 0000 0000 0000 3820 0000 0000 0000 7c00 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  ................8 ......8 ......|...............................
-</span></span><span class="line"><span class="cl">000039e8: d300 0000 0e00 0000 0300 0000 0000 0000 d03d 0000 0000 0000 d02d 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................=.......-......................................
-</span></span><span class="line"><span class="cl">00003a28: df00 0000 0f00 0000 0300 0000 0000 0000 d83d 0000 0000 0000 d82d 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................=.......-......................................
-</span></span><span class="line"><span class="cl">00003a68: eb00 0000 0600 0000 0300 0000 0000 0000 e03d 0000 0000 0000 e02d 0000 0000 0000 e001 0000 0000 0000 0700 0000 0000 0000 0800 0000 0000 0000 1000 0000 0000 0000  .................=.......-......................................
-</span></span><span class="line"><span class="cl">00003aa8: f400 0000 0100 0000 0300 0000 0000 0000 c03f 0000 0000 0000 c02f 0000 0000 0000 2800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................?......./......(...............................
-</span></span><span class="line"><span class="cl">00003ae8: f900 0000 0100 0000 0300 0000 0000 0000 e83f 0000 0000 0000 e82f 0000 0000 0000 2800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................?......./......(...............................
-</span></span><span class="line"><span class="cl">00003b28: 0201 0000 0100 0000 0300 0000 0000 0000 1040 0000 0000 0000 1030 0000 0000 0000 1d00 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  .................@.......0......................................
-</span></span><span class="line"><span class="cl">00003b68: 0801 0000 0800 0000 0300 0000 0000 0000 2d40 0000 0000 0000 2d30 0000 0000 0000 0300 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  ................-@......-0......................................
-</span></span><span class="line"><span class="cl">00003ba8: 0d01 0000 0100 0000 3000 0000 0000 0000 0000 0000 0000 0000 2d30 0000 0000 0000 1b00 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0100 0000 0000 0000  ........0...............-0......................................
-</span></span><span class="line"><span class="cl">00003be8: 0100 0000 0200 0000 0000 0000 0000 0000 0000 0000 0000 0000 4830 0000 0000 0000 7002 0000 0000 0000 1c00 0000 0600 0000 0800 0000 0000 0000 1800 0000 0000 0000  ........................H0......p...............................
-</span></span><span class="line"><span class="cl">00003c28: 0900 0000 0300 0000 0000 0000 0000 0000 0000 0000 0000 0000 b832 0000 0000 0000 5301 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  .........................2......S...............................
-</span></span><span class="line"><span class="cl">00003c68: 1100 0000 0300 0000 0000 0000 0000 0000 0000 0000 0000 0000 0b34 0000 0000 0000 1601 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  .........................4......................................
-</span></span></code></pre></div><p>With each line presenting itself as a section header entry, it&rsquo;s like experiencing an elegant and straightforward design! Now we just have to map each of these lines to <code>Elf64_Shdr</code> (since we have a 64Bit file)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L321
-</span></span><span class="line"><span class="cl">*/
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">typedef struct elf64_shdr {
-</span></span><span class="line"><span class="cl">  Elf64_Word sh_name;		/* Section name, index in string tbl    # 4 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Word sh_type;		/* Type of section                      # 4 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Xword sh_flags;		/* Miscellaneous section attributes   # 8 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Addr sh_addr;		/* Section virtual addr at execution    # 8 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Off sh_offset;		/* Section file offset                # 8 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Xword sh_size;		/* Size of section in bytes           # 8 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Word sh_link;		/* Index of another section             # 4 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Word sh_info;		/* Additional section information       # 4 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Xword sh_addralign;	/* Section alignment                # 8 bytes */
-</span></span><span class="line"><span class="cl">  Elf64_Xword sh_entsize;	/* Entry size if section holds table  # 8 bytes */
-</span></span><span class="line"><span class="cl">} Elf64_Shdr;
-</span></span></code></pre></div><p>But first, understand why we are doing any of this&hellip;</p>
+<pre tabindex="0"><code>❯ xxd -s 13608 -l $(( 64*30 )) -c 64 hello_world
+00003528: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  ................................................................
+00003568: 1b00 0000 0100 0000 0200 0000 0000 0000 1803 0000 0000 0000 1803 0000 0000 0000 1c00 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  ................................................................
+000035a8: 2300 0000 0700 0000 0200 0000 0000 0000 3803 0000 0000 0000 3803 0000 0000 0000 4000 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  #...............8.......8.......@...............................
+000035e8: 3600 0000 0700 0000 0200 0000 0000 0000 7803 0000 0000 0000 7803 0000 0000 0000 2400 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  6...............x.......x.......$...............................
+00003628: 4900 0000 0700 0000 0200 0000 0000 0000 9c03 0000 0000 0000 9c03 0000 0000 0000 2000 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  I............................... ...............................
+00003668: 5700 0000 f6ff ff6f 0200 0000 0000 0000 c003 0000 0000 0000 c003 0000 0000 0000 1c00 0000 0000 0000 0600 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  W......o........................................................
+000036a8: 6100 0000 0b00 0000 0200 0000 0000 0000 e003 0000 0000 0000 e003 0000 0000 0000 c000 0000 0000 0000 0700 0000 0100 0000 0800 0000 0000 0000 1800 0000 0000 0000  a...............................................................
+000036e8: 6900 0000 0300 0000 0200 0000 0000 0000 a004 0000 0000 0000 a004 0000 0000 0000 a800 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  i...............................................................
+00003728: 7100 0000 ffff ff6f 0200 0000 0000 0000 4805 0000 0000 0000 4805 0000 0000 0000 1000 0000 0000 0000 0600 0000 0000 0000 0200 0000 0000 0000 0200 0000 0000 0000  q......o........H.......H.......................................
+00003768: 7e00 0000 feff ff6f 0200 0000 0000 0000 5805 0000 0000 0000 5805 0000 0000 0000 4000 0000 0000 0000 0700 0000 0100 0000 0800 0000 0000 0000 0000 0000 0000 0000  ~......o........X.......X.......@...............................
+000037a8: 8d00 0000 0400 0000 0200 0000 0000 0000 9805 0000 0000 0000 9805 0000 0000 0000 c000 0000 0000 0000 0600 0000 0000 0000 0800 0000 0000 0000 1800 0000 0000 0000  ................................................................
+000037e8: 9700 0000 0400 0000 4200 0000 0000 0000 5806 0000 0000 0000 5806 0000 0000 0000 3000 0000 0000 0000 0600 0000 1700 0000 0800 0000 0000 0000 1800 0000 0000 0000  ........B.......X.......X.......0...............................
+00003828: a100 0000 0100 0000 0600 0000 0000 0000 0010 0000 0000 0000 0010 0000 0000 0000 1b00 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................................................................
+00003868: 9c00 0000 0100 0000 0600 0000 0000 0000 2010 0000 0000 0000 2010 0000 0000 0000 3000 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 1000 0000 0000 0000  ................ ....... .......0...............................
+000038a8: a700 0000 0100 0000 0600 0000 0000 0000 5010 0000 0000 0000 5010 0000 0000 0000 7101 0000 0000 0000 0000 0000 0000 0000 1000 0000 0000 0000 0000 0000 0000 0000  ................P.......P.......q...............................
+000038e8: ad00 0000 0100 0000 0600 0000 0000 0000 c411 0000 0000 0000 c411 0000 0000 0000 0d00 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................................................................
+00003928: b300 0000 0100 0000 0200 0000 0000 0000 0020 0000 0000 0000 0020 0000 0000 0000 1100 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................. ....... ......................................
+00003968: bb00 0000 0100 0000 0200 0000 0000 0000 1420 0000 0000 0000 1420 0000 0000 0000 2400 0000 0000 0000 0000 0000 0000 0000 0400 0000 0000 0000 0000 0000 0000 0000  ................. ....... ......$...............................
+000039a8: c900 0000 0100 0000 0200 0000 0000 0000 3820 0000 0000 0000 3820 0000 0000 0000 7c00 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  ................8 ......8 ......|...............................
+000039e8: d300 0000 0e00 0000 0300 0000 0000 0000 d03d 0000 0000 0000 d02d 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................=.......-......................................
+00003a28: df00 0000 0f00 0000 0300 0000 0000 0000 d83d 0000 0000 0000 d82d 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................=.......-......................................
+00003a68: eb00 0000 0600 0000 0300 0000 0000 0000 e03d 0000 0000 0000 e02d 0000 0000 0000 e001 0000 0000 0000 0700 0000 0000 0000 0800 0000 0000 0000 1000 0000 0000 0000  .................=.......-......................................
+00003aa8: f400 0000 0100 0000 0300 0000 0000 0000 c03f 0000 0000 0000 c02f 0000 0000 0000 2800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................?......./......(...............................
+00003ae8: f900 0000 0100 0000 0300 0000 0000 0000 e83f 0000 0000 0000 e82f 0000 0000 0000 2800 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0800 0000 0000 0000  .................?......./......(...............................
+00003b28: 0201 0000 0100 0000 0300 0000 0000 0000 1040 0000 0000 0000 1030 0000 0000 0000 1d00 0000 0000 0000 0000 0000 0000 0000 0800 0000 0000 0000 0000 0000 0000 0000  .................@.......0......................................
+00003b68: 0801 0000 0800 0000 0300 0000 0000 0000 2d40 0000 0000 0000 2d30 0000 0000 0000 0300 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  ................-@......-0......................................
+00003ba8: 0d01 0000 0100 0000 3000 0000 0000 0000 0000 0000 0000 0000 2d30 0000 0000 0000 1b00 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0100 0000 0000 0000  ........0...............-0......................................
+00003be8: 0100 0000 0200 0000 0000 0000 0000 0000 0000 0000 0000 0000 4830 0000 0000 0000 7002 0000 0000 0000 1c00 0000 0600 0000 0800 0000 0000 0000 1800 0000 0000 0000  ........................H0......p...............................
+00003c28: 0900 0000 0300 0000 0000 0000 0000 0000 0000 0000 0000 0000 b832 0000 0000 0000 5301 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  .........................2......S...............................
+00003c68: 1100 0000 0300 0000 0000 0000 0000 0000 0000 0000 0000 0000 0b34 0000 0000 0000 1601 0000 0000 0000 0000 0000 0000 0000 0100 0000 0000 0000 0000 0000 0000 0000  .........................4......................................
+</code></pre><p>With each line presenting itself as a section header entry, it&rsquo;s like experiencing an elegant and straightforward design! Now we just have to map each of these lines to <code>Elf64_Shdr</code> (since we have a 64Bit file)</p>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/elf.h#L321
+*/
+
+typedef struct elf64_shdr {
+  Elf64_Word sh_name;		/* Section name, index in string tbl    # 4 bytes */
+  Elf64_Word sh_type;		/* Type of section                      # 4 bytes */
+  Elf64_Xword sh_flags;		/* Miscellaneous section attributes   # 8 bytes */
+  Elf64_Addr sh_addr;		/* Section virtual addr at execution    # 8 bytes */
+  Elf64_Off sh_offset;		/* Section file offset                # 8 bytes */
+  Elf64_Xword sh_size;		/* Size of section in bytes           # 8 bytes */
+  Elf64_Word sh_link;		/* Index of another section             # 4 bytes */
+  Elf64_Word sh_info;		/* Additional section information       # 4 bytes */
+  Elf64_Xword sh_addralign;	/* Section alignment                # 8 bytes */
+  Elf64_Xword sh_entsize;	/* Entry size if section holds table  # 8 bytes */
+} Elf64_Shdr;
+</code></pre><p>But first, understand why we are doing any of this&hellip;</p>
 <h2 id="section-headers">Section headers</h2>
 <p>Imagine a <a href="https://www.lego.com/en-us/product/lego-dc-batman-batmobile-tumbler-76240">LEGO batmobile</a> – it&rsquo;s not just one big block, right? It has different parts, like a roof, doors, wheels, etc. <strong>ELF sections</strong> (not section headers) are like these parts in a computer program. Each section has its own job, some sections hold the variables, some hold the program instructions, while some just hold extra notes. Basically, each section has some data in it and has a specific role for that data.</p>
 <p>Section headers is like a index for those sections. It tells you a good amount of details about the section, like</p>
@@ -396,38 +394,38 @@
 </ul>
 <p>Now you know what section headers are and the valuable data they contain, and with the ELF file headers acting as our treasure map, directing us to the precise location of the section headers in the file (<code>e_shoff</code>), detailing their entry size (<code>e_shentsize</code>) and counting their entries (<code>e_shnum</code>).</p>
 <p>I&rsquo;ve also whipped up a nifty little parser, just for the occasion. It&rsquo;s designed to gracefully dissect an ELF file and lay out the section headers in a more digestible and user-friendly fashion. No more cryptic <code>hexdumps</code> or <code>xxd</code> outputs for us!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[ + ] Section headers begins at: 0x34b8
-</span></span><span class="line"><span class="cl"> [ 00 ] Section Name:                            Type: 0x0       Flags: 0x0      Addr: 0x0       Offset: 0x0             Size: 0         Link: 0         Info: 0x0       Addralign: 0x0          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 01 ] Section Name: .interp                    Type: 0x1       Flags: 0x2      Addr: 0x318     Offset: 0x318           Size: 28        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 02 ] Section Name: .note.gnu.property         Type: 0x7       Flags: 0x2      Addr: 0x338     Offset: 0x338           Size: 64        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 03 ] Section Name: .note.gnu.build-id         Type: 0x7       Flags: 0x2      Addr: 0x378     Offset: 0x378           Size: 36        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 04 ] Section Name: .note.ABI-tag              Type: 0x7       Flags: 0x2      Addr: 0x39c     Offset: 0x39c           Size: 32        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 05 ] Section Name: .gnu.hash                  Type: 0xfff6    Flags: 0x2      Addr: 0x3c0     Offset: 0x3c0           Size: 28        Link: 6         Info: 0x0       Addralign: 0x8          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 06 ] Section Name: .dynsym                    Type: 0xb       Flags: 0x2      Addr: 0x3e0     Offset: 0x3e0           Size: 168       Link: 7         Info: 0x1       Addralign: 0x8          Entsize: 24
-</span></span><span class="line"><span class="cl"> [ 07 ] Section Name: .dynstr                    Type: 0x3       Flags: 0x2      Addr: 0x488     Offset: 0x488           Size: 144       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 08 ] Section Name: .gnu.version               Type: 0xffff    Flags: 0x2      Addr: 0x518     Offset: 0x518           Size: 14        Link: 6         Info: 0x0       Addralign: 0x2          Entsize: 2
-</span></span><span class="line"><span class="cl"> [ 09 ] Section Name: .gnu.version_r             Type: 0xfffe    Flags: 0x2      Addr: 0x528     Offset: 0x528           Size: 48        Link: 7         Info: 0x1       Addralign: 0x8          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 10 ] Section Name: .rela.dyn                  Type: 0x4       Flags: 0x2      Addr: 0x558     Offset: 0x558           Size: 192       Link: 6         Info: 0x0       Addralign: 0x8          Entsize: 24
-</span></span><span class="line"><span class="cl"> [ 11 ] Section Name: .rela.plt                  Type: 0x4       Flags: 0x42     Addr: 0x618     Offset: 0x618           Size: 24        Link: 6         Info: 0x17      Addralign: 0x8          Entsize: 24
-</span></span><span class="line"><span class="cl"> [ 12 ] Section Name: .init                      Type: 0x1       Flags: 0x6      Addr: 0x1000    Offset: 0x1000          Size: 27        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 13 ] Section Name: .plt                       Type: 0x1       Flags: 0x6      Addr: 0x1020    Offset: 0x1020          Size: 32        Link: 0         Info: 0x0       Addralign: 0x10         Entsize: 16
-</span></span><span class="line"><span class="cl"> [ 14 ] Section Name: .text                      Type: 0x1       Flags: 0x6      Addr: 0x1040    Offset: 0x1040          Size: 315       Link: 0         Info: 0x0       Addralign: 0x10         Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 15 ] Section Name: .fini                      Type: 0x1       Flags: 0x6      Addr: 0x117c    Offset: 0x117c          Size: 13        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 16 ] Section Name: .rodata                    Type: 0x1       Flags: 0x2      Addr: 0x2000    Offset: 0x2000          Size: 18        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 17 ] Section Name: .eh_frame_hdr              Type: 0x1       Flags: 0x2      Addr: 0x2014    Offset: 0x2014          Size: 36        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 18 ] Section Name: .eh_frame                  Type: 0x1       Flags: 0x2      Addr: 0x2038    Offset: 0x2038          Size: 124       Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 19 ] Section Name: .init_array                Type: 0xe       Flags: 0x3      Addr: 0x3dd0    Offset: 0x2dd0          Size: 8         Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
-</span></span><span class="line"><span class="cl"> [ 20 ] Section Name: .fini_array                Type: 0xf       Flags: 0x3      Addr: 0x3dd8    Offset: 0x2dd8          Size: 8         Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
-</span></span><span class="line"><span class="cl"> [ 21 ] Section Name: .dynamic                   Type: 0x6       Flags: 0x3      Addr: 0x3de0    Offset: 0x2de0          Size: 480       Link: 7         Info: 0x0       Addralign: 0x8          Entsize: 16
-</span></span><span class="line"><span class="cl"> [ 22 ] Section Name: .got                       Type: 0x1       Flags: 0x3      Addr: 0x3fc0    Offset: 0x2fc0          Size: 40        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
-</span></span><span class="line"><span class="cl"> [ 23 ] Section Name: .got.plt                   Type: 0x1       Flags: 0x3      Addr: 0x3fe8    Offset: 0x2fe8          Size: 32        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
-</span></span><span class="line"><span class="cl"> [ 24 ] Section Name: .data                      Type: 0x1       Flags: 0x3      Addr: 0x4008    Offset: 0x3008          Size: 16        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 25 ] Section Name: .bss                       Type: 0x8       Flags: 0x3      Addr: 0x4018    Offset: 0x3018          Size: 8         Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 26 ] Section Name: .comment                   Type: 0x1       Flags: 0x30     Addr: 0x0       Offset: 0x3018          Size: 27        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 1
-</span></span><span class="line"><span class="cl"> [ 27 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x3038          Size: 576       Link: 28        Info: 0x6       Addralign: 0x8          Entsize: 24
-</span></span><span class="line"><span class="cl"> [ 28 ] Section Name: .strtab                    Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x3278          Size: 298       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-</span></span><span class="line"><span class="cl"> [ 29 ] Section Name: .shstrtab                  Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x33a2          Size: 278       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
-</span></span></code></pre></div><p>Here&rsquo;s a sneak peek at what my trusty parser churned out, for your reference. (If you fancy, you can even pit it against the <code>xxd</code> results we saw earlier).</p>
+<pre tabindex="0"><code>[ + ] Section headers begins at: 0x34b8
+ [ 00 ] Section Name:                            Type: 0x0       Flags: 0x0      Addr: 0x0       Offset: 0x0             Size: 0         Link: 0         Info: 0x0       Addralign: 0x0          Entsize: 0
+ [ 01 ] Section Name: .interp                    Type: 0x1       Flags: 0x2      Addr: 0x318     Offset: 0x318           Size: 28        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+ [ 02 ] Section Name: .note.gnu.property         Type: 0x7       Flags: 0x2      Addr: 0x338     Offset: 0x338           Size: 64        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
+ [ 03 ] Section Name: .note.gnu.build-id         Type: 0x7       Flags: 0x2      Addr: 0x378     Offset: 0x378           Size: 36        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 04 ] Section Name: .note.ABI-tag              Type: 0x7       Flags: 0x2      Addr: 0x39c     Offset: 0x39c           Size: 32        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 05 ] Section Name: .gnu.hash                  Type: 0xfff6    Flags: 0x2      Addr: 0x3c0     Offset: 0x3c0           Size: 28        Link: 6         Info: 0x0       Addralign: 0x8          Entsize: 0
+ [ 06 ] Section Name: .dynsym                    Type: 0xb       Flags: 0x2      Addr: 0x3e0     Offset: 0x3e0           Size: 168       Link: 7         Info: 0x1       Addralign: 0x8          Entsize: 24
+ [ 07 ] Section Name: .dynstr                    Type: 0x3       Flags: 0x2      Addr: 0x488     Offset: 0x488           Size: 144       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+ [ 08 ] Section Name: .gnu.version               Type: 0xffff    Flags: 0x2      Addr: 0x518     Offset: 0x518           Size: 14        Link: 6         Info: 0x0       Addralign: 0x2          Entsize: 2
+ [ 09 ] Section Name: .gnu.version_r             Type: 0xfffe    Flags: 0x2      Addr: 0x528     Offset: 0x528           Size: 48        Link: 7         Info: 0x1       Addralign: 0x8          Entsize: 0
+ [ 10 ] Section Name: .rela.dyn                  Type: 0x4       Flags: 0x2      Addr: 0x558     Offset: 0x558           Size: 192       Link: 6         Info: 0x0       Addralign: 0x8          Entsize: 24
+ [ 11 ] Section Name: .rela.plt                  Type: 0x4       Flags: 0x42     Addr: 0x618     Offset: 0x618           Size: 24        Link: 6         Info: 0x17      Addralign: 0x8          Entsize: 24
+ [ 12 ] Section Name: .init                      Type: 0x1       Flags: 0x6      Addr: 0x1000    Offset: 0x1000          Size: 27        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 13 ] Section Name: .plt                       Type: 0x1       Flags: 0x6      Addr: 0x1020    Offset: 0x1020          Size: 32        Link: 0         Info: 0x0       Addralign: 0x10         Entsize: 16
+ [ 14 ] Section Name: .text                      Type: 0x1       Flags: 0x6      Addr: 0x1040    Offset: 0x1040          Size: 315       Link: 0         Info: 0x0       Addralign: 0x10         Entsize: 0
+ [ 15 ] Section Name: .fini                      Type: 0x1       Flags: 0x6      Addr: 0x117c    Offset: 0x117c          Size: 13        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 16 ] Section Name: .rodata                    Type: 0x1       Flags: 0x2      Addr: 0x2000    Offset: 0x2000          Size: 18        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 17 ] Section Name: .eh_frame_hdr              Type: 0x1       Flags: 0x2      Addr: 0x2014    Offset: 0x2014          Size: 36        Link: 0         Info: 0x0       Addralign: 0x4          Entsize: 0
+ [ 18 ] Section Name: .eh_frame                  Type: 0x1       Flags: 0x2      Addr: 0x2038    Offset: 0x2038          Size: 124       Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
+ [ 19 ] Section Name: .init_array                Type: 0xe       Flags: 0x3      Addr: 0x3dd0    Offset: 0x2dd0          Size: 8         Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
+ [ 20 ] Section Name: .fini_array                Type: 0xf       Flags: 0x3      Addr: 0x3dd8    Offset: 0x2dd8          Size: 8         Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
+ [ 21 ] Section Name: .dynamic                   Type: 0x6       Flags: 0x3      Addr: 0x3de0    Offset: 0x2de0          Size: 480       Link: 7         Info: 0x0       Addralign: 0x8          Entsize: 16
+ [ 22 ] Section Name: .got                       Type: 0x1       Flags: 0x3      Addr: 0x3fc0    Offset: 0x2fc0          Size: 40        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
+ [ 23 ] Section Name: .got.plt                   Type: 0x1       Flags: 0x3      Addr: 0x3fe8    Offset: 0x2fe8          Size: 32        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 8
+ [ 24 ] Section Name: .data                      Type: 0x1       Flags: 0x3      Addr: 0x4008    Offset: 0x3008          Size: 16        Link: 0         Info: 0x0       Addralign: 0x8          Entsize: 0
+ [ 25 ] Section Name: .bss                       Type: 0x8       Flags: 0x3      Addr: 0x4018    Offset: 0x3018          Size: 8         Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+ [ 26 ] Section Name: .comment                   Type: 0x1       Flags: 0x30     Addr: 0x0       Offset: 0x3018          Size: 27        Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 1
+ [ 27 ] Section Name: .symtab                    Type: 0x2       Flags: 0x0      Addr: 0x0       Offset: 0x3038          Size: 576       Link: 28        Info: 0x6       Addralign: 0x8          Entsize: 24
+ [ 28 ] Section Name: .strtab                    Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x3278          Size: 298       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+ [ 29 ] Section Name: .shstrtab                  Type: 0x3       Flags: 0x0      Addr: 0x0       Offset: 0x33a2          Size: 278       Link: 0         Info: 0x0       Addralign: 0x1          Entsize: 0
+</code></pre><p>Here&rsquo;s a sneak peek at what my trusty parser churned out, for your reference. (If you fancy, you can even pit it against the <code>xxd</code> results we saw earlier).</p>
 <p>Now, it&rsquo;s time to take a deep dive into the inner workings of the <code>Elf64_Shdr</code> struct</p>
 <h3 id="1-sh_name">1. sh_name</h3>
 <p>As I mentioned earlier, among so many sections of an ELF file, there&rsquo;s one special place known as the string table. In this mystical realm, the names of all sections are held in a null-terminated fashion, creating a seamless string of section names. Now, the <code>sh_name</code> member, well, it&rsquo;s like a treasure map, pinpointing the exact <strong>offset</strong> within that section. So, if, for instance, <code>.interp</code> resides at <code>X1</code> bytes within the section, and this section itself is tucked away at <code>Y1</code> bytes into the file, the location of this string can be calculated as simply <code>X1 + Y1</code> bytes into the file. But, for the sake of simplicity, <code>sh_name</code> keeps things straightforward by storing just the <code>X1</code> value, and nothing more. To track down the section&rsquo;s exact location, we can rely on the trusty <code>e_shstrndx</code> value from the ELF file header.</p>
@@ -501,80 +499,78 @@ Linux kernel has some flag types defined -</p>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p>Alright, buckle up, because we&rsquo;ve just taken a deep dive into the wild world of ELF section headers! Picture this -</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   ┌───────────────────────────┐
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │      File Header          │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │     Program Header        │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │      Section 1            │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │      Section 2            │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │      Section 3            │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │      Section 4            │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │      Section 5            │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │     Section 6             │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   ├───────────────────────────┤
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │     Section Header        │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   │                           │
-</span></span><span class="line"><span class="cl">   └───────────────────────────┘
-</span></span></code></pre></div><p>Think of sections as pieces of a puzzle, each unique in size and placed at different offsets within the file. But fear not, for the section headers play the role of meticulous architects, documenting these diverse sections&rsquo; whereabouts and characteristics. They&rsquo;re the cool blueprints that grant us insight into the entire file&rsquo;s layout and functionality.</p>
+<pre tabindex="0"><code>
+   ┌───────────────────────────┐
+   │                           │
+   │      File Header          │
+   │                           │
+   │                           │
+   ├───────────────────────────┤
+   │                           │
+   │     Program Header        │
+   │                           │
+   │                           │
+   ├───────────────────────────┤
+   │                           │
+   │                           │
+   │      Section 1            │
+   │                           │
+   ├───────────────────────────┤
+   │      Section 2            │
+   ├───────────────────────────┤
+   │                           │
+   │      Section 3            │
+   ├───────────────────────────┤
+   │                           │
+   │                           │
+   │                           │
+   │                           │
+   │                           │
+   │      Section 4            │
+   │                           │
+   │                           │
+   │                           │
+   │                           │
+   ├───────────────────────────┤
+   │                           │
+   │                           │
+   │      Section 5            │
+   │                           │
+   │                           │
+   │                           │
+   ├───────────────────────────┤
+   │                           │
+   │                           │
+   │     Section 6             │
+   │                           │
+   │                           │
+   ├───────────────────────────┤
+   │                           │
+   │                           │
+   │     Section Header        │
+   │                           │
+   │                           │
+   └───────────────────────────┘
+</code></pre><p>Think of sections as pieces of a puzzle, each unique in size and placed at different offsets within the file. But fear not, for the section headers play the role of meticulous architects, documenting these diverse sections&rsquo; whereabouts and characteristics. They&rsquo;re the cool blueprints that grant us insight into the entire file&rsquo;s layout and functionality.</p>
 ]]></content:encoded>
     </item>
-    
     <item>
-      <title>ELF Chronicles: ELF file Header</title>
+      <title>ELF Chronicles: ELF file Header (1/?)</title>
       <link>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</link>
       <pubDate>Wed, 18 Oct 2023 13:34:57 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/</guid>
       <description>Exploring ELF file headers</description>
       <content:encoded><![CDATA[<h2 id="hexdumps">Hexdumps</h2>
 <p>In the fascinating world of computers, we&rsquo;re stuck conversing in binary, a rather dull language of just <em>ones</em> and <em>zeros</em>. But because we <em>mere</em> humans love things to be a tad more exciting and concise, we&rsquo;ve come up with our own nifty number system - &ldquo;<code>hexadecimal</code>&rdquo; or &ldquo;<code>hex</code>&rdquo; for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It&rsquo;s got your usual digits from <code>0 to 9</code>, plus those fancy <code>A to F</code> letters to make data a bit more, well, <em>hexadecimal-chic</em>!</p>
 <p>Now, let&rsquo;s take a gander at this binary enigma, a message that only the most extraordinary folks can decipher with ease:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">011010000110010101101100011011000110111100001010
-</span></span></code></pre></div><p>For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.</p>
+<pre tabindex="0"><code>011010000110010101101100011011000110111100001010
+</code></pre><p>For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.</p>
 <p>Step one involves breaking down the binary data into byte-sized chunks, each containing 8 bits:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">01101000 01100101 01101100 01101100 01101111 00001010
-</span></span></code></pre></div><p>Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like <a href="https://cyberchef.org/#recipe=From_Binary('Space',8)To_Hex('Space',0)&amp;input=MDExMDEwMDAgMDExMDAxMDEgMDExMDExMDAgMDExMDExMDAgMDExMDExMTEgMDAwMDEwMTA">CyberChef</a>.</p>
+<pre tabindex="0"><code>01101000 01100101 01101100 01101100 01101111 00001010
+</code></pre><p>Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like <a href="https://cyberchef.org/#recipe=From_Binary('Space',8)To_Hex('Space',0)&amp;input=MDExMDEwMDAgMDExMDAxMDEgMDExMDExMDAgMDExMDExMDAgMDExMDExMTEgMDAwMDEwMTA">CyberChef</a>.</p>
 <p>No matter your chosen method, the results remains the same:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">68 65 6c 6c 6f 0a
-</span></span></code></pre></div><p>The binary code&rsquo;s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It&rsquo;s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!</p>
+<pre tabindex="0"><code>68 65 6c 6c 6f 0a
+</code></pre><p>The binary code&rsquo;s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It&rsquo;s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!</p>
 <h2 id="from-code-to-binary">From Code to Binary</h2>
 <p>Lets&rsquo;s go on a journey that turns elegant C code into a mysterious binary blob, a language of ones and zeros that only computers understand. (** <em>coughs compilation</em> **)</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* file: hello_world.c */</span>
@@ -602,27 +598,27 @@ Linux kernel has some flag types defined -</p>
 <p>This generated file, at its core, is nothing more than a delightful binary blob. It&rsquo;s the computer&rsquo;s secret handshake, speaking directly in ones and zeros, no pleasantries. And the icing on the cake is that we <em>mere</em> humans, with our clever programming prowess, can craft tools to translate this binary jargon into friendly hexadecimal, or we can simply cozy up to good ol&rsquo; <code>hexdump</code> and <code>xxd</code> for the job. Whichever suits your fancy, we&rsquo;ve got options!</p>
 <h2 id="elf-header">ELF Header</h2>
 <p>Here&rsquo;s a snapshot of the first 64 bytes in the compiled binary file:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># In binary representation
-</span></span><span class="line"><span class="cl">❯ xxd -b -l 64 ./hello_world
-</span></span><span class="line"><span class="cl">00000000: 01111111 01000101 01001100 01000110 00000010 00000001  .ELF..
-</span></span><span class="line"><span class="cl">00000006: 00000001 00000000 00000000 00000000 00000000 00000000  ......
-</span></span><span class="line"><span class="cl">0000000c: 00000000 00000000 00000000 00000000 00000011 00000000  ......
-</span></span><span class="line"><span class="cl">00000012: 00111110 00000000 00000001 00000000 00000000 00000000  &gt;.....
-</span></span><span class="line"><span class="cl">00000018: 01010000 00010000 00000000 00000000 00000000 00000000  P.....
-</span></span><span class="line"><span class="cl">0000001e: 00000000 00000000 01000000 00000000 00000000 00000000  ..@...
-</span></span><span class="line"><span class="cl">00000024: 00000000 00000000 00000000 00000000 00101000 00110101  ....(5
-</span></span><span class="line"><span class="cl">0000002a: 00000000 00000000 00000000 00000000 00000000 00000000  ......
-</span></span><span class="line"><span class="cl">00000030: 00000000 00000000 00000000 00000000 01000000 00000000  ....@.
-</span></span><span class="line"><span class="cl">00000036: 00111000 00000000 00001101 00000000 01000000 00000000  8...@.
-</span></span><span class="line"><span class="cl">0000003c: 00011110 00000000 00011101 00000000                    ....
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># In hex representation
-</span></span><span class="line"><span class="cl">❯ xxd -l 64 ./hello_world
-</span></span><span class="line"><span class="cl">00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
-</span></span><span class="line"><span class="cl">00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
-</span></span><span class="line"><span class="cl">00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
-</span></span><span class="line"><span class="cl">00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
-</span></span></code></pre></div><p>Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code&rsquo;s purpose.</p>
+<pre tabindex="0"><code># In binary representation
+❯ xxd -b -l 64 ./hello_world
+00000000: 01111111 01000101 01001100 01000110 00000010 00000001  .ELF..
+00000006: 00000001 00000000 00000000 00000000 00000000 00000000  ......
+0000000c: 00000000 00000000 00000000 00000000 00000011 00000000  ......
+00000012: 00111110 00000000 00000001 00000000 00000000 00000000  &gt;.....
+00000018: 01010000 00010000 00000000 00000000 00000000 00000000  P.....
+0000001e: 00000000 00000000 01000000 00000000 00000000 00000000  ..@...
+00000024: 00000000 00000000 00000000 00000000 00101000 00110101  ....(5
+0000002a: 00000000 00000000 00000000 00000000 00000000 00000000  ......
+00000030: 00000000 00000000 00000000 00000000 01000000 00000000  ....@.
+00000036: 00111000 00000000 00001101 00000000 01000000 00000000  8...@.
+0000003c: 00011110 00000000 00011101 00000000                    ....
+
+# In hex representation
+❯ xxd -l 64 ./hello_world
+00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
+00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
+00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
+00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
+</code></pre><p>Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code&rsquo;s purpose.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
 </span></span></span><span class="line"><span class="cl"><span class="cm">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L207
 </span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
@@ -663,99 +659,99 @@ Linux kernel has some flag types defined -</p>
 </span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_shstrndx</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">Elf64_Ehdr</span><span class="p">;</span>
 </span></span></code></pre></div><p>Since I&rsquo;m on a 64 bit system, I&rsquo;ll use <code>Elf64_Ehdr</code> to show what each byte in the above data chunk represents.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ xxd -l 64 ./hello_world
-</span></span><span class="line"><span class="cl">00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
-</span></span><span class="line"><span class="cl">00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
-</span></span><span class="line"><span class="cl">00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
-</span></span><span class="line"><span class="cl">00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">// After mapping the linux ELF struct to the above data
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">e_type      = 03 00
-</span></span><span class="line"><span class="cl">e_machine   = 3e 00
-</span></span><span class="line"><span class="cl">e_version   = 01 00 00 00
-</span></span><span class="line"><span class="cl">e_entry     = 50 10 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">e_phoff     = 40 00 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">e_shoff     = 28 35 00 00 00 00 00 00
-</span></span><span class="line"><span class="cl">e_flags     = 00 00 00 00
-</span></span><span class="line"><span class="cl">e_ehsize    = 40 00
-</span></span><span class="line"><span class="cl">e_phentsize = 38 00
-</span></span><span class="line"><span class="cl">e_phnum     = 0d 00
-</span></span><span class="line"><span class="cl">e_shentsize = 40 00
-</span></span><span class="line"><span class="cl">e_shnum     = 1e 00
-</span></span><span class="line"><span class="cl">e_shstrndx  = 1d 00
-</span></span></code></pre></div><p>Shall we dissect each of these mysterious members in the struct?</p>
+<pre tabindex="0"><code>❯ xxd -l 64 ./hello_world
+00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
+00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
+00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
+00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
+
+
+// After mapping the linux ELF struct to the above data
+
+e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+e_type      = 03 00
+e_machine   = 3e 00
+e_version   = 01 00 00 00
+e_entry     = 50 10 00 00 00 00 00 00
+e_phoff     = 40 00 00 00 00 00 00 00
+e_shoff     = 28 35 00 00 00 00 00 00
+e_flags     = 00 00 00 00
+e_ehsize    = 40 00
+e_phentsize = 38 00
+e_phnum     = 0d 00
+e_shentsize = 40 00
+e_shnum     = 1e 00
+e_shstrndx  = 1d 00
+</code></pre><p>Shall we dissect each of these mysterious members in the struct?</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/QaNQJZhjd2QrDUBNcg/giphy.gif#center" alt=""  />
 </p>
 <h3 id="1-e_identei_nident">1. <strong>e_ident[EI_NIDENT]</strong></h3>
 <p>The first 16 bytes of the ELF header are collectively referred to as the &ldquo;ident&rdquo; or &ldquo;identification&rdquo; field. It includes a magic number and various identification information. Here is a table that tells more about what all identification information is present in it.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">e_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000
-</span></span><span class="line"><span class="cl">    EI_MAG0 = 7f
-</span></span><span class="line"><span class="cl">    EI_MAG1 = 45 (E)
-</span></span><span class="line"><span class="cl">    EI_MAG2 = 4c (L)
-</span></span><span class="line"><span class="cl">    EI_MAG3 = 46 (F)
-</span></span><span class="line"><span class="cl">    EI_CLASS = 02
-</span></span><span class="line"><span class="cl">    EI_DATA = 01
-</span></span><span class="line"><span class="cl">    EI_VERSION = 01
-</span></span><span class="line"><span class="cl">    EI_OSABI = 00
-</span></span><span class="line"><span class="cl">    EI_ABIVERSION = 00
-</span></span><span class="line"><span class="cl">    EI_PAD = 00 0000 0000 0000
-</span></span></code></pre></div><p>Ah, you might wonder, &ldquo;How on earth do I know this?&rdquo; Well, my friend, it&rsquo;s a detective game we play, and our magnifying glass is the kernel source code.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334
-</span></span><span class="line"><span class="cl">*/
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#define	EI_MAG0		0		/* e_ident[] indexes */
-</span></span><span class="line"><span class="cl">#define	EI_MAG1		1
-</span></span><span class="line"><span class="cl">#define	EI_MAG2		2
-</span></span><span class="line"><span class="cl">#define	EI_MAG3		3
-</span></span><span class="line"><span class="cl">#define	EI_CLASS	4       /* 1=32Bit; 2=64Bit */
-</span></span><span class="line"><span class="cl">#define	EI_DATA		5       /* Endianness ==&gt; 1=Little; 2=Big */
-</span></span><span class="line"><span class="cl">#define	EI_VERSION	6       /* ELF header version */
-</span></span><span class="line"><span class="cl">#define	EI_OSABI	7       /* OS ABI ==&gt; 0=None(same as SysV); 3=Linux */
-</span></span><span class="line"><span class="cl">#define	EI_PAD		8       /* Starting of padding - currently unused */
-</span></span></code></pre></div><p><strong>==&gt;</strong> This information tells me that my ELF binary is a <code>64-Bit</code> (EI_CLASS = 02), <code>Little</code> endian (EI_DATA = 01) binary.</p>
+<pre tabindex="0"><code>e_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000
+    EI_MAG0 = 7f
+    EI_MAG1 = 45 (E)
+    EI_MAG2 = 4c (L)
+    EI_MAG3 = 46 (F)
+    EI_CLASS = 02
+    EI_DATA = 01
+    EI_VERSION = 01
+    EI_OSABI = 00
+    EI_ABIVERSION = 00
+    EI_PAD = 00 0000 0000 0000
+</code></pre><p>Ah, you might wonder, &ldquo;How on earth do I know this?&rdquo; Well, my friend, it&rsquo;s a detective game we play, and our magnifying glass is the kernel source code.</p>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334
+*/
+
+#define	EI_MAG0		0		/* e_ident[] indexes */
+#define	EI_MAG1		1
+#define	EI_MAG2		2
+#define	EI_MAG3		3
+#define	EI_CLASS	4       /* 1=32Bit; 2=64Bit */
+#define	EI_DATA		5       /* Endianness ==&gt; 1=Little; 2=Big */
+#define	EI_VERSION	6       /* ELF header version */
+#define	EI_OSABI	7       /* OS ABI ==&gt; 0=None(same as SysV); 3=Linux */
+#define	EI_PAD		8       /* Starting of padding - currently unused */
+</code></pre><p><strong>==&gt;</strong> This information tells me that my ELF binary is a <code>64-Bit</code> (EI_CLASS = 02), <code>Little</code> endian (EI_DATA = 01) binary.</p>
 <h3 id="2-e_type">2. <strong>e_type</strong></h3>
 <p>This member tells what type of ELF file it is.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69
-</span></span><span class="line"><span class="cl">*/
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#define ET_NONE   0         // No file type
-</span></span><span class="line"><span class="cl">#define ET_REL    1
-</span></span><span class="line"><span class="cl">#define ET_EXEC   2
-</span></span><span class="line"><span class="cl">#define ET_DYN    3
-</span></span><span class="line"><span class="cl">#define ET_CORE   4
-</span></span><span class="line"><span class="cl">#define ET_LOPROC 0xff00    // Processor-specific
-</span></span><span class="line"><span class="cl">#define ET_HIPROC 0xffff    // Processor-specific
-</span></span></code></pre></div><p>Since my binary is little endian, <code>e_type = 03 00</code> should be read as <code>e_type = 00 03</code>. That tells me that I&rsquo;ve a <code>ET_DYN</code> type of file.</p>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69
+*/
+
+#define ET_NONE   0         // No file type
+#define ET_REL    1
+#define ET_EXEC   2
+#define ET_DYN    3
+#define ET_CORE   4
+#define ET_LOPROC 0xff00    // Processor-specific
+#define ET_HIPROC 0xffff    // Processor-specific
+</code></pre><p>Since my binary is little endian, <code>e_type = 03 00</code> should be read as <code>e_type = 00 03</code>. That tells me that I&rsquo;ve a <code>ET_DYN</code> type of file.</p>
 <h3 id="3-e_machine">3. <strong>e_machine</strong></h3>
 <p>This member tells us about the target architecture for the file. In linux kernel uapi, there is <a href="https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h">a complete header file dedicated for target machines</a>.</p>
 <p>For my binary file, machine type is <code>3e</code> (e_machine = <em>3e 00</em>; Should be read as <em>00 3e</em>).</p>
 <p><em>(Integer representation of <code>3e</code> is <code>62</code>)</em></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/*
-</span></span><span class="line"><span class="cl">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31
-</span></span><span class="line"><span class="cl">*/
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">#define EM_X86_64	62	/* AMD x86-64 */
-</span></span></code></pre></div><h3 id="4-e_version">4. <strong>e_version</strong></h3>
+<pre tabindex="0"><code>/*
+https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31
+*/
+
+#define EM_X86_64	62	/* AMD x86-64 */
+</code></pre><h3 id="4-e_version">4. <strong>e_version</strong></h3>
 <p>This member specifies the version of the ELF file. This is different from the <code>EI_VERSION</code> which tells only about the ELF header version.</p>
 <p>For my binary file, version is <code>1</code> (remember, to convert the value to little endian)</p>
 <p>These are the versions defined in linux kernel uapi header</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#define EV_NONE		0		/* e_version, EI_VERSION */
-</span></span><span class="line"><span class="cl">#define EV_CURRENT	1
-</span></span><span class="line"><span class="cl">#define EV_NUM		2
-</span></span></code></pre></div><h3 id="5-e_entry">5. <strong>e_entry</strong></h3>
+<pre tabindex="0"><code>#define EV_NONE		0		/* e_version, EI_VERSION */
+#define EV_CURRENT	1
+#define EV_NUM		2
+</code></pre><h3 id="5-e_entry">5. <strong>e_entry</strong></h3>
 <p>This member is quite interesting. This tells about the virtual/memory address where program execution begins. This is the starting point of the program.</p>
 <p>You might think, &ldquo;Aha, this must always point to the <code>main()</code> function!&rdquo; Well, here&rsquo;s a plot twist for you!</p>
 <p>For my binary file, the entry point is <code>1050</code> (e_entry = 50 10 00 00 00 00 00 00).</p>
 <p>According to our trusty <code>objdump</code>, this value does not point to the <code>main</code> function but points to the <code>_start</code> function. <em>(..which in turn executes the <code>main</code> function. Here is <a href="https://ayedaemon.github.io/post/2022/01/debugging-c-code/#the-whole-picture">an article</a> that explains this.)</em></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ objdump  -D --disassembler-options=intel hello_world | grep -i &#34;1050&#34;
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">0000000000001050 &lt;_start&gt;:
-</span></span></code></pre></div><h3 id="6-e_phoff">6. <strong>e_phoff</strong></h3>
+<pre tabindex="0"><code>❯ objdump  -D --disassembler-options=intel hello_world | grep -i &#34;1050&#34;
+
+0000000000001050 &lt;_start&gt;:
+</code></pre><h3 id="6-e_phoff">6. <strong>e_phoff</strong></h3>
 <p>This is the program header offset. The starting point in the ELF file where program headers can be found.</p>
 <h3 id="7-e_shoff">7. <strong>e_shoff</strong></h3>
 <p>Just like <code>e_phoff</code>, this member stores the offset of the section headers of the ELF file.</p>
@@ -782,8 +778,8 @@ Linux kernel has some flag types defined -</p>
 <ul>
 <li>Open the file in vim in binary mode (use <code>-b</code> flag)</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vim -b argv_printer
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>vim -b argv_printer
+</code></pre><ul>
 <li>Pass the data to <code>xxd</code> (you can also use the additional flags that xxd supports)
 <ul>
 <li>Press <code>:</code> to go into commmand mode</li>
@@ -791,8 +787,8 @@ Linux kernel has some flag types defined -</p>
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:%!xxd -c 1
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>:%!xxd -c 1
+</code></pre><ul>
 <li>Edit the hex values you want (just like you would edit any other text file, press <code>i</code> and go on)</li>
 <li>Reverse the hex to binary
 <ul>
@@ -801,8 +797,8 @@ Linux kernel has some flag types defined -</p>
 </ul>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:%!xxd -r
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>:%!xxd -r
+</code></pre><ul>
 <li>Now save and quit the vim editor
 <ul>
 <li>If you don&rsquo;t know steps for that consider learning vim first</li>
@@ -814,30 +810,30 @@ Linux kernel has some flag types defined -</p>
 <ul>
 <li>Open the file with vim and edit the <code>EI_MAG</code> part.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Before
-</span></span><span class="line"><span class="cl">  00000000: 7f  .
-</span></span><span class="line"><span class="cl">  00000001: 45  E
-</span></span><span class="line"><span class="cl">  00000002: 4c  L
-</span></span><span class="line"><span class="cl">  00000003: 46  F
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># After
-</span></span><span class="line"><span class="cl">  00000000: 7f  .
-</span></span><span class="line"><span class="cl">  00000001: 48  E
-</span></span><span class="line"><span class="cl">  00000002: 45  L
-</span></span><span class="line"><span class="cl">  00000003: 58  F
-</span></span></code></pre></div><p><em>Note that I&rsquo;ve only changed the hex values and not the ascii values for it.</em></p>
+<pre tabindex="0"><code># Before
+  00000000: 7f  .
+  00000001: 45  E
+  00000002: 4c  L
+  00000003: 46  F
+
+# After
+  00000000: 7f  .
+  00000001: 48  E
+  00000002: 45  L
+  00000003: 58  F
+</code></pre><p><em>Note that I&rsquo;ve only changed the hex values and not the ascii values for it.</em></p>
 <ul>
 <li>revert the hex to binary data (<code>:%!xxd -r</code>)</li>
 <li>write and quit vim (I&rsquo;m still not telling you the command)</li>
 <li>analyze it</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">❯ ./hello_world
-</span></span><span class="line"><span class="cl">zsh: exec format error: ./hello_world
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">❯ readelf --file-header --wide hello_world
-</span></span><span class="line"><span class="cl">readelf: Error: Not an ELF file - it has the wrong magic bytes at the start
-</span></span></code></pre></div><p>The reason for this behaviour is written in kernel code.</p>
+<pre tabindex="0"><code>❯ ./hello_world
+zsh: exec format error: ./hello_world
+
+
+❯ readelf --file-header --wide hello_world
+readelf: Error: Not an ELF file - it has the wrong magic bytes at the start
+</code></pre><p>The reason for this behaviour is written in kernel code.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
 </span></span></span><span class="line"><span class="cl"><span class="cm">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L348
 </span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
@@ -854,27 +850,27 @@ Linux kernel has some flag types defined -</p>
 <ul>
 <li>Open the file with vim and edit the <code>EI_CLASS</code> part.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Before
-</span></span><span class="line"><span class="cl">  00000004: 02  .
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># After
-</span></span><span class="line"><span class="cl">  00000004: 01  .
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code># Before
+  00000004: 02  .
+
+# After
+  00000004: 01  .
+</code></pre><ul>
 <li>revert the hex to binary data (<code>:%!xxd -r</code>)</li>
 <li>write and quit vim (I&rsquo;m still not telling you the command)</li>
 <li>analyze it</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Runs perfectly fine
-</span></span><span class="line"><span class="cl">❯ ./hello_world
-</span></span><span class="line"><span class="cl">Hello World1
-</span></span><span class="line"><span class="cl">Hello World2
-</span></span><span class="line"><span class="cl">Hello World3
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># file command tells another tale
-</span></span><span class="line"><span class="cl">❯ file hello_world
-</span></span><span class="line"><span class="cl">hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header
-</span></span></code></pre></div><p>This is clearly a parsing problem. There are no checks on the kernel for the <code>EI_CLASS</code> (or I should say I could not find any, if you find one, please let me know.)</p>
+<pre tabindex="0"><code># Runs perfectly fine
+❯ ./hello_world
+Hello World1
+Hello World2
+Hello World3
+
+
+# file command tells another tale
+❯ file hello_world
+hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header
+</code></pre><p>This is clearly a parsing problem. There are no checks on the kernel for the <code>EI_CLASS</code> (or I should say I could not find any, if you find one, please let me know.)</p>
 <h3 id="more-diy-kind-of">&hellip;more (DIY, kind of)</h3>
 <p>There are few more interesting things you can play around with</p>
 <ul>
@@ -892,6 +888,5 @@ Linux kernel has some flag types defined -</p>
 </ol>
 ]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

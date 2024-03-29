@@ -6,206 +6,147 @@
     <description>Recent content in Tags on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Oct 2023 15:21:49 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C</title>
       <link>https://ayedaemon.github.io/tags/c/</link>
       <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/c/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>ELF</title>
       <link>https://ayedaemon.github.io/tags/elf/</link>
       <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/elf/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>RE</title>
       <link>https://ayedaemon.github.io/tags/re/</link>
       <pubDate>Fri, 20 Oct 2023 15:21:49 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/re/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>C programming</title>
       <link>https://ayedaemon.github.io/tags/c-programming/</link>
       <pubDate>Mon, 01 May 2023 02:34:50 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/c-programming/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>Linux</title>
       <link>https://ayedaemon.github.io/tags/linux/</link>
       <pubDate>Mon, 01 May 2023 02:34:50 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/linux/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula</title>
       <link>https://ayedaemon.github.io/tags/eudyptula/</link>
       <pubDate>Mon, 01 May 2023 02:32:12 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/eudyptula/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>Security</title>
       <link>https://ayedaemon.github.io/tags/security/</link>
       <pubDate>Tue, 27 Dec 2022 23:25:23 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/security/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>audit</title>
       <link>https://ayedaemon.github.io/tags/audit/</link>
       <pubDate>Sun, 11 Dec 2022 21:15:13 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/audit/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>bootloader</title>
       <link>https://ayedaemon.github.io/tags/bootloader/</link>
       <pubDate>Wed, 28 Sep 2022 01:10:18 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/bootloader/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>mbr</title>
       <link>https://ayedaemon.github.io/tags/mbr/</link>
       <pubDate>Wed, 28 Sep 2022 01:10:18 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/mbr/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>malware</title>
       <link>https://ayedaemon.github.io/tags/malware/</link>
       <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/malware/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>obfuscation</title>
       <link>https://ayedaemon.github.io/tags/obfuscation/</link>
       <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/obfuscation/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>powershell</title>
       <link>https://ayedaemon.github.io/tags/powershell/</link>
       <pubDate>Tue, 30 Aug 2022 17:55:02 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/powershell/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>docker</title>
       <link>https://ayedaemon.github.io/tags/docker/</link>
       <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/docker/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>sbom</title>
       <link>https://ayedaemon.github.io/tags/sbom/</link>
       <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/sbom/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>git</title>
       <link>https://ayedaemon.github.io/tags/git/</link>
       <pubDate>Thu, 25 Feb 2021 23:07:04 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/git/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>keylogger</title>
       <link>https://ayedaemon.github.io/tags/keylogger/</link>
       <pubDate>Tue, 02 Feb 2021 14:47:26 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/keylogger/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>Debugging</title>
       <link>https://ayedaemon.github.io/tags/debugging/</link>
       <pubDate>Wed, 27 Jan 2021 14:58:51 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/debugging/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>IDS</title>
       <link>https://ayedaemon.github.io/tags/ids/</link>
       <pubDate>Sat, 19 Dec 2020 14:25:28 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/ids/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
     <item>
       <title>cryptograpy</title>
       <link>https://ayedaemon.github.io/tags/cryptograpy/</link>
       <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/tags/cryptograpy/</guid>
       <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

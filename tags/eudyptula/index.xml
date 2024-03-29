@@ -6,40 +6,40 @@
     <description>Recent content in Eudyptula on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 01 May 2023 02:32:12 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/eudyptula/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 May 2023 02:32:12 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/eudyptula/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Eudyptula Task 7</title>
       <link>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</link>
       <pubDate>Mon, 01 May 2023 02:32:12 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/</guid>
       <description>Task 7 for Eudyptula challenge</description>
-      <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">This</span> <span class="n">is</span> <span class="n">Task</span> <span class="mi">07</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Eudyptula</span> <span class="n">Challenge</span>
-</span></span><span class="line"><span class="cl"><span class="o">------------------------------------------</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Great</span> <span class="n">work</span> <span class="n">with</span> <span class="n">that</span> <span class="n">misc</span> <span class="n">device</span> <span class="n">driver</span><span class="o">.</span>  <span class="n">Isn</span><span class="s1">&#39;t that a nice and simple</span>
-</span></span><span class="line"><span class="cl"><span class="n">way</span> <span class="n">to</span> <span class="n">write</span> <span class="n">a</span> <span class="n">character</span> <span class="n">driver</span><span class="err">?</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Just</span> <span class="n">when</span> <span class="n">you</span> <span class="n">think</span> <span class="n">this</span> <span class="n">challenge</span> <span class="n">is</span> <span class="n">all</span> <span class="n">about</span> <span class="n">writing</span> <span class="n">kernel</span> <span class="n">code</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl"><span class="n">this</span> <span class="n">task</span> <span class="n">is</span> <span class="n">a</span> <span class="n">throwback</span> <span class="n">to</span> <span class="n">your</span> <span class="n">second</span> <span class="n">one</span><span class="o">.</span>  <span class="n">Yes</span><span class="p">,</span> <span class="n">that</span><span class="s1">&#39;s right,</span>
-</span></span><span class="line"><span class="cl"><span class="n">building</span> <span class="n">kernels</span><span class="o">.</span>  <span class="n">Turns</span> <span class="n">out</span> <span class="n">that</span><span class="s1">&#39;s what most developers end up doing,</span>
-</span></span><span class="line"><span class="cl"><span class="n">tons</span> <span class="ow">and</span> <span class="n">tons</span> <span class="n">of</span> <span class="n">rebuilds</span><span class="p">,</span> <span class="ow">not</span> <span class="n">writing</span> <span class="n">new</span> <span class="n">code</span><span class="o">.</span>  <span class="n">Sad</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">is</span> <span class="n">a</span> <span class="n">good</span>
-</span></span><span class="line"><span class="cl"><span class="n">skill</span> <span class="n">to</span> <span class="n">know</span><span class="o">.</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">The</span> <span class="n">tasks</span> <span class="n">this</span> <span class="nb">round</span> <span class="n">are</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">  <span class="o">-</span> <span class="n">Download</span> <span class="n">the</span> <span class="n">linux</span><span class="o">-</span><span class="n">next</span> <span class="n">kernel</span> <span class="k">for</span> <span class="n">today</span><span class="o">.</span>  <span class="n">Or</span> <span class="n">tomorrow</span><span class="p">,</span> <span class="n">just</span> <span class="n">use</span>
-</span></span><span class="line"><span class="cl">    <span class="n">the</span> <span class="n">latest</span> <span class="n">one</span><span class="o">.</span>  <span class="n">It</span> <span class="n">changes</span> <span class="n">every</span> <span class="n">day</span> <span class="n">so</span> <span class="n">there</span> <span class="n">is</span> <span class="n">no</span> <span class="n">specific</span> <span class="n">one</span>
-</span></span><span class="line"><span class="cl">    <span class="n">you</span> <span class="n">need</span> <span class="n">to</span> <span class="n">pick</span><span class="o">.</span>  <span class="n">Build</span> <span class="n">it</span><span class="o">.</span>  <span class="n">Boot</span> <span class="n">it</span><span class="o">.</span>  <span class="n">Provide</span> <span class="n">proof</span> <span class="n">that</span> <span class="n">you</span> <span class="n">built</span>
-</span></span><span class="line"><span class="cl">    <span class="ow">and</span> <span class="n">booted</span> <span class="n">it</span><span class="o">.</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">What</span> <span class="n">is</span> <span class="n">the</span> <span class="n">linux</span><span class="o">-</span><span class="n">next</span> <span class="n">kernel</span><span class="err">?</span>  <span class="n">Ah</span><span class="p">,</span> <span class="n">that</span><span class="s1">&#39;s part of the challenge.</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">For</span> <span class="n">a</span> <span class="n">hint</span><span class="p">,</span> <span class="n">you</span> <span class="n">should</span> <span class="n">read</span> <span class="n">the</span> <span class="n">excellent</span> <span class="n">documentation</span> <span class="n">about</span> <span class="n">how</span> <span class="n">the</span>
-</span></span><span class="line"><span class="cl"><span class="n">Linux</span> <span class="n">kernel</span> <span class="n">is</span> <span class="n">developed</span> <span class="ow">in</span> <span class="n">Documentation</span><span class="o">/</span><span class="n">development</span><span class="o">-</span><span class="n">process</span><span class="o">/</span> <span class="ow">in</span> <span class="n">the</span>
-</span></span><span class="line"><span class="cl"><span class="n">kernel</span> <span class="n">source</span> <span class="n">itself</span><span class="o">.</span>  <span class="n">It</span><span class="s1">&#39;s a great read, and should tell you all you</span>
-</span></span><span class="line"><span class="cl"><span class="n">never</span> <span class="n">wanted</span> <span class="n">to</span> <span class="n">know</span> <span class="n">about</span> <span class="n">what</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">developers</span> <span class="k">do</span> <span class="ow">and</span> <span class="n">how</span> <span class="n">they</span>
-</span></span><span class="line"><span class="cl"><span class="k">do</span> <span class="n">it</span><span class="o">.</span>
-</span></span></code></pre></div><h1 id="what-is-linux">What is Linux??</h1>
+      <content:encoded><![CDATA[<pre tabindex="0"><code>This is Task 07 of the Eudyptula Challenge
+------------------------------------------
+
+Great work with that misc device driver.  Isn&#39;t that a nice and simple
+way to write a character driver?
+
+Just when you think this challenge is all about writing kernel code,
+this task is a throwback to your second one.  Yes, that&#39;s right,
+building kernels.  Turns out that&#39;s what most developers end up doing,
+tons and tons of rebuilds, not writing new code.  Sad, but it is a good
+skill to know.
+
+The tasks this round are:
+  - Download the linux-next kernel for today.  Or tomorrow, just use
+    the latest one.  It changes every day so there is no specific one
+    you need to pick.  Build it.  Boot it.  Provide proof that you built
+    and booted it.
+
+What is the linux-next kernel?  Ah, that&#39;s part of the challenge.
+
+For a hint, you should read the excellent documentation about how the
+Linux kernel is developed in Documentation/development-process/ in the
+kernel source itself.  It&#39;s a great read, and should tell you all you
+never wanted to know about what Linux kernel developers do and how they
+do it.
+</code></pre><h1 id="what-is-linux">What is Linux??</h1>
 <p>Before jumping on Linux-next&hellip;let&rsquo;s start with an overview of the Linux kernel and its significance within the Linux operating system.</p>
 <p>Linux is an open-source operating system kernel that was initially developed by Linus Torvalds in 1991. The kernel serves as the core component of the Linux operating system, providing essential functionalities and acting as an intermediary between the hardware and the software layers.</p>
 <p>The Linux kernel plays a crucial role in managing system resources, handling hardware devices, and providing a foundation for software applications to run efficiently. Some of its key responsibilities include process management, memory management, device driver handling, file system management, and networking.</p>
@@ -169,30 +169,30 @@
 <ul>
 <li>Clone the linux tree</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+</code></pre><ul>
 <li>Add a <code>linux-next</code> remote.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd linux
-</span></span><span class="line"><span class="cl">git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>cd linux
+git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+</code></pre><ul>
 <li>Fetch the changes and tags from <code>linux-next</code>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git fetch linux-next
-</span></span><span class="line"><span class="cl">git fetch --tags linux-next
-</span></span></code></pre></div><h2 id="regular-tracking">Regular tracking</h2>
+<pre tabindex="0"><code>git fetch linux-next
+git fetch --tags linux-next
+</code></pre><h2 id="regular-tracking">Regular tracking</h2>
 <p>Linux <code>-next</code> trees are built every day&hellip; so you need to update it everyday before your work to make sure that you are not working on an older code base.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git checkout master
-</span></span><span class="line"><span class="cl">git remote update
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>git checkout master
+git remote update
+</code></pre><ul>
 <li>Check newer tags</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git tag -l &#34;next-*&#34; | tail
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>git tag -l &#34;next-*&#34; | tail
+</code></pre><ul>
 <li>Checkout a new branch from the branch you want to work</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git checkout -b my_local_branch next-20230427
-</span></span></code></pre></div><p>Now the next steps are very simple and straight-forward.</p>
+<pre tabindex="0"><code>git checkout -b my_local_branch next-20230427
+</code></pre><p>Now the next steps are very simple and straight-forward.</p>
 <ul>
 <li>Make changes to the code base.</li>
 <li>Test it with <code>./scripts/checkpatch.pl</code> script for any issues which you need to solve before submitting it as a patch.</li>
@@ -219,12 +219,10 @@
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task 6</title>
       <link>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</link>
       <pubDate>Sun, 18 Sep 2022 13:57:01 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/</guid>
       <description>Task 6 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 06 of the Eudyptula Challenge
@@ -831,12 +829,10 @@
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task5</title>
       <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</link>
       <pubDate>Wed, 22 Jun 2022 16:14:27 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/</guid>
       <description>Task 5 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 05 of the Eudyptula Challenge
@@ -3678,30 +3674,30 @@ USB interfaces may have alternate settings, which are different choices for para
 </span></span><span class="line"><span class="cl">sudo /bin/bash -c <span class="s1">&#39;echo 1-4.3:1.0l &gt; /sys/bus/usb/drivers/ayedaemonUSBdriver/bind&#39;</span>
 </span></span></code></pre></div><p>These are the files exposed by kernel to handle dynamic binding and unbinding from user-space. The number <code>1-4.3:1.0</code> the endpoint location specifier &hellip; I mean this is a specifier that can be used to locate the actual endpoint for the USB that needs this driver.</p>
 <p>If we break it down it&rsquo;ll be much more understandable.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">##  1-4.3:1.0
-</span></span><span class="line"><span class="cl">1: root_hub
-</span></span><span class="line"><span class="cl">4: My USB hub (usb hub extension connected to laptop usb port)
-</span></span><span class="line"><span class="cl">3: USB device connected to that hub
-</span></span><span class="line"><span class="cl">1: Config number
-</span></span><span class="line"><span class="cl">0: Interface number
-</span></span></code></pre></div><p>To summarize, the device naming scheme is somewhat like this -&gt; <code>root_hub-hub_port.internal_port:config.interface</code>. So If I directly plug my pen-drive into my laptop USB port, it should give me something like <code>1-*:1.0</code>.. because I know I&rsquo;m plugging it to bus 1 (It&rsquo;s my laptop, I know it), and then the <code>config.interface</code> part will be same as the old one. Interesting thing to note here is that since there is no external hub connected this time, so the <code>hub_port.internal_port</code> will just be <code>hub_port</code>. So I&rsquo;m expecting only 1 value in that place. Hence, <code>1-*:1.0</code> and in the logs, I got <code>1-2:1.0</code>.</p>
+<pre tabindex="0"><code>##  1-4.3:1.0
+1: root_hub
+4: My USB hub (usb hub extension connected to laptop usb port)
+3: USB device connected to that hub
+1: Config number
+0: Interface number
+</code></pre><p>To summarize, the device naming scheme is somewhat like this -&gt; <code>root_hub-hub_port.internal_port:config.interface</code>. So If I directly plug my pen-drive into my laptop USB port, it should give me something like <code>1-*:1.0</code>.. because I know I&rsquo;m plugging it to bus 1 (It&rsquo;s my laptop, I know it), and then the <code>config.interface</code> part will be same as the old one. Interesting thing to note here is that since there is no external hub connected this time, so the <code>hub_port.internal_port</code> will just be <code>hub_port</code>. So I&rsquo;m expecting only 1 value in that place. Hence, <code>1-*:1.0</code> and in the logs, I got <code>1-2:1.0</code>.</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/Yq7ioTdDP5GzLSrqOw/giphy.gif#center" alt=""  />
 </p>
 <p>In this era of laziness and automation, we will want to do some automation for binding/unbinding. What we would need is a program that keeps on listening on the device events and help us to run our commands when a particular event occurs&hellip;. <code>udev</code> can help us do that!!! All we have to do is write a simple rule and provide it to <code>udev</code> and the rest will be taken care of.</p>
 <p>To create a udev rule, paste the below text in the following file - <code>/etc/udev/rules.d/99-custom-usb.rules</code></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ACTION==&#34;bind&#34;, SUBSYSTEMS==&#34;usb&#34;, \
-</span></span><span class="line"><span class="cl">OPTIONS=&#34;log_level=debug&#34;, \
-</span></span><span class="line"><span class="cl">ATTRS{idVendor}==&#34;058f&#34;, ATTRS{idProduct}==&#34;6387&#34;, \
-</span></span><span class="line"><span class="cl">RUN+=&#34;/bin/bash -c &#39;echo $kernel &gt; /sys/bus/usb/drivers/usb-storage/unbind&#39;&#34;, \
-</span></span><span class="line"><span class="cl">RUN+=&#34;/bin/bash -c &#39;echo $kernel &gt; /sys/bus/usb/drivers/ayedaemonUSBdriver/bind&#39;&#34;
-</span></span></code></pre></div><p>The above rule matches the USB Attributes and triggers the <code>RUN</code> commands accordingly. If you want this rule to be more generic, remove the <code>ATTRS{idVendor}</code> and <code>ATTRS{idProduct}</code>. <a href="http://reactivated.net/writing_udev_rules.html">Read here</a> to learn more about writing udev rules.</p>
+<pre tabindex="0"><code class="language-udev" data-lang="udev">ACTION==&#34;bind&#34;, SUBSYSTEMS==&#34;usb&#34;, \
+OPTIONS=&#34;log_level=debug&#34;, \
+ATTRS{idVendor}==&#34;058f&#34;, ATTRS{idProduct}==&#34;6387&#34;, \
+RUN+=&#34;/bin/bash -c &#39;echo $kernel &gt; /sys/bus/usb/drivers/usb-storage/unbind&#39;&#34;, \
+RUN+=&#34;/bin/bash -c &#39;echo $kernel &gt; /sys/bus/usb/drivers/ayedaemonUSBdriver/bind&#39;&#34;
+</code></pre><p>The above rule matches the USB Attributes and triggers the <code>RUN</code> commands accordingly. If you want this rule to be more generic, remove the <code>ATTRS{idVendor}</code> and <code>ATTRS{idProduct}</code>. <a href="http://reactivated.net/writing_udev_rules.html">Read here</a> to learn more about writing udev rules.</p>
 <p>If you change the C code and reload the module and remove the <code>ATTRS</code> selector from the udev rule, you can get a system where any <code>usb-storage</code> kind of devices will be automatically binded with <code>Driver=ayedaemonUSBdriver</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Port 3: Dev 18, If 0, Class=Mass Storage, Driver=ayedaemonUSBdriver, 480M
-</span></span><span class="line"><span class="cl">ID 058f:6387 Alcor Micro Corp. Flash Drive
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Port 1: Dev 17, If 0, Class=Mass Storage, Driver=ayedaemonUSBdriver, 480M
-</span></span><span class="line"><span class="cl">ID 0930:6545 Toshiba Corp. Kingston DataTraveler 102/2.0 / HEMA Flash Drive 2 GB / PNY Attache 4GB Stick
-</span></span></code></pre></div><h3 id="conclusion">Conclusion</h3>
+<pre tabindex="0"><code>Port 3: Dev 18, If 0, Class=Mass Storage, Driver=ayedaemonUSBdriver, 480M
+ID 058f:6387 Alcor Micro Corp. Flash Drive
+
+Port 1: Dev 17, If 0, Class=Mass Storage, Driver=ayedaemonUSBdriver, 480M
+ID 0930:6545 Toshiba Corp. Kingston DataTraveler 102/2.0 / HEMA Flash Drive 2 GB / PNY Attache 4GB Stick
+</code></pre><h3 id="conclusion">Conclusion</h3>
 <p>Writing a Linux USB device driver is not a difficult task if one understands how USB subsystem works behind the abstractions. This article just touches the surface of USB drivers and there is still a lot more to look out for&hellip; like USB urbs. If you want to continue learning more about USB drivers, most common recommendation on internet is - <a href="https://www.makelinux.net/ldd3/?u=chp-4-sect-2.shtml"><em>Linux Device Drivers: Chapter 13. USB Drivers</em></a>. This book is somewhat dated, but the content is still relevant.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
@@ -3749,12 +3745,10 @@ USB interfaces may have alternate settings, which are different choices for para
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task4</title>
       <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</link>
       <pubDate>Fri, 17 Jun 2022 16:14:27 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/</guid>
       <description>Task 4 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 04 of the Eudyptula Challenge
@@ -4057,12 +4051,10 @@ USB interfaces may have alternate settings, which are different choices for para
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task3</title>
       <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</link>
       <pubDate>Thu, 16 Jun 2022 16:14:27 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/</guid>
       <description>Task 3 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 03 of the Eudyptula Challenge
@@ -4271,26 +4263,26 @@ USB interfaces may have alternate settings, which are different choices for para
 <p>Linux kernel developers have also made automation scripts for you that actually finds the maintainers for a file.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./scripts/get_maintainer.pl -f Makefile
 </span></span></code></pre></div><p>Output:-</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">Masahiro</span> <span class="n">Yamada</span> <span class="o">&lt;</span><span class="n">masahiroy</span><span class="err">@</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">maintainer</span><span class="p">:</span><span class="n">KERNEL</span> <span class="n">BUILD</span> <span class="o">+</span> <span class="n">files</span> <span class="n">below</span> <span class="n">scripts</span><span class="o">/</span> <span class="p">(</span><span class="n">unless</span> <span class="n">mai</span><span class="o">...</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">Michal</span> <span class="n">Marek</span> <span class="o">&lt;</span><span class="n">michal</span><span class="o">.</span><span class="n">lkml</span><span class="err">@</span><span class="n">markovi</span><span class="o">.</span><span class="n">net</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">maintainer</span><span class="p">:</span><span class="n">KERNEL</span> <span class="n">BUILD</span> <span class="o">+</span> <span class="n">files</span> <span class="n">below</span> <span class="n">scripts</span><span class="o">/</span> <span class="p">(</span><span class="n">unless</span> <span class="n">mai</span><span class="o">...</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">Nick</span> <span class="n">Desaulniers</span> <span class="o">&lt;</span><span class="n">ndesaulniers</span><span class="err">@</span><span class="n">google</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">KERNEL</span> <span class="n">BUILD</span> <span class="o">+</span> <span class="n">files</span> <span class="n">below</span> <span class="n">scripts</span><span class="o">/</span> <span class="p">(</span><span class="n">unless</span> <span class="n">mai</span><span class="o">...</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">Nick</span> <span class="n">Terrell</span> <span class="o">&lt;</span><span class="n">terrelln</span><span class="err">@</span><span class="n">fb</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">maintainer</span><span class="p">:</span><span class="n">ZSTD</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">Alexei</span> <span class="n">Starovoitov</span> <span class="o">&lt;</span><span class="n">ast</span><span class="err">@</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">supporter</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Daniel</span> <span class="n">Borkmann</span> <span class="o">&lt;</span><span class="n">daniel</span><span class="err">@</span><span class="n">iogearbox</span><span class="o">.</span><span class="n">net</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">supporter</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Andrii</span> <span class="n">Nakryiko</span> <span class="o">&lt;</span><span class="n">andrii</span><span class="err">@</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">supporter</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Martin</span> <span class="n">KaFai</span> <span class="n">Lau</span> <span class="o">&lt;</span><span class="n">kafai</span><span class="err">@</span><span class="n">fb</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Song</span> <span class="n">Liu</span> <span class="o">&lt;</span><span class="n">songliubraving</span><span class="err">@</span><span class="n">fb</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Yonghong</span> <span class="n">Song</span> <span class="o">&lt;</span><span class="n">yhs</span><span class="err">@</span><span class="n">fb</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">John</span> <span class="n">Fastabend</span> <span class="o">&lt;</span><span class="n">john</span><span class="o">.</span><span class="n">fastabend</span><span class="err">@</span><span class="n">gmail</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">KP</span> <span class="n">Singh</span> <span class="o">&lt;</span><span class="n">kpsingh</span><span class="err">@</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">Nathan</span> <span class="n">Chancellor</span> <span class="o">&lt;</span><span class="n">nathan</span><span class="err">@</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">supporter</span><span class="p">:</span><span class="n">CLANG</span><span class="o">/</span><span class="n">LLVM</span> <span class="n">BUILD</span> <span class="n">SUPPORT</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">Tom</span> <span class="n">Rix</span> <span class="o">&lt;</span><span class="n">trix</span><span class="err">@</span><span class="n">redhat</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">reviewer</span><span class="p">:</span><span class="n">CLANG</span><span class="o">/</span><span class="n">LLVM</span> <span class="n">BUILD</span> <span class="n">SUPPORT</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">linux</span><span class="o">-</span><span class="n">kbuild</span><span class="err">@</span><span class="n">vger</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span> <span class="p">(</span><span class="n">open</span> <span class="n">list</span><span class="p">:</span><span class="n">KERNEL</span> <span class="n">BUILD</span> <span class="o">+</span> <span class="n">files</span> <span class="n">below</span> <span class="n">scripts</span><span class="o">/</span> <span class="p">(</span><span class="n">unless</span> <span class="n">mai</span><span class="o">...</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">linux</span><span class="o">-</span><span class="n">kernel</span><span class="err">@</span><span class="n">vger</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span> <span class="p">(</span><span class="n">open</span> <span class="n">list</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">netdev</span><span class="err">@</span><span class="n">vger</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span> <span class="p">(</span><span class="n">open</span> <span class="n">list</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">bpf</span><span class="err">@</span><span class="n">vger</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span> <span class="p">(</span><span class="n">open</span> <span class="n">list</span><span class="p">:</span><span class="n">BPF</span> <span class="p">(</span><span class="n">Safe</span> <span class="n">dynamic</span> <span class="n">programs</span> <span class="ow">and</span> <span class="n">tools</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">llvm</span><span class="err">@</span><span class="n">lists</span><span class="o">.</span><span class="n">linux</span><span class="o">.</span><span class="n">dev</span> <span class="p">(</span><span class="n">open</span> <span class="n">list</span><span class="p">:</span><span class="n">CLANG</span><span class="o">/</span><span class="n">LLVM</span> <span class="n">BUILD</span> <span class="n">SUPPORT</span><span class="p">)</span>
-</span></span></code></pre></div><p>The above list gives you the recipients list for you patch. Before submitting your patch, please read <a href="https://www.kernel.org/doc/html/latest/process/submitting-patches.html">the official kernel documentations</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> to know mode about the patch submissions.</p>
+<pre tabindex="0"><code>Masahiro Yamada &lt;masahiroy@kernel.org&gt; (maintainer:KERNEL BUILD + files below scripts/ (unless mai...)
+Michal Marek &lt;michal.lkml@markovi.net&gt; (maintainer:KERNEL BUILD + files below scripts/ (unless mai...)
+Nick Desaulniers &lt;ndesaulniers@google.com&gt; (reviewer:KERNEL BUILD + files below scripts/ (unless mai...)
+Nick Terrell &lt;terrelln@fb.com&gt; (maintainer:ZSTD)
+Alexei Starovoitov &lt;ast@kernel.org&gt; (supporter:BPF (Safe dynamic programs and tools))
+Daniel Borkmann &lt;daniel@iogearbox.net&gt; (supporter:BPF (Safe dynamic programs and tools))
+Andrii Nakryiko &lt;andrii@kernel.org&gt; (supporter:BPF (Safe dynamic programs and tools))
+Martin KaFai Lau &lt;kafai@fb.com&gt; (reviewer:BPF (Safe dynamic programs and tools))
+Song Liu &lt;songliubraving@fb.com&gt; (reviewer:BPF (Safe dynamic programs and tools))
+Yonghong Song &lt;yhs@fb.com&gt; (reviewer:BPF (Safe dynamic programs and tools))
+John Fastabend &lt;john.fastabend@gmail.com&gt; (reviewer:BPF (Safe dynamic programs and tools))
+KP Singh &lt;kpsingh@kernel.org&gt; (reviewer:BPF (Safe dynamic programs and tools))
+Nathan Chancellor &lt;nathan@kernel.org&gt; (supporter:CLANG/LLVM BUILD SUPPORT)
+Tom Rix &lt;trix@redhat.com&gt; (reviewer:CLANG/LLVM BUILD SUPPORT)
+linux-kbuild@vger.kernel.org (open list:KERNEL BUILD + files below scripts/ (unless mai...)
+linux-kernel@vger.kernel.org (open list)
+netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT)
+</code></pre><p>The above list gives you the recipients list for you patch. Before submitting your patch, please read <a href="https://www.kernel.org/doc/html/latest/process/submitting-patches.html">the official kernel documentations</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> to know mode about the patch submissions.</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/fvmbkNjNwBlHCG3Yin/giphy.gif#center" alt=""  />
 </p>
 <h4 id="how-do-they-apply-my-patch">how do they apply my patch??</h4>
@@ -4312,12 +4304,10 @@ USB interfaces may have alternate settings, which are different choices for para
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task2</title>
       <link>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</link>
       <pubDate>Wed, 01 Jun 2022 15:14:27 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/</guid>
       <description>Task 2 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 02 of the Eudyptula Challenge
@@ -4426,46 +4416,46 @@ USB interfaces may have alternate settings, which are different choices for para
 </span></span><span class="line"><span class="cl"><span class="c1">#   &lt; CONFIG_PRINTK_CALLER=y</span>
 </span></span><span class="line"><span class="cl"><span class="c1">#   &gt; # CONFIG_PRINTK_CALLER is not set</span>
 </span></span></code></pre></div><p>Now we have very few steps left to be done. We need to <strong><em>compile the kernel</em></strong>, then <strong><em>install modules</em></strong> and finally, <strong><em>install kerrnel</em></strong>. Run below commands to get this done.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Update .config with newer config file
-</span></span><span class="line"><span class="cl">mv -v new.config .config
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Backup the newer config file
-</span></span><span class="line"><span class="cl">cp -v .config ../new.config
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Install some more dependencies
-</span></span><span class="line"><span class="cl">sudo pacman -S --noconfirm --needed \
-</span></span><span class="line"><span class="cl">	bc \
-</span></span><span class="line"><span class="cl">	cpio   # If on arch based distro or using my vagrantfile
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Compile kernel (might require your input) - use -j4 to make it build faster
-</span></span><span class="line"><span class="cl">make -j4
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Install modules (takes some time) - user -j4 to make it build faster
-</span></span><span class="line"><span class="cl">sudo make modules_install -j4
-</span></span></code></pre></div><p>If you are use LILO bootloader, then the kernel make file will do the job for you with this command - <code>sudo make install</code>. But if you are using GRUB, then you will have to make some manual steps by running below commands.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Copy kernel image to /boot
-</span></span><span class="line"><span class="cl">sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Copy system.map to /boot
-</span></span><span class="line"><span class="cl">sudo cp System.map /boot/System-ayedaemonlinux.map
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Copy config file to /boot (just to be safe)
-</span></span><span class="line"><span class="cl">sudo cp .config /boot/ayedaemonlinux.kernel.config
-</span></span></code></pre></div><p>Let&rsquo;s take a minute to see what we just did. After we configured the linux kernel using <code>make</code> and <code>.config</code> file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-</p>
+<pre tabindex="0"><code># Update .config with newer config file
+mv -v new.config .config
+
+# Backup the newer config file
+cp -v .config ../new.config
+
+# Install some more dependencies
+sudo pacman -S --noconfirm --needed \
+	bc \
+	cpio   # If on arch based distro or using my vagrantfile
+
+# Compile kernel (might require your input) - use -j4 to make it build faster
+make -j4
+
+# Install modules (takes some time) - user -j4 to make it build faster
+sudo make modules_install -j4
+</code></pre><p>If you are use LILO bootloader, then the kernel make file will do the job for you with this command - <code>sudo make install</code>. But if you are using GRUB, then you will have to make some manual steps by running below commands.</p>
+<pre tabindex="0"><code># Copy kernel image to /boot
+sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux
+
+# Copy system.map to /boot
+sudo cp System.map /boot/System-ayedaemonlinux.map
+
+# Copy config file to /boot (just to be safe)
+sudo cp .config /boot/ayedaemonlinux.kernel.config
+</code></pre><p>Let&rsquo;s take a minute to see what we just did. After we configured the linux kernel using <code>make</code> and <code>.config</code> file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-</p>
 <ol>
 <li><code>vmlinuz</code> =&gt; Is the actual kernel file. Yes it is the kernel you were waiting for so long. If you fancy, do 	<code>file /boot/vmlinuz-ayedaemonlinux</code> and check the results.</li>
 <li><code>System.map</code> =&gt; This is the map file which stores the kernel symbol table information. <a href="https://rlworkman.net/system.map/">Read more about it here</a></li>
 </ol>
 <p>Anyways, we need these files in our <code>/boot/</code> directory so that our boot-loader can load our compiled kernel. But our boot-loader is dumb, it can not simply detect the files from <code>/boot/</code> and show us options on the boot-loader screen, we will have to do that as well. You might also need to generate a <code>initrd</code> file depending upon what configurations you are using on your system. If you are following the steps from this blog, then you need <strong>initrd</strong> for sure. <strong>Initrd</strong> is the program that helps your kernel to load and boot up properly by providing the modules support that are not built into the kernel at compile time. In this blog, we have not compiled all the modules in the kernel that our kernel might need at boot time, so we will create a <code>initrd</code> file and then we can tell our boot loader about our custom kernel.</p>
 <p>Use <code>mkinitcpio</code> command to generate a initrd file and then update bootloader config using <code>grub-mkconfig</code> command. If you want this kernel to be default, then you&rsquo;ll have to make proper changes to the boot config file. Read more about it from <a href="https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Changing_the_default_menu_entry">arch wiki</a> or <a href="https://stackoverflow.com/questions/44422745/change-default-kernel-version-in-grub">stackoverflow</a>. If you are someone who prefers easy workarounds, you can also select the new kernel from the grub menu at boot time; Just make sure that <code>GRUB_TIMEOUT</code> variable (from <code>/etc/default/grub</code>) is not set to zero.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># generate initramfs
-</span></span><span class="line"><span class="cl">sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># update grub config - add entry to boot menu
-</span></span><span class="line"><span class="cl">sudo grub-mkconfig -o /boot/grub/grub.cfg
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># Setup grub boot order if you want to - else use the lazy way
-</span></span></code></pre></div><p>Output:-</p>
+<pre tabindex="0"><code># generate initramfs
+sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img
+
+# update grub config - add entry to boot menu
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+# Setup grub boot order if you want to - else use the lazy way
+</code></pre><p>Output:-</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">#  sudo grub-mkconfig -o /boot/grub/grub.cfg
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">Generating grub configuration file ...
@@ -4497,12 +4487,10 @@ USB interfaces may have alternate settings, which are different choices for para
 </div>
 ]]></content:encoded>
     </item>
-    
     <item>
       <title>Eudyptula Task1</title>
       <link>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</link>
       <pubDate>Wed, 25 May 2022 15:14:27 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/05/eudyptula-task-1/</guid>
       <description>Task 1 for Eudyptula challenge</description>
       <content:encoded><![CDATA[<h3 id="what-is-this">What is this?</h3>
@@ -4651,6 +4639,5 @@ USB interfaces may have alternate settings, which are different choices for para
 </div>
 ]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

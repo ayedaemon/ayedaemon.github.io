@@ -6,12 +6,12 @@
     <description>Recent content in git on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 25 Feb 2021 23:07:04 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Feb 2021 23:07:04 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Git Form Inside Out</title>
       <link>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</link>
       <pubDate>Thu, 25 Feb 2021 23:07:04 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2021/02/git-form-inside-out/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Inside out approach to learn git&lt;/p&gt;
@@ -29,8 +29,8 @@
 </p>
 <p>Next step after this will be creating/initializing a git repository. This can be done using <code>git init</code> command in the <code>working directory</code>.</p>
 <p>[ OUTPUT ]:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Initialized empty Git repository in /home/ayedaemon/extra/playground/play-git/.git/
-</span></span></code></pre></div><p>This will create a <code>.git</code> folder in my working repo as indicated by the output of <code>git init</code> command (above).</p>
+<pre tabindex="0"><code>Initialized empty Git repository in /home/ayedaemon/extra/playground/play-git/.git/
+</code></pre><p>This will create a <code>.git</code> folder in my working repo as indicated by the output of <code>git init</code> command (above).</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*vQK4HULRUlQaa_x_kVQYvw.png" alt="adb3f2fb0a40e1c709355decfdaa7e1a.png"  />
 </p>
 <p>This <code>.git</code> folder is generally called <code>git repository</code>. This is the place where all of the git magic resides. All your configuration files, repo description, commit histories, information about branches, and other git related things are present here in this directory.</p>
@@ -75,26 +75,26 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*g6Tmt0Ye63GSIo92f44Q5A.png" alt="68cacb0fc7051e7605d1500d4dbdc042.png"  />
 </p>
 <p>If we are to visualize the current situation it&rsquo;ll be something like this.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    HEAD
-</span></span><span class="line"><span class="cl">      +---------+
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                v
-</span></span><span class="line"><span class="cl">            master +----------+
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              v
-</span></span><span class="line"><span class="cl">                    +---------+--------+
-</span></span><span class="line"><span class="cl">                    |                  |
-</span></span><span class="line"><span class="cl">                    |    ed6108f       |
-</span></span><span class="line"><span class="cl">                    |                  |
-</span></span><span class="line"><span class="cl">                    +------------------+
-</span></span></code></pre></div><p>Let&rsquo;s add more commits to it now.</p>
+<pre tabindex="0"><code>    HEAD
+      +---------+
+                |
+                |
+                |
+                |
+                |
+                |
+                v
+            master +----------+
+                              |
+                              |
+                              |
+                              v
+                    +---------+--------+
+                    |                  |
+                    |    ed6108f       |
+                    |                  |
+                    +------------------+
+</code></pre><p>Let&rsquo;s add more commits to it now.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*I2RizOVqQNubcH9WCoSz6Q.png" alt="cbdf135114c2841bff7a548a257b0be4.png"  />
 </p>
 <p>We now have 2 new objects for 2 new files.</p>
@@ -114,26 +114,26 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*kVSAsLYHDYGn9TfPLYGCpA.png" alt="6be26d0862e1d91c65932568f0d00252.png"  />
 </p>
 <p>Visual diagram for the above will look something like this.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">     HEAD
-</span></span><span class="line"><span class="cl">      +---------+
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                |
-</span></span><span class="line"><span class="cl">                v
-</span></span><span class="line"><span class="cl">            master +----------+
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              v
-</span></span><span class="line"><span class="cl">                        +------------------+              +--------+-------+
-</span></span><span class="line"><span class="cl">                        |                  |              |                |
-</span></span><span class="line"><span class="cl">                        |    20998091      +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                        |                  |              |                |
-</span></span><span class="line"><span class="cl">                        +------------------+              +----------------+
-</span></span></code></pre></div><p>You can also check this from the screenshot below.</p>
+<pre tabindex="0"><code>     HEAD
+      +---------+
+                |
+                |
+                |
+                |
+                |
+                |
+                v
+            master +----------+
+                              |
+                              |
+                              |
+                              v
+                        +------------------+              +--------+-------+
+                        |                  |              |                |
+                        |    20998091      +&lt;-------------+   ed6108f      |
+                        |                  |              |                |
+                        +------------------+              +----------------+
+</code></pre><p>You can also check this from the screenshot below.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*vbLTth8rJXui9kGYU0ZV5Q.png" alt="7f17fb655b855a4d6e8bf4b4e72c859f.png"  />
 </p>
 <p>Let&rsquo;s go branching now. You can create a new branch using <code>git checkout -b feature</code>. This command will create a branch for you. We can also observe that there are 2 new files.. 1 in the <code>logs</code> and another one in the <code>refs/heads</code>.</p>
@@ -147,102 +147,102 @@
 <li><code>feature</code> and <code>master</code> branch point to the same commit at the moment.</li>
 <li><code>.git/HEAD</code> (HEAD) points to the <code>feature</code> branch. This means whatever changes we will make it&rsquo;ll be made on the <code>feature</code> branch.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">            master +----------+
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              v
-</span></span><span class="line"><span class="cl">                        +------------------+              +--------+-------+
-</span></span><span class="line"><span class="cl">                        |                  |              |                |
-</span></span><span class="line"><span class="cl">                        |    20998091      +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                        |                  |              |                |
-</span></span><span class="line"><span class="cl">                        +------------------+              +----------------+
-</span></span><span class="line"><span class="cl"> HEAD                              ^
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  +---------&gt;  feature +-----------+                    
-</span></span></code></pre></div><p>Let&rsquo;s add new commits and see if we can see what we just concluded.</p>
+<pre tabindex="0"><code>            master +----------+
+                              |
+                              |
+                              |
+                              v
+                        +------------------+              +--------+-------+
+                        |                  |              |                |
+                        |    20998091      +&lt;-------------+   ed6108f      |
+                        |                  |              |                |
+                        +------------------+              +----------------+
+ HEAD                              ^
+  |                                |
+  |                                |
+  |                                |
+  |                                |
+  +---------&gt;  feature +-----------+                    
+</code></pre><p>Let&rsquo;s add new commits and see if we can see what we just concluded.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*XInKAYXdX0fYXhdx_-MNEg.png" alt="5ef13d9b8a5bc1ad9405e0a674ddd7b4.png"  />
 </p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">                                            master +--------+
-</span></span><span class="line"><span class="cl">                                                            |
-</span></span><span class="line"><span class="cl">                                                            |
-</span></span><span class="line"><span class="cl">                                                            |
-</span></span><span class="line"><span class="cl">                                                            v
-</span></span><span class="line"><span class="cl">                        +----------------+           +-------+----------+              +----------------+
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        +----------------+           +------------------+              +---------+------+
-</span></span><span class="line"><span class="cl"> HEAD                              ^
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  |                                |
-</span></span><span class="line"><span class="cl">  +---------&gt;  feature +-----------+                    
-</span></span></code></pre></div><p>At this point, the <code>master</code> is direct parent to the <code>feature</code> branch. So if we just merge <code>feature</code> to <code>master</code> then it&rsquo;ll simply move the label one commit ahead. There is no need for a new commit to add both the changes.</p>
+<pre tabindex="0"><code>                                            master +--------+
+                                                            |
+                                                            |
+                                                            |
+                                                            v
+                        +----------------+           +-------+----------+              +----------------+
+                        |                |           |                  |              |                |
+                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+                        |                |           |                  |              |                |
+                        +----------------+           +------------------+              +---------+------+
+ HEAD                              ^
+  |                                |
+  |                                |
+  |                                |
+  |                                |
+  +---------&gt;  feature +-----------+                    
+</code></pre><p>At this point, the <code>master</code> is direct parent to the <code>feature</code> branch. So if we just merge <code>feature</code> to <code>master</code> then it&rsquo;ll simply move the label one commit ahead. There is no need for a new commit to add both the changes.</p>
 <p>For this, we need to change back to the master branch. Behind the scenes, this will simply change the <code>.git/HEAD</code> reference to <code>master</code> from <code>feature</code>.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*lI79Jo8v8bvdW4MumLCh9g.png" alt="23a94720384d5ba47175ef036e8b53e7.png"  />
 </p>
 <p>And visually, it&rsquo;ll look something like this.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">                              HEAD
-</span></span><span class="line"><span class="cl">                                    +---------+
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                |  
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                v
-</span></span><span class="line"><span class="cl">                                              master +--------+
-</span></span><span class="line"><span class="cl">                                                              |
-</span></span><span class="line"><span class="cl">                                                              |
-</span></span><span class="line"><span class="cl">                                                              |
-</span></span><span class="line"><span class="cl">                                                              v
-</span></span><span class="line"><span class="cl">                        +----------------+           +-------+----------+              +----------------+
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        +----------------+           +------------------+              +---------+------+
-</span></span><span class="line"><span class="cl">                                   ^
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">               feature +-----------+    
-</span></span></code></pre></div><p>We can see that there are some changes in the <code>feature</code> branch that <code>master</code> branch does not have yet. We can merge <code>feature</code> branch to <code>master</code> branch to get these features in the <code>master</code>.</p>
+<pre tabindex="0"><code>                              HEAD
+                                    +---------+
+                                                |
+                                                |  
+                                                |
+                                                |
+                                                |
+                                                |
+                                                v
+                                              master +--------+
+                                                              |
+                                                              |
+                                                              |
+                                                              v
+                        +----------------+           +-------+----------+              +----------------+
+                        |                |           |                  |              |                |
+                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+                        |                |           |                  |              |                |
+                        +----------------+           +------------------+              +---------+------+
+                                   ^
+                                   |
+                                   |
+                                   |
+                                   |
+               feature +-----------+    
+</code></pre><p>We can see that there are some changes in the <code>feature</code> branch that <code>master</code> branch does not have yet. We can merge <code>feature</code> branch to <code>master</code> branch to get these features in the <code>master</code>.</p>
 <p>To merge, we need to switch to master branch, and then simply merge it.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*Yd6L72qzwOmpxI1_BQqlAQ.png" alt="47dda33a7e15a0152c7316dd65624f2a.png"  />
 </p>
 <p>This type of merge is called <code>fast-forward</code> merge (as given in the output). This is simply moving forward and shifting the label (<code>master</code>) to point to appropriate commit.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    HEAD
-</span></span><span class="line"><span class="cl">        +---------+
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |  
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    v
-</span></span><span class="line"><span class="cl">                    master +--------+
-</span></span><span class="line"><span class="cl">                                    |
-</span></span><span class="line"><span class="cl">                                    |
-</span></span><span class="line"><span class="cl">                                    |
-</span></span><span class="line"><span class="cl">                                    v
-</span></span><span class="line"><span class="cl">                        +----------------+           +-------+----------+              +----------------+
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                        |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                        +----------------+           +------------------+              +---------+------+
-</span></span><span class="line"><span class="cl">                                   ^
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">                                   |
-</span></span><span class="line"><span class="cl">               feature +-----------+
-</span></span></code></pre></div><p>Let&rsquo;s make more changes to <code>feature</code> and <code>master</code> both. And then merge them.</p>
+<pre tabindex="0"><code>    HEAD
+        +---------+
+                    |
+                    |  
+                    |
+                    |
+                    |
+                    |
+                    v
+                    master +--------+
+                                    |
+                                    |
+                                    |
+                                    v
+                        +----------------+           +-------+----------+              +----------------+
+                        |                |           |                  |              |                |
+                        |  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+                        |                |           |                  |              |                |
+                        +----------------+           +------------------+              +---------+------+
+                                   ^
+                                   |
+                                   |
+                                   |
+                                   |
+               feature +-----------+
+</code></pre><p>Let&rsquo;s make more changes to <code>feature</code> and <code>master</code> both. And then merge them.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*5Y6skgMMb_rvh0L1A1dJtA.png" alt="89af308b8586ed845882a9b37afabbd9.png"  />
 </p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*NdS8odkqsUX6I0tkULNU3Q.png" alt="6efd02ef2eeddea7e22247c59d19bc3f.png"  />
@@ -259,66 +259,66 @@
 </p>
 <p>Since I am in my main branch right now, so the <code>HEAD</code> points to <code>master</code>.</p>
 <p>This situation will look something like this diagram below.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HEAD
-</span></span><span class="line"><span class="cl">    +---------+
-</span></span><span class="line"><span class="cl">              |
-</span></span><span class="line"><span class="cl">              |
-</span></span><span class="line"><span class="cl">              v
-</span></span><span class="line"><span class="cl">              master +--------+
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              |
-</span></span><span class="line"><span class="cl">                              v
-</span></span><span class="line"><span class="cl">                      +-------+-------+      +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                      |               |      |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                      |   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                      |               |   |  |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                      +---------------+   |  +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                                          |
-</span></span><span class="line"><span class="cl">                                          |
-</span></span><span class="line"><span class="cl">                                          |
-</span></span><span class="line"><span class="cl">                                          |
-</span></span><span class="line"><span class="cl">                     +----------------+   |
-</span></span><span class="line"><span class="cl">                     |                |   |
-</span></span><span class="line"><span class="cl">                     |  68d38e06      +&lt;--+
-</span></span><span class="line"><span class="cl">                     |                |
-</span></span><span class="line"><span class="cl">                     +-------+--------+
-</span></span><span class="line"><span class="cl">                             ^
-</span></span><span class="line"><span class="cl">                             |
-</span></span><span class="line"><span class="cl">                             |
-</span></span><span class="line"><span class="cl">         feature +-----------+
-</span></span></code></pre></div><p>let&rsquo;s see what happens when we merge these 2 branches now.</p>
+<pre tabindex="0"><code>HEAD
+    +---------+
+              |
+              |
+              v
+              master +--------+
+                              |
+                              |
+                              v
+                      +-------+-------+      +----------------+           +------------------+              +----------------+
+                      |               |      |                |           |                  |              |                |
+                      |   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+                      |               |   |  |                |           |                  |              |                |
+                      +---------------+   |  +----------------+           +------------------+              +----------------+
+                                          |
+                                          |
+                                          |
+                                          |
+                     +----------------+   |
+                     |                |   |
+                     |  68d38e06      +&lt;--+
+                     |                |
+                     +-------+--------+
+                             ^
+                             |
+                             |
+         feature +-----------+
+</code></pre><p>let&rsquo;s see what happens when we merge these 2 branches now.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*S5b5pJGsxqKgU0i_I89fIg.png" alt="b1983eee80e14c1595471d2c2b3ec4ee.png"  />
 </p>
 <p>This time it creates a new commit to merge both the branches and moves label <code>master</code> ahead to that commit, along with the <code>HEAD</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">HEAD
-</span></span><span class="line"><span class="cl">  +---------+
-</span></span><span class="line"><span class="cl">            |
-</span></span><span class="line"><span class="cl">            |
-</span></span><span class="line"><span class="cl">            v
-</span></span><span class="line"><span class="cl">          master +--+
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    |
-</span></span><span class="line"><span class="cl">                    v
-</span></span><span class="line"><span class="cl">            +-------+---------+         +---------------+      +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">            |                 |         |               |      |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">            |  76b2abc        +&lt;--------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">            |                 |         |               |   |  |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">            +-------+---------+         +---------------+   |  +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                    ^                                       |
-</span></span><span class="line"><span class="cl">                    |                                       |
-</span></span><span class="line"><span class="cl">                    |                                       |
-</span></span><span class="line"><span class="cl">                    |                                       |
-</span></span><span class="line"><span class="cl">                    |                  +----------------+   |
-</span></span><span class="line"><span class="cl">                    |                  |                |   |
-</span></span><span class="line"><span class="cl">                    +------------------+  68d38e06      +&lt;--+
-</span></span><span class="line"><span class="cl">                                       |                |
-</span></span><span class="line"><span class="cl">                                       +--------+-------+
-</span></span><span class="line"><span class="cl">                                                ^
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                                                |
-</span></span><span class="line"><span class="cl">                            feature +-----------+
-</span></span></code></pre></div><p>In this merge, <code>master</code> calculated that it is not in the same hierarchy as <code>feature</code>. So it created a new object, merged the data from the feature and commited it as any other object.</p>
+<pre tabindex="0"><code>HEAD
+  +---------+
+            |
+            |
+            v
+          master +--+
+                    |
+                    |
+                    |
+                    v
+            +-------+---------+         +---------------+      +----------------+           +------------------+              +----------------+
+            |                 |         |               |      |                |           |                  |              |                |
+            |  76b2abc        +&lt;--------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+            |                 |         |               |   |  |                |           |                  |              |                |
+            +-------+---------+         +---------------+   |  +----------------+           +------------------+              +----------------+
+                    ^                                       |
+                    |                                       |
+                    |                                       |
+                    |                                       |
+                    |                  +----------------+   |
+                    |                  |                |   |
+                    +------------------+  68d38e06      +&lt;--+
+                                       |                |
+                                       +--------+-------+
+                                                ^
+                                                |
+                                                |
+                            feature +-----------+
+</code></pre><p>In this merge, <code>master</code> calculated that it is not in the same hierarchy as <code>feature</code>. So it created a new object, merged the data from the feature and commited it as any other object.</p>
 <p>After merging, <code>master</code> and <code>head</code> labels will move forward to the latest commit. But the <code>feature</code> will be the same as before&hellip; as we have not changed anything in that yet.</p>
 <p>What if that this new commit <code>76b2abc</code> was a mistake and we want our <code>master</code> and <code>HEAD</code> labels back to commit <code>633145f</code>?</p>
 <p>We can simply reset the commits by <code>git reset 633145</code> command. This will move my labels back to this commit mentioned.</p>
@@ -331,33 +331,33 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*pLucA0coDh_U9fddlJXONg.png" alt="9d399a607e2c967a20bd135c2f73f4f1.png"  />
 </p>
 <p>This is again <strong>recursive strategy</strong> merge.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">                                              master +--+
-</span></span><span class="line"><span class="cl">                                                        |
-</span></span><span class="line"><span class="cl">                                                        |
-</span></span><span class="line"><span class="cl">                                                        |
-</span></span><span class="line"><span class="cl">                                                        v
-</span></span><span class="line"><span class="cl">                                               +--------+------+      +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                                               |               |      |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                           +-------------------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">                           |                   |               |   |  |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                           |                   +---------------+   |  +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                           |                                       |
-</span></span><span class="line"><span class="cl">                           |                                       |
-</span></span><span class="line"><span class="cl">                           |                                       |
-</span></span><span class="line"><span class="cl">                           |                                       |
-</span></span><span class="line"><span class="cl">                  +--------v--------+         +----------------+   |
-</span></span><span class="line"><span class="cl">                  |                 |         |                |   |
-</span></span><span class="line"><span class="cl">                  |    88dd609c     +&lt;--------+  68d38e06      +&lt;--+
-</span></span><span class="line"><span class="cl">                  |                 |         |                |
-</span></span><span class="line"><span class="cl">                  +--------+--------+         +----------------+
-</span></span><span class="line"><span class="cl">                           ^
-</span></span><span class="line"><span class="cl">                           |
-</span></span><span class="line"><span class="cl">                           |
-</span></span><span class="line"><span class="cl">    +-----&gt; feature +------+
-</span></span><span class="line"><span class="cl">    |
-</span></span><span class="line"><span class="cl">    |
-</span></span><span class="line"><span class="cl">HEAD+
-</span></span></code></pre></div><p>This way there was no change made in the <code>master</code> and a new <code>feature</code> was added and can be tested properly. You can call this <code>feature integration test</code>. If the feature passes the tests and we decide to update <code>master</code> with this feature, we can simply switch to <code>master</code> branch and merge <code>feature</code> to it.</p>
+<pre tabindex="0"><code>                                              master +--+
+                                                        |
+                                                        |
+                                                        |
+                                                        v
+                                               +--------+------+      +----------------+           +------------------+              +----------------+
+                                               |               |      |                |           |                  |              |                |
+                           +-------------------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+                           |                   |               |   |  |                |           |                  |              |                |
+                           |                   +---------------+   |  +----------------+           +------------------+              +----------------+
+                           |                                       |
+                           |                                       |
+                           |                                       |
+                           |                                       |
+                  +--------v--------+         +----------------+   |
+                  |                 |         |                |   |
+                  |    88dd609c     +&lt;--------+  68d38e06      +&lt;--+
+                  |                 |         |                |
+                  +--------+--------+         +----------------+
+                           ^
+                           |
+                           |
+    +-----&gt; feature +------+
+    |
+    |
+HEAD+
+</code></pre><p>This way there was no change made in the <code>master</code> and a new <code>feature</code> was added and can be tested properly. You can call this <code>feature integration test</code>. If the feature passes the tests and we decide to update <code>master</code> with this feature, we can simply switch to <code>master</code> branch and merge <code>feature</code> to it.</p>
 <p>After checking out to <code>master</code> using <code>git checkout master</code> command, <code>HEAD</code> points to <code>master</code> like in the screenshot below.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*BNZEHTYipmrr07qggYpuxw.png" alt="57556ceaeef66bd42d848dbcee4ba250.png"  />
 </p>
@@ -367,29 +367,29 @@
 <p>After merge, <code>master</code>, <code>HEAD</code>, and <code>feature</code> point to the same commit.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*DwuBaYNqhryqOIaTKQhvXg.png" alt="f3a0e106a715bfc7c9fb29294c2be6ae.png"  />
 </p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">                                                +---------------+      +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">                                                |               |      |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">                                   +------------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
-</span></span><span class="line"><span class="cl">    +-----&gt; master +--+            |            |               |   |  |                |           |                  |              |                |
-</span></span><span class="line"><span class="cl">    |                 |            |            +---------------+   |  +----------------+           +------------------+              +----------------+
-</span></span><span class="line"><span class="cl">    |                 |            |                                |
-</span></span><span class="line"><span class="cl">HEAD+                 |            |                                |
-</span></span><span class="line"><span class="cl">                      v            |                                |
-</span></span><span class="line"><span class="cl">                   +--+------------v-+                              |
-</span></span><span class="line"><span class="cl">                   |                 |         +----------------+   |
-</span></span><span class="line"><span class="cl">                   |                 |         |                |   |
-</span></span><span class="line"><span class="cl">                   |    88dd609c     +&lt;--------+  68d38e06      +&lt;--+
-</span></span><span class="line"><span class="cl">                   |                 |         |                |
-</span></span><span class="line"><span class="cl">                   +--------+--------+         +----------------+
-</span></span><span class="line"><span class="cl">                            ^
-</span></span><span class="line"><span class="cl">                            |
-</span></span><span class="line"><span class="cl">                            |
-</span></span><span class="line"><span class="cl">             feature +------+
-</span></span></code></pre></div><h3 id="collaborating-with-git">Collaborating with git</h3>
+<pre tabindex="0"><code>                                                +---------------+      +----------------+           +------------------+              +----------------+
+                                                |               |      |                |           |                  |              |                |
+                                   +------------+   633145f     +&lt;--+--+  748ffe6       +&lt;----------+   20998091       +&lt;-------------+   ed6108f      |
+    +-----&gt; master +--+            |            |               |   |  |                |           |                  |              |                |
+    |                 |            |            +---------------+   |  +----------------+           +------------------+              +----------------+
+    |                 |            |                                |
+HEAD+                 |            |                                |
+                      v            |                                |
+                   +--+------------v-+                              |
+                   |                 |         +----------------+   |
+                   |                 |         |                |   |
+                   |    88dd609c     +&lt;--------+  68d38e06      +&lt;--+
+                   |                 |         |                |
+                   +--------+--------+         +----------------+
+                            ^
+                            |
+                            |
+             feature +------+
+</code></pre><h3 id="collaborating-with-git">Collaborating with git</h3>
 <p>Usually we don&rsquo;t use git standalone in our machine. What I mean is, we do use git locally most of the time but at some point we need to share our commits to someone else via network.</p>
 <p>To cover up the whole picture in a line &ndash;&gt;</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">To **get commits** from someone else we need to do `git pull`... and to **send our commits** out on the internet we need to `git push`.
-</span></span></code></pre></div><p>I am going the way we usually go and do things - &ldquo;start with cloning a repo&rdquo;. After cloning a repo I have got this.</p>
+<pre tabindex="0"><code>To **get commits** from someone else we need to do `git pull`... and to **send our commits** out on the internet we need to `git push`.
+</code></pre><p>I am going the way we usually go and do things - &ldquo;start with cloning a repo&rdquo;. After cloning a repo I have got this.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*OAjmAcpPHS3lh__6a8eG4A.png" alt="3136b34c3d1fb691978ba27ba7fe040c.png"  />
 </p>
 <p>Let&rsquo;s inspect it.</p>
@@ -406,33 +406,33 @@
 <p>So from all this, we can see that there is no exact need for <code>origin</code> or simply <code>remote</code> to be on the internet or in the network all the time. They both just need to be in contact whenever these needs to be synced. After that&rsquo;s the whole point of being a distributed system.</p>
 <p>What we need is a <code>remote</code> repository..that can give us the pack files&hellip;and other objects&hellip; and then a <code>working</code> directory that we can use to add our changes and maybe another working directory that someone else is using to make his changes.</p>
 <p>Workflow I am going to use now is as follows:-</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">                  start project
-</span></span><span class="line"><span class="cl">                       +
-</span></span><span class="line"><span class="cl">                       |
-</span></span><span class="line"><span class="cl">                       v
-</span></span><span class="line"><span class="cl">                   add new file
-</span></span><span class="line"><span class="cl">       +------------+      +-----------+
-</span></span><span class="line"><span class="cl">       |                               |
-</span></span><span class="line"><span class="cl">       v                               v
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">make a feature                 fix some old bugs
-</span></span><span class="line"><span class="cl">      +                            		 +
-</span></span><span class="line"><span class="cl">      |                             	 |
-</span></span><span class="line"><span class="cl">      |                              	 |
-</span></span><span class="line"><span class="cl">      |                             	 |
-</span></span><span class="line"><span class="cl">      |                             	 |
-</span></span><span class="line"><span class="cl">      v                             	 |
-</span></span><span class="line"><span class="cl">                                    	 |
-</span></span><span class="line"><span class="cl">  integrate and test new feature  &lt;------+
-</span></span><span class="line"><span class="cl">         +
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         |
-</span></span><span class="line"><span class="cl">         +---------&gt; (Push now)
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*awN0OcR6ChWNGImDu5NQzg.png" alt="0c57e1dc0af1138ed7eece4e94aca6e6.png"  />
+<pre tabindex="0"><code>                  start project
+                       +
+                       |
+                       v
+                   add new file
+       +------------+      +-----------+
+       |                               |
+       v                               v
+
+make a feature                 fix some old bugs
+      +                            		 +
+      |                             	 |
+      |                              	 |
+      |                             	 |
+      |                             	 |
+      v                             	 |
+                                    	 |
+  integrate and test new feature  &lt;------+
+         +
+         |
+         |
+         |
+         |
+         |
+         |
+         +---------&gt; (Push now)
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*awN0OcR6ChWNGImDu5NQzg.png" alt="0c57e1dc0af1138ed7eece4e94aca6e6.png"  />
 </p>
 <p>After integrating <code>master</code> to our <code>feature</code> we have:-</p>
 <ul>
@@ -467,9 +467,9 @@
 </p>
 <p>Now our origin has got that new branch. So I had made changes to <code>master</code> branch it would have reflected in the master branch of the <code>origin</code>.</p>
 <p>After running below commands, <code>someone</code> can switch to his <code>master</code> branch and merge his <code>user_feature</code> branch.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git checkout master
-</span></span><span class="line"><span class="cl">git merge user_feature
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*u2nxwq7h6iqoH90HDX81sQ.png" alt="1d5c65d132d775240cd239b78e89d1ab.png"  />
+<pre tabindex="0"><code>git checkout master
+git merge user_feature
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*u2nxwq7h6iqoH90HDX81sQ.png" alt="1d5c65d132d775240cd239b78e89d1ab.png"  />
 </p>
 <p><code>master</code> has now got all the new commits. Time to push/share master to our origin.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/proxy/1*ylZQEbguGwLgPLGWeqpyRA.png" alt="9c97cab32e0355e39989991912c21ad4.png"  />
@@ -477,13 +477,12 @@
 <p>After pushing changes to <code>origin</code> all the commits made to <code>master</code> are shared with <code>origin/master</code> and now both of them point to a single commit.</p>
 <p>I can also <code>pull</code> the changes from <code>remote_repo</code> to <code>mywork</code>&hellip; the only thing I have to do is set a <code>remote</code> that points to the repo I want to pull data from.</p>
 <p>Or for now I can simply specify from where to pull and merge where.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git pull ./../remote_repo/ master
-</span></span></code></pre></div><p>This will give me the latest commits made by <em>someone</em> and pushed to remote.</p>
+<pre tabindex="0"><code>git pull ./../remote_repo/ master
+</code></pre><p>This will give me the latest commits made by <em>someone</em> and pushed to remote.</p>
 <h3 id="conclusion">Conclusion</h3>
 <p>This is how a typical git flow works. There are obviously other git flows better and complex than this but knowing this flow gives you a basic idea of how to make your way around git and use it effectively to manage your project.</p>
 <p><strong>Where to go from here??</strong>
 You should start playing on your own exploring more commands and looking up their <code>help pages</code> for descriptions and other information. I&rsquo;ll recommend to read the <a href="https://git-scm.com/book/en/v2"><code>Pro Git</code> Book</a> to understand other concepts as well. It is available for free.</p>]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

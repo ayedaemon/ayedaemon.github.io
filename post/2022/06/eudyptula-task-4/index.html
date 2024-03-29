@@ -1,239 +1,582 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Eudyptula Task4 | Connected</title>
-<meta name=keywords content="Eudyptula,linux"><meta name=description content="Task 4 for Eudyptula challenge"><meta name=author content="ayedaemon"><link rel=canonical href=https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/><link crossorigin=anonymous href=/assets/css/stylesheet.5cfc680b1eeaeef9efbced92d46c2a9e876b72ee14fba85846afc4cff9e6e6f8.css integrity="sha256-XPxoCx7q7vnvvO2S1Gwqnodrcu4U+6hYRq/Ez/nm5vg=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://ayedaemon.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ayedaemon.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ayedaemon.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ayedaemon.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ayedaemon.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:title" content="Eudyptula Task4"><meta property="og:description" content="Task 4 for Eudyptula challenge"><meta property="og:type" content="article"><meta property="og:url" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-06-17T16:14:27+05:30"><meta property="article:modified_time" content="2023-12-08T14:55:44+05:30"><meta property="og:site_name" content="Connected"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"><meta name=twitter:card content="summary"><meta name=twitter:title content="Eudyptula Task4"><meta name=twitter:description content="Task 4 for Eudyptula challenge"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://ayedaemon.github.io/post/"},{"@type":"ListItem","position":2,"name":"Eudyptula Task4","item":"https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Eudyptula Task4","name":"Eudyptula Task4","description":"Task 4 for Eudyptula challenge","keywords":["Eudyptula","linux"],"articleBody":"This is Task 04 of the Eudyptula Challenge ------------------------------------------ Wonderful job in making it this far, I hope you have been having fun. Oh, you're getting bored, just booting and installing kernels? Well, time for some pedantic things to make you feel that those kernel builds are actually fun! Part of the job of being a kernel developer is recognizing the proper Linux kernel coding style. The full description of this coding style can be found in the kernel itself, in the Documentation/CodingStyle file. I'd recommend going and reading that right now, it's pretty simple stuff, and something that you are going to need to know and understand. There is also a tool in the kernel source tree in the scripts/ directory called checkpatch.pl that can be used to test for adhering to the coding style rules, as kernel programmers are lazy and prefer to let scripts do their work for them... And why a coding standard at all? That's because of your brain (yes, yours, not mine, remember, I'm just some dumb shell scripts). Once your brain learns the patterns, the information contained really starts to sink in better. So it's important that everyone follow the same standard so that the patterns become consistent. In other words, you want to make it really easy for other people to find the bugs in your code, and not be confused and distracted by the fact that you happen to prefer 5 spaces instead of tabs for indentation. Of course you would never prefer such a thing, I'd never accuse you of that, it was just an example, please forgive my impertinence! Anyway, the tasks for this round all deal with the Linux kernel coding style. Attached to this message are two kernel modules that do not follow the proper Linux kernel coding style rules. Please fix both of them up, and send it back to me in such a way that does follow the rules. What, you recognize one of these modules? Imagine that, perhaps I was right to accuse you of the using a \"wrong\" coding style :) Yes, the logic in the second module is crazy, and probably wrong, but don't focus on that, just look at the patterns here, and fix up the coding style, do not remove lines of code. Coding styles – what and why? We all have different styles and preferences in everything in life. Even while writing code, everyone loves to imprint their personalities in the code that brings originality and a sense of ownership and responsibility.\nCoding styles are set of rules or suggestions to write code. The idea behind developing these sets of rules for coding style is very simple - to make code readable by everybody or just to make your brain habitual to a specific style so that you can easily understand the code writen by another person.\nThe code style depends mainly on the language, few decisions are made depending on the context, and if you switch from one to another. Some of these decisions might be:\nComments (how and when you use them) Tabs or spaces for indentation (the number of spaces is quite important) Appropriate naming of variables and functions. Code grouping an organization, Patterns to be used or avoided. But what happens when a whole team is working on one project?\nEveryone develops a certain style and for individual work, this is great… but when you need more people on your team, understanding different styles could become a problem to everyone.\nThis has been on my mind a lot lately. For instance, during a code review, I often question whether I should bring specific ways of coding into the discussion or not. How does it affect the application; Is it readable, is it easy to maintain?\nOr perhaps I should leave it alone, thinking to myself — Don’t be picky, it’s just their preference, it’s not a matter of right or wrong.\nLinuc kernel developers has done an amazing job to build a coding style that is followed by mostly everybody who is getting involved in kernel development process.\nHow bad can it go? If we do not have a properly defined coding style, we might end up with mostly working but very unreadable code…. This can be very unhealty for a mere human being.\nLet’s take a simple example (In C programming language) to understand the need of coding styles.\n#include int main() { printf(\"This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.\"); return 0; } Above code is very simple in terms of functionality - It prints a huge paragraph. The same code can also be written in the below style…\n#include int main () { printf ( \"This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.\" ) ;return 0; } I know nobody will ever write code in this style..but it is still a possible option to write a working code.\nOr you might be familiar with the below code…. Spoiler:- This prints a rotating donut. Read this amazing article to understand the maths behind it.\nk;double sin() ,cos();main(){float A= 0,B=0,i,j,z[1760];char b[ 1760];printf(\"\\x1b[2J\");for(;; ){memset(b,32,1760);memset(z,0,7040) ;for(j=0;6.28\u003ej;j+=0.07)for(i=0;6.28 \u003ei;i+=0.02){float c=sin(i),d=cos(j),e= sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c* h*e+f*g+5),l=cos (i),m=cos(B),n=s\\ in(B),t=c*h*g-f* e;int x=40+30*D* (l*h*m-t*n),y= 12+15*D*(l*h*n +t*m),o=x+80*y, N=8*((f*e-c*d*g )*m-c*d*e-f*g-l *d*n);if(22\u003ey\u0026\u0026 y\u003e0\u0026\u0026x\u003e0\u0026\u002680\u003ex\u0026\u0026D\u003ez[o]){z[o]=D;;;b[o]= \".,-~:;=!*#$@\"[N\u003e0?N:0];}}/*#****!!-*/ printf(\"\\x1b[H\");for(k=0;1761\u003ek;k++) putchar(k%80?b[k]:10);A+=0.04;B+= 0.02;}}/*****####*******!!=;:~ ~::==!!!**********!!!==::- .,~~;;;========;;;:~-. ..,--------,*/ Anyways, my point is that the code can become very unreadable and unmaintainable if no coding style guidelines are defined. Early in my journey, I engaged in all kinds of holy wars on code styles. I would read some article about why a particular convention was correct, while another was totally wrong. But I’ve finally come to a conclusion - These things don’t matter; Consistency and readability matters.\nThe development process of linux kernel is very chaotic with thousands of developers working completely remotely on the same code base. How do they do it without messing it all up??\nOut of many reasons, one is that all kernel developers try best to follow the code style guidelines laid out in the official kernel documentations 1. Here they provide all the necessary details and examples to put their point. And still, it is just a recommendation not forcing anybody to be very specific about it.\nFixing style issue problem In this task, we are provided with 2 different modules (Linux Kernel Modules)… and our job here is to fix the style coding as per the coding style.\nYou don’t have to read the complete coding style to fix it, smart people have already built a tool that can check these issues and provide a warning to us in a clean way. Linux provides a script/checkpatch.pl 2 script, for the same. This script can check the code for trivial style violations in patches and optionally corrects them. This tool can also be used for regular kernel source code files. Read more about this tool from official docs 3.\nThis is not a very unique idea, today we have linters and other tools that can check the style issues and report it or fix it automatically in your source code….in almost all the program languages. You can add one such tool in you pre-commit hook or most IDEs have plugins for this, you can use those too.\nAnyways, let’s pick up a file and run the checkpatch tool against it. The code looked fine to me at first… it had a good filename at top and has got indentations.\n/* * helloworld.c */ #include #include #include static int hello_init(void) { pr_debug(\"Hello World!\\n\"); return 0; } static void hello_exit(void) { pr_debug(\"See you later.\\n\"); } module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE(\"GPL\"); MODULE_AUTHOR(\"ayedaemon\"); MODULE_DESCRIPTION(\"Just a module\"); But it still does not follow the guidelines. You can check that using the tool - checkpatch.pl.\n## COMMAND - ../linux/scripts/checkpatch.pl -f helloworld.c WARNING: Missing or malformed SPDX-License-Identifier tag in line 1 #1: FILE: helloworld.c:1: +/* WARNING: It's generally not useful to have the filename in the file #2: FILE: helloworld.c:2: +* helloworld.c WARNING: Block comments should align the * on each line #2: FILE: helloworld.c:2: +/* +* helloworld.c total: 0 errors, 3 warnings, 24 lines checked There are 3 warnings reported by this script…\nAdd SPDX licence info in line 1 Filename at top is not useful Block comments should have * aligned (This will be discarded because according to point 2, we are going to remove that comment block) Now after fixing the code according to the provided suggestions, we get the below code:\n// SPDX-License-Identifier: GPL-2.0+ #include #include #include static int hello_init(void) { pr_debug(\"Hello World!\\n\"); return 0; } static void hello_exit(void) { pr_debug(\"See you later.\\n\"); } module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE(\"GPL\"); MODULE_AUTHOR(\"ayedaemon\"); MODULE_DESCRIPTION(\"Just a module\"); In other module file, we have another code that looks good at first but the checkpatch reults indicate otherwise.\nCode:-\n#include #include #include #include int do_work(int *my_int, int retval) { int x; int y = *my_int; int z; for (x = 0; x \u003c *my_int; ++x) udelay(10); if (y \u003c 10) /* * That was a long sleep, tell userspace about it */ pr_debug(\"We slept a long time!\"); z = x * y; return z; } int my_init(void) { int x = 10; x = do_work(\u0026x, x); return x; } void my_exit(void) { return; } module_init(my_init); module_exit(my_exit); This module is somewhat different than what we previously saw. Apart from the regular init and exit functions, this module has an extra function that is called by init function. That’s it. You don’t have to worry about the code and other logic at this point.. just focus on coding styles.\n# COMMAND - ../linux/scripts/checkpatch.pl -f coding_style.c WARNING: Missing or malformed SPDX-License-Identifier tag in line 1 #1: FILE: coding_style.c:1: +#include WARNING: void function return statements are not generally useful #35: FILE: coding_style.c:35: +\treturn; +} total: 0 errors, 2 warnings, 38 lines checked The script gives us 2 warnings for this module.\nSPDX licence (just as the previous one, we’ll talk more about it later.) void function return statements. (Void functions do not return anything; no return statements are required) For this case, I added the SPDX licence comment at line 1 and commented the return statement. If you want, you can remove it entirely from the code. For me, the new code looks like below:-\n// SPDX-License-Identifier: GPL-2.0+ #include #include #include #include int do_work(int *my_int, int retval) { int x; int y = *my_int; int z; for (x = 0; x \u003c *my_int; ++x) udelay(10); if (y \u003c 10) /* * That was a long sleep, tell userspace about it */ pr_debug(\"We slept a long time!\"); z = x * y; return z; } int my_init(void) { int x = 10; x = do_work(\u0026x, x); return x; } void my_exit(void) { // return; } module_init(my_init); module_exit(my_exit); Great!! you are now familiar with the coding style issues in the linux kernel code and has got the ability to fix such issues. If you want to be more automatic with this, you can also use the pre-commit hooks. Read more about git hooks from githooks.com 4\nhttps://www.kernel.org/doc/html/v4.10/process/coding-style.html ↩︎\nhttps://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl ↩︎\nhttps://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html ↩︎\nhttps://githooks.com/ ↩︎\n","wordCount":"2010","inLanguage":"en","datePublished":"2022-06-17T16:14:27+05:30","dateModified":"2023-12-08T14:55:44+05:30","author":[{"@type":"Person","name":"ayedaemon"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"},"publisher":{"@type":"Organization","name":"Connected","logo":{"@type":"ImageObject","url":"https://ayedaemon.github.io/favicon.ico"}}}</script></head><body class=dark id=top><header class=header><nav class=nav><div class=logo><a href=https://ayedaemon.github.io/ accesskey=h title="Connected (Alt + H)">Connected</a><div class=logo-switches></div></div><ul id=menu><li><a href=https://ayedaemon.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://ayedaemon.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://ayedaemon.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://ayedaemon.github.io/series/ title=Series><span>Series</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://ayedaemon.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://ayedaemon.github.io/post/>Posts</a></div><h1 class=post-title>Eudyptula Task4</h1><div class=post-description>Task 4 for Eudyptula challenge</div><div class=post-meta><span title='2022-06-17 16:14:27 +0530 +0530'>June 17, 2022</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;2010 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href=https://github.com/ayedaemon/ayedaemon.github.io/tree/main/content/post/2022/06/Eudyptula-task-4.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><ul><li><a href=#coding-styles----what-and-why>Coding styles &ndash; what and why?</a></li><li><a href=#fixing-style-issue-problem>Fixing style issue problem</a></li></ul></li></ul></nav></div></details></div><div class=post-content><div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl>This is Task 04 of the Eudyptula Challenge
-</span></span><span class=line><span class=cl>------------------------------------------
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Wonderful job in making it this far, I hope you have been having fun.
-</span></span><span class=line><span class=cl>Oh, you&#39;re getting bored, just booting and installing kernels?  Well,
-</span></span><span class=line><span class=cl>time for some pedantic things to make you feel that those kernel builds
-</span></span><span class=line><span class=cl>are actually fun!
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Part of the job of being a kernel developer is recognizing the proper
-</span></span><span class=line><span class=cl>Linux kernel coding style.  The full description of this coding style
-</span></span><span class=line><span class=cl>can be found in the kernel itself, in the Documentation/CodingStyle
-</span></span><span class=line><span class=cl>file.  I&#39;d recommend going and reading that right now, it&#39;s pretty
-</span></span><span class=line><span class=cl>simple stuff, and something that you are going to need to know and
-</span></span><span class=line><span class=cl>understand.  There is also a tool in the kernel source tree in the
-</span></span><span class=line><span class=cl>scripts/ directory called checkpatch.pl that can be used to test for
-</span></span><span class=line><span class=cl>adhering to the coding style rules, as kernel programmers are lazy and
-</span></span><span class=line><span class=cl>prefer to let scripts do their work for them...
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>And why a coding standard at all?  That&#39;s because of your brain (yes,
-</span></span><span class=line><span class=cl>yours, not mine, remember, I&#39;m just some dumb shell scripts).  Once your
-</span></span><span class=line><span class=cl>brain learns the patterns, the information contained really starts to
-</span></span><span class=line><span class=cl>sink in better.  So it&#39;s important that everyone follow the same
-</span></span><span class=line><span class=cl>standard so that the patterns become consistent.  In other words, you
-</span></span><span class=line><span class=cl>want to make it really easy for other people to find the bugs in your
-</span></span><span class=line><span class=cl>code, and not be confused and distracted by the fact that you happen to
-</span></span><span class=line><span class=cl>prefer 5 spaces instead of tabs for indentation.  Of course you would
-</span></span><span class=line><span class=cl>never prefer such a thing, I&#39;d never accuse you of that, it was just an
-</span></span><span class=line><span class=cl>example, please forgive my impertinence!
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Anyway, the tasks for this round all deal with the Linux kernel coding
-</span></span><span class=line><span class=cl>style.  Attached to this message are two kernel modules that do not
-</span></span><span class=line><span class=cl>follow the proper Linux kernel coding style rules.  Please fix both of
-</span></span><span class=line><span class=cl>them up, and send it back to me in such a way that does follow the
-</span></span><span class=line><span class=cl>rules.
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>What, you recognize one of these modules?  Imagine that, perhaps I was
-</span></span><span class=line><span class=cl>right to accuse you of the using a &#34;wrong&#34; coding style :)
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>Yes, the logic in the second module is crazy, and probably wrong, but
-</span></span><span class=line><span class=cl>don&#39;t focus on that, just look at the patterns here, and fix up the
-</span></span><span class=line><span class=cl>coding style, do not remove lines of code.
-</span></span></code></pre></div><h3 id=coding-styles----what-and-why>Coding styles &ndash; what and why?<a hidden class=anchor aria-hidden=true href=#coding-styles----what-and-why>#</a></h3><p>We all have different styles and preferences in everything in life. Even while writing code, everyone loves to imprint their personalities in the code that brings originality and a sense of ownership and responsibility.</p><p>Coding styles are set of rules or suggestions to write code. The idea behind developing these sets of rules for coding style is very simple - to make code readable by everybody or just to make your brain habitual to a specific style so that you can easily understand the code writen by another person.</p><p>The code style depends mainly on the language, few decisions are made depending on the context, and if you switch from one to another. Some of these decisions might be:</p><ul><li>Comments (how and when you use them)</li><li>Tabs or spaces for indentation (the number of spaces is quite important)</li><li>Appropriate naming of variables and functions.</li><li>Code grouping an organization,</li><li>Patterns to be used or avoided.</li></ul><p><strong>But what happens when a whole team is working on one project?</strong></p><p>Everyone develops a certain style and for individual work, this is great&mldr; but when you need more people on your team, understanding different styles could become a problem to everyone.</p><p>This has been on my mind a lot lately. For instance, during a code review, I often question whether I should bring specific ways of coding into the discussion or not. How does it affect the application; Is it readable, is it easy to maintain?</p><p>Or perhaps I should leave it alone, thinking to myself — <em>Don’t be picky, it’s just their preference, it’s not a matter of right or wrong.</em></p><p>Linuc kernel developers has done an amazing job to build a coding style that is followed by mostly everybody who is getting involved in kernel development process.</p><h4 id=how-bad-can-it-go>How bad can it go?<a hidden class=anchor aria-hidden=true href=#how-bad-can-it-go>#</a></h4><p>If we do not have a properly defined coding style, we might end up with mostly working but very unreadable code&mldr;. This can be very unhealty for a mere human being.</p><p>Let&rsquo;s take a simple example (In C programming language) to understand the need of coding styles.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>Above code is very simple in terms of functionality - It prints a huge paragraph. The same code can also be written in the below style&mldr;</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=kt>int</span> 
-</span></span><span class=line><span class=cl><span class=nf>main</span>
-</span></span><span class=line><span class=cl><span class=p>()</span> 
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl><span class=nf>printf</span>
-</span></span><span class=line><span class=cl><span class=p>(</span>
-</span></span><span class=line><span class=cl>    <span class=s>&#34;This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.&#34;</span>
-</span></span><span class=line><span class=cl><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>;</span><span class=k>return</span> 
-</span></span><span class=line><span class=cl><span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>I know nobody will ever write code in this style..but it is still a possible option to write a working code.</p><p>Or you might be familiar with the below code&mldr;. Spoiler:- This prints a rotating donut. Read <a href=https://www.a1k0n.net/2011/07/20/donut-math.html>this amazing article</a> to understand the maths behind it.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl>             <span class=n>k</span><span class=p>;</span><span class=kt>double</span> <span class=nf>sin</span><span class=p>()</span>
-</span></span><span class=line><span class=cl>         <span class=p>,</span><span class=nf>cos</span><span class=p>();</span><span class=nf>main</span><span class=p>(){</span><span class=kt>float</span> <span class=n>A</span><span class=o>=</span>
-</span></span><span class=line><span class=cl>       <span class=mi>0</span><span class=p>,</span><span class=n>B</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span><span class=n>i</span><span class=p>,</span><span class=n>j</span><span class=p>,</span><span class=n>z</span><span class=p>[</span><span class=mi>1760</span><span class=p>];</span><span class=kt>char</span> <span class=n>b</span><span class=p>[</span>
-</span></span><span class=line><span class=cl>     <span class=mi>1760</span><span class=p>];</span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;</span><span class=se>\x1b</span><span class=s>[2J&#34;</span><span class=p>);</span><span class=k>for</span><span class=p>(;;</span>
-</span></span><span class=line><span class=cl>  <span class=p>){</span><span class=nf>memset</span><span class=p>(</span><span class=n>b</span><span class=p>,</span><span class=mi>32</span><span class=p>,</span><span class=mi>1760</span><span class=p>);</span><span class=nf>memset</span><span class=p>(</span><span class=n>z</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>7040</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>  <span class=p>;</span><span class=k>for</span><span class=p>(</span><span class=n>j</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span><span class=mf>6.28</span><span class=o>&gt;</span><span class=n>j</span><span class=p>;</span><span class=n>j</span><span class=o>+=</span><span class=mf>0.07</span><span class=p>)</span><span class=k>for</span><span class=p>(</span><span class=n>i</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span><span class=mf>6.28</span>
-</span></span><span class=line><span class=cl> <span class=o>&gt;</span><span class=n>i</span><span class=p>;</span><span class=n>i</span><span class=o>+=</span><span class=mf>0.02</span><span class=p>){</span><span class=kt>float</span> <span class=n>c</span><span class=o>=</span><span class=nf>sin</span><span class=p>(</span><span class=n>i</span><span class=p>),</span><span class=n>d</span><span class=o>=</span><span class=nf>cos</span><span class=p>(</span><span class=n>j</span><span class=p>),</span><span class=n>e</span><span class=o>=</span>
-</span></span><span class=line><span class=cl> <span class=nf>sin</span><span class=p>(</span><span class=n>A</span><span class=p>),</span><span class=n>f</span><span class=o>=</span><span class=nf>sin</span><span class=p>(</span><span class=n>j</span><span class=p>),</span><span class=n>g</span><span class=o>=</span><span class=nf>cos</span><span class=p>(</span><span class=n>A</span><span class=p>),</span><span class=n>h</span><span class=o>=</span><span class=n>d</span><span class=o>+</span><span class=mi>2</span><span class=p>,</span><span class=n>D</span><span class=o>=</span><span class=mi>1</span><span class=o>/</span><span class=p>(</span><span class=n>c</span><span class=o>*</span>
-</span></span><span class=line><span class=cl> <span class=n>h</span><span class=o>*</span><span class=n>e</span><span class=o>+</span><span class=n>f</span><span class=o>*</span><span class=n>g</span><span class=o>+</span><span class=mi>5</span><span class=p>),</span><span class=n>l</span><span class=o>=</span><span class=nf>cos</span>      <span class=p>(</span><span class=n>i</span><span class=p>),</span><span class=n>m</span><span class=o>=</span><span class=nf>cos</span><span class=p>(</span><span class=n>B</span><span class=p>),</span><span class=n>n</span><span class=o>=</span><span class=n>s</span>\
-</span></span><span class=line><span class=cl><span class=nf>in</span><span class=p>(</span><span class=n>B</span><span class=p>),</span><span class=n>t</span><span class=o>=</span><span class=n>c</span><span class=o>*</span><span class=n>h</span><span class=o>*</span><span class=n>g</span><span class=o>-</span><span class=n>f</span><span class=o>*</span>        <span class=n>e</span><span class=p>;</span><span class=kt>int</span> <span class=n>x</span><span class=o>=</span><span class=mi>40</span><span class=o>+</span><span class=mi>30</span><span class=o>*</span><span class=n>D</span><span class=o>*</span>
-</span></span><span class=line><span class=cl><span class=p>(</span><span class=n>l</span><span class=o>*</span><span class=n>h</span><span class=o>*</span><span class=n>m</span><span class=o>-</span><span class=n>t</span><span class=o>*</span><span class=n>n</span><span class=p>),</span><span class=n>y</span><span class=o>=</span>            <span class=mi>12</span><span class=o>+</span><span class=mi>15</span><span class=o>*</span><span class=n>D</span><span class=o>*</span><span class=p>(</span><span class=n>l</span><span class=o>*</span><span class=n>h</span><span class=o>*</span><span class=n>n</span>
-</span></span><span class=line><span class=cl><span class=o>+</span><span class=n>t</span><span class=o>*</span><span class=n>m</span><span class=p>),</span><span class=n>o</span><span class=o>=</span><span class=n>x</span><span class=o>+</span><span class=mi>80</span><span class=o>*</span><span class=n>y</span><span class=p>,</span>          <span class=n>N</span><span class=o>=</span><span class=mi>8</span><span class=o>*</span><span class=p>((</span><span class=n>f</span><span class=o>*</span><span class=n>e</span><span class=o>-</span><span class=n>c</span><span class=o>*</span><span class=n>d</span><span class=o>*</span><span class=n>g</span>
-</span></span><span class=line><span class=cl> <span class=p>)</span><span class=o>*</span><span class=n>m</span><span class=o>-</span><span class=n>c</span><span class=o>*</span><span class=n>d</span><span class=o>*</span><span class=n>e</span><span class=o>-</span><span class=n>f</span><span class=o>*</span><span class=n>g</span><span class=o>-</span><span class=n>l</span>        <span class=o>*</span><span class=n>d</span><span class=o>*</span><span class=n>n</span><span class=p>);</span><span class=k>if</span><span class=p>(</span><span class=mi>22</span><span class=o>&gt;</span><span class=n>y</span><span class=o>&amp;&amp;</span>
-</span></span><span class=line><span class=cl> <span class=n>y</span><span class=o>&gt;</span><span class=mi>0</span><span class=o>&amp;&amp;</span><span class=n>x</span><span class=o>&gt;</span><span class=mi>0</span><span class=o>&amp;&amp;</span><span class=mi>80</span><span class=o>&gt;</span><span class=n>x</span><span class=o>&amp;&amp;</span><span class=n>D</span><span class=o>&gt;</span><span class=n>z</span><span class=p>[</span><span class=n>o</span><span class=p>]){</span><span class=n>z</span><span class=p>[</span><span class=n>o</span><span class=p>]</span><span class=o>=</span><span class=n>D</span><span class=p>;;;</span><span class=n>b</span><span class=p>[</span><span class=n>o</span><span class=p>]</span><span class=o>=</span>
-</span></span><span class=line><span class=cl> <span class=s>&#34;.,-~:;=!*#$@&#34;</span><span class=p>[</span><span class=n>N</span><span class=o>&gt;</span><span class=mi>0</span><span class=o>?</span><span class=nl>N</span><span class=p>:</span><span class=mi>0</span><span class=p>];}}</span><span class=cm>/*#****!!-*/</span>
-</span></span><span class=line><span class=cl>  <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;</span><span class=se>\x1b</span><span class=s>[H&#34;</span><span class=p>);</span><span class=k>for</span><span class=p>(</span><span class=n>k</span><span class=o>=</span><span class=mi>0</span><span class=p>;</span><span class=mi>1761</span><span class=o>&gt;</span><span class=n>k</span><span class=p>;</span><span class=n>k</span><span class=o>++</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>   <span class=nf>putchar</span><span class=p>(</span><span class=n>k</span><span class=o>%</span><span class=mi>80</span><span class=o>?</span><span class=n>b</span><span class=p>[</span><span class=n>k</span><span class=p>]</span><span class=o>:</span><span class=mi>10</span><span class=p>);</span><span class=n>A</span><span class=o>+=</span><span class=mf>0.04</span><span class=p>;</span><span class=n>B</span><span class=o>+=</span>
-</span></span><span class=line><span class=cl>     <span class=mf>0.02</span><span class=p>;}}</span><span class=cm>/*****####*******!!=;:~
-</span></span></span><span class=line><span class=cl><span class=cm>       ~::==!!!**********!!!==::-
-</span></span></span><span class=line><span class=cl><span class=cm>         .,~~;;;========;;;:~-.
-</span></span></span><span class=line><span class=cl><span class=cm>             ..,--------,*/</span>
-</span></span></code></pre></div><p>Anyways, my point is that the code can become very unreadable and unmaintainable if no coding style guidelines are defined. Early in my journey, I engaged in all kinds of holy wars on code styles. I would read some article about why a particular convention was correct, while another was totally wrong. But I&rsquo;ve finally come to a conclusion - <strong>These things don&rsquo;t matter; Consistency and readability matters</strong>.</p><p>The development process of linux kernel is very chaotic with thousands of developers working completely remotely on the same code base. How do they do it without messing it all up??</p><p>Out of many reasons, one is that all kernel developers try best to follow the code style guidelines laid out in the official kernel documentations <sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>. Here they provide all the necessary details and examples to put their point. And still, it is just a recommendation not forcing anybody to be very specific about it.</p><h3 id=fixing-style-issue-problem>Fixing style issue problem<a hidden class=anchor aria-hidden=true href=#fixing-style-issue-problem>#</a></h3><p>In this task, we are provided with 2 different modules (Linux Kernel Modules)&mldr; and our job here is to fix the style coding as per the coding style.</p><p>You don&rsquo;t have to read the complete coding style to fix it, smart people have already built a tool that can check these issues and provide a warning to us in a clean way. Linux provides a <code>script/checkpatch.pl</code> <sup id=fnref:2><a href=#fn:2 class=footnote-ref role=doc-noteref>2</a></sup> script, for the same. This script can check the code for trivial style violations in patches and optionally corrects them. This tool can also be used for regular kernel source code files. Read more about this tool from official docs <sup id=fnref:3><a href=#fn:3 class=footnote-ref role=doc-noteref>3</a></sup>.</p><p>This is not a very unique idea, today we have linters and other tools that can check the style issues and report it or fix it automatically in your source code&mldr;.in almost all the program languages. You can add one such tool in you <code>pre-commit</code> hook or most IDEs have plugins for this, you can use those too.</p><p>Anyways, let&rsquo;s pick up a file and run the <code>checkpatch</code> tool against it. The code looked fine to me at first&mldr; it had a good filename at top and has got indentations.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*
-</span></span></span><span class=line><span class=cl><span class=cm>* helloworld.c
-</span></span></span><span class=line><span class=cl><span class=cm>*/</span>
-</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/init.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/module.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/kernel.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>int</span> <span class=nf>hello_init</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	  <span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;Hello World!</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>void</span> <span class=nf>hello_exit</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	  <span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;See you later.</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>module_init</span><span class=p>(</span><span class=n>hello_init</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>module_exit</span><span class=p>(</span><span class=n>hello_exit</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_LICENSE</span><span class=p>(</span><span class=s>&#34;GPL&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_AUTHOR</span><span class=p>(</span><span class=s>&#34;ayedaemon&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_DESCRIPTION</span><span class=p>(</span><span class=s>&#34;Just a module&#34;</span><span class=p>);</span>
-</span></span></code></pre></div><p>But it still does not follow the guidelines. You can check that using the tool - <code>checkpatch.pl</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl>## COMMAND -  ../linux/scripts/checkpatch.pl -f helloworld.c
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-</span></span><span class=line><span class=cl>#1: FILE: helloworld.c:1:
-</span></span><span class=line><span class=cl>+/*
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>WARNING: It&#39;s generally not useful to have the filename in the file
-</span></span><span class=line><span class=cl>#2: FILE: helloworld.c:2:
-</span></span><span class=line><span class=cl>+* helloworld.c
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>WARNING: Block comments should align the * on each line
-</span></span><span class=line><span class=cl>#2: FILE: helloworld.c:2:
-</span></span><span class=line><span class=cl>+/*
-</span></span><span class=line><span class=cl>+* helloworld.c
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>total: 0 errors, 3 warnings, 24 lines checked
-</span></span></code></pre></div><p>There are 3 warnings reported by this script&mldr;</p><ol><li>Add SPDX licence info in line 1</li><li>Filename at top is not useful</li><li>Block comments should have * aligned <em>(This will be discarded because according to point 2, we are going to remove that comment block)</em></li></ol><p>Now after fixing the code according to the provided suggestions, we get the below code:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// SPDX-License-Identifier: GPL-2.0+
-</span></span></span><span class=line><span class=cl><span class=c1></span>
-</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/init.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/module.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/kernel.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>int</span> <span class=nf>hello_init</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;Hello World!</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>static</span> <span class=kt>void</span> <span class=nf>hello_exit</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;See you later.</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>module_init</span><span class=p>(</span><span class=n>hello_init</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>module_exit</span><span class=p>(</span><span class=n>hello_exit</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_LICENSE</span><span class=p>(</span><span class=s>&#34;GPL&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_AUTHOR</span><span class=p>(</span><span class=s>&#34;ayedaemon&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>MODULE_DESCRIPTION</span><span class=p>(</span><span class=s>&#34;Just a module&#34;</span><span class=p>);</span>
-</span></span></code></pre></div><p>In other module file, we have another code that looks good at first but the <code>checkpatch</code> reults indicate otherwise.</p><p>Code:-</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/module.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/kernel.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/delay.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/slab.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>do_work</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>my_int</span><span class=p>,</span> <span class=kt>int</span> <span class=n>retval</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>x</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>y</span> <span class=o>=</span> <span class=o>*</span><span class=n>my_int</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>z</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=p>(</span><span class=n>x</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>x</span> <span class=o>&lt;</span> <span class=o>*</span><span class=n>my_int</span><span class=p>;</span> <span class=o>++</span><span class=n>x</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>		<span class=nf>udelay</span><span class=p>(</span><span class=mi>10</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=p>(</span><span class=n>y</span> <span class=o>&lt;</span> <span class=mi>10</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>		<span class=cm>/*
-</span></span></span><span class=line><span class=cl><span class=cm>		 * That was a long sleep, tell userspace about it
-</span></span></span><span class=line><span class=cl><span class=cm>		 */</span>
-</span></span><span class=line><span class=cl>		<span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;We slept a long time!&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	<span class=n>z</span> <span class=o>=</span> <span class=n>x</span> <span class=o>*</span> <span class=n>y</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>z</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>my_init</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>x</span> <span class=o>=</span> <span class=mi>10</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=n>x</span> <span class=o>=</span> <span class=nf>do_work</span><span class=p>(</span><span class=o>&amp;</span><span class=n>x</span><span class=p>,</span> <span class=n>x</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>x</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>my_exit</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>module_init</span><span class=p>(</span><span class=n>my_init</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>module_exit</span><span class=p>(</span><span class=n>my_exit</span><span class=p>);</span>
-</span></span></code></pre></div><p>This module is somewhat different than what we previously saw. Apart from the regular <code>init</code> and <code>exit</code> functions, this module has an extra function that is called by <code>init</code> function. That&rsquo;s it. You don&rsquo;t have to worry about the code and other logic at this point.. just focus on coding styles.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl># COMMAND -  ../linux/scripts/checkpatch.pl -f coding_style.c
-</span></span><span class=line><span class=cl>WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-</span></span><span class=line><span class=cl>#1: FILE: coding_style.c:1:
-</span></span><span class=line><span class=cl>+#include &lt;linux/module.h&gt;
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>WARNING: void function return statements are not generally useful
-</span></span><span class=line><span class=cl>#35: FILE: coding_style.c:35:
-</span></span><span class=line><span class=cl>+	return;
-</span></span><span class=line><span class=cl>+}
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>total: 0 errors, 2 warnings, 38 lines checked
-</span></span></code></pre></div><p>The script gives us 2 warnings for this module.</p><ol><li>SPDX licence <em>(just as the previous one, we&rsquo;ll talk more about it later.)</em></li><li>void function return statements. <em>(Void functions do not return anything; no return statements are required)</em></li></ol><p>For this case, I added the SPDX licence comment at line 1 and commented the return statement. If you want, you can remove it entirely from the code. For me, the new code looks like below:-</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-C data-lang=C><span class=line><span class=cl><span class=c1>// SPDX-License-Identifier: GPL-2.0+
-</span></span></span><span class=line><span class=cl><span class=c1></span>
-</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/module.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/kernel.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/delay.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;linux/slab.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>do_work</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>my_int</span><span class=p>,</span> <span class=kt>int</span> <span class=n>retval</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>x</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>y</span> <span class=o>=</span> <span class=o>*</span><span class=n>my_int</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>z</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=p>(</span><span class=n>x</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>x</span> <span class=o>&lt;</span> <span class=o>*</span><span class=n>my_int</span><span class=p>;</span> <span class=o>++</span><span class=n>x</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>		<span class=nf>udelay</span><span class=p>(</span><span class=mi>10</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=p>(</span><span class=n>y</span> <span class=o>&lt;</span> <span class=mi>10</span><span class=p>)</span>
-</span></span><span class=line><span class=cl>		<span class=cm>/*
-</span></span></span><span class=line><span class=cl><span class=cm>		 * That was a long sleep, tell userspace about it
-</span></span></span><span class=line><span class=cl><span class=cm>		 */</span>
-</span></span><span class=line><span class=cl>		<span class=nf>pr_debug</span><span class=p>(</span><span class=s>&#34;We slept a long time!&#34;</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	<span class=n>z</span> <span class=o>=</span> <span class=n>x</span> <span class=o>*</span> <span class=n>y</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>z</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>my_init</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>x</span> <span class=o>=</span> <span class=mi>10</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>	<span class=n>x</span> <span class=o>=</span> <span class=nf>do_work</span><span class=p>(</span><span class=o>&amp;</span><span class=n>x</span><span class=p>,</span> <span class=n>x</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>x</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>my_exit</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-</span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>	<span class=c1>// return;
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=nf>module_init</span><span class=p>(</span><span class=n>my_init</span><span class=p>);</span>
-</span></span><span class=line><span class=cl><span class=nf>module_exit</span><span class=p>(</span><span class=n>my_exit</span><span class=p>);</span>
-</span></span></code></pre></div><p>Great!! you are now familiar with the coding style issues in the linux kernel code and has got the ability to fix such issues. If you want to be more automatic with this, you can also use the pre-commit hooks. Read more about git hooks from <a href=https://githooks.com/>githooks.com</a> <sup id=fnref:4><a href=#fn:4 class=footnote-ref role=doc-noteref>4</a></sup></p><div class=footnotes role=doc-endnotes><hr><ol><li id=fn:1><p><a href=https://www.kernel.org/doc/html/v4.10/process/coding-style.html>https://www.kernel.org/doc/html/v4.10/process/coding-style.html</a>&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:2><p><a href=https://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl>https://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl</a>&#160;<a href=#fnref:2 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:3><p><a href=https://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html>https://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html</a>&#160;<a href=#fnref:3 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:4><p><a href=https://githooks.com/>https://githooks.com/</a>&#160;<a href=#fnref:4 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://ayedaemon.github.io/tags/eudyptula/>Eudyptula</a></li><li><a href=https://ayedaemon.github.io/tags/linux/>Linux</a></li></ul><nav class=paginav><a class=prev href=https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/><span class=title>« Next</span><br><span>Eudyptula Task5</span>
-</a><a class=next href=https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/><span class=title>Prev »</span><br><span>Eudyptula Task3</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ayedaemon.github.io/>Connected</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Eudyptula Task4 | Connected</title>
+<meta name="keywords" content="Eudyptula, linux">
+<meta name="description" content="Task 4 for Eudyptula challenge">
+<meta name="author" content="ayedaemon">
+<link rel="canonical" href="https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://ayedaemon.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ayedaemon.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ayedaemon.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ayedaemon.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ayedaemon.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Eudyptula Task4" />
+<meta property="og:description" content="Task 4 for Eudyptula challenge" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-17T16:14:27+05:30" />
+<meta property="article:modified_time" content="2022-06-17T16:14:27+05:30" />
+<meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/" />
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Eudyptula Task4"/>
+<meta name="twitter:description" content="Task 4 for Eudyptula challenge"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://ayedaemon.github.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Eudyptula Task4",
+      "item": "https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Eudyptula Task4",
+  "name": "Eudyptula Task4",
+  "description": "Task 4 for Eudyptula challenge",
+  "keywords": [
+    "Eudyptula", "linux"
+  ],
+  "articleBody": "This is Task 04 of the Eudyptula Challenge ------------------------------------------ Wonderful job in making it this far, I hope you have been having fun. Oh, you're getting bored, just booting and installing kernels? Well, time for some pedantic things to make you feel that those kernel builds are actually fun! Part of the job of being a kernel developer is recognizing the proper Linux kernel coding style. The full description of this coding style can be found in the kernel itself, in the Documentation/CodingStyle file. I'd recommend going and reading that right now, it's pretty simple stuff, and something that you are going to need to know and understand. There is also a tool in the kernel source tree in the scripts/ directory called checkpatch.pl that can be used to test for adhering to the coding style rules, as kernel programmers are lazy and prefer to let scripts do their work for them... And why a coding standard at all? That's because of your brain (yes, yours, not mine, remember, I'm just some dumb shell scripts). Once your brain learns the patterns, the information contained really starts to sink in better. So it's important that everyone follow the same standard so that the patterns become consistent. In other words, you want to make it really easy for other people to find the bugs in your code, and not be confused and distracted by the fact that you happen to prefer 5 spaces instead of tabs for indentation. Of course you would never prefer such a thing, I'd never accuse you of that, it was just an example, please forgive my impertinence! Anyway, the tasks for this round all deal with the Linux kernel coding style. Attached to this message are two kernel modules that do not follow the proper Linux kernel coding style rules. Please fix both of them up, and send it back to me in such a way that does follow the rules. What, you recognize one of these modules? Imagine that, perhaps I was right to accuse you of the using a \"wrong\" coding style :) Yes, the logic in the second module is crazy, and probably wrong, but don't focus on that, just look at the patterns here, and fix up the coding style, do not remove lines of code. Coding styles – what and why? We all have different styles and preferences in everything in life. Even while writing code, everyone loves to imprint their personalities in the code that brings originality and a sense of ownership and responsibility.\nCoding styles are set of rules or suggestions to write code. The idea behind developing these sets of rules for coding style is very simple - to make code readable by everybody or just to make your brain habitual to a specific style so that you can easily understand the code writen by another person.\nThe code style depends mainly on the language, few decisions are made depending on the context, and if you switch from one to another. Some of these decisions might be:\nComments (how and when you use them) Tabs or spaces for indentation (the number of spaces is quite important) Appropriate naming of variables and functions. Code grouping an organization, Patterns to be used or avoided. But what happens when a whole team is working on one project?\nEveryone develops a certain style and for individual work, this is great… but when you need more people on your team, understanding different styles could become a problem to everyone.\nThis has been on my mind a lot lately. For instance, during a code review, I often question whether I should bring specific ways of coding into the discussion or not. How does it affect the application; Is it readable, is it easy to maintain?\nOr perhaps I should leave it alone, thinking to myself — Don’t be picky, it’s just their preference, it’s not a matter of right or wrong.\nLinuc kernel developers has done an amazing job to build a coding style that is followed by mostly everybody who is getting involved in kernel development process.\nHow bad can it go? If we do not have a properly defined coding style, we might end up with mostly working but very unreadable code…. This can be very unhealty for a mere human being.\nLet’s take a simple example (In C programming language) to understand the need of coding styles.\n#include int main() { printf(\"This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.\"); return 0; } Above code is very simple in terms of functionality - It prints a huge paragraph. The same code can also be written in the below style…\n#include int main () { printf ( \"This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.\" ) ;return 0; } I know nobody will ever write code in this style..but it is still a possible option to write a working code.\nOr you might be familiar with the below code…. Spoiler:- This prints a rotating donut. Read this amazing article to understand the maths behind it.\nk;double sin() ,cos();main(){float A= 0,B=0,i,j,z[1760];char b[ 1760];printf(\"\\x1b[2J\");for(;; ){memset(b,32,1760);memset(z,0,7040) ;for(j=0;6.28\u003ej;j+=0.07)for(i=0;6.28 \u003ei;i+=0.02){float c=sin(i),d=cos(j),e= sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c* h*e+f*g+5),l=cos (i),m=cos(B),n=s\\ in(B),t=c*h*g-f* e;int x=40+30*D* (l*h*m-t*n),y= 12+15*D*(l*h*n +t*m),o=x+80*y, N=8*((f*e-c*d*g )*m-c*d*e-f*g-l *d*n);if(22\u003ey\u0026\u0026 y\u003e0\u0026\u0026x\u003e0\u0026\u002680\u003ex\u0026\u0026D\u003ez[o]){z[o]=D;;;b[o]= \".,-~:;=!*#$@\"[N\u003e0?N:0];}}/*#****!!-*/ printf(\"\\x1b[H\");for(k=0;1761\u003ek;k++) putchar(k%80?b[k]:10);A+=0.04;B+= 0.02;}}/*****####*******!!=;:~ ~::==!!!**********!!!==::- .,~~;;;========;;;:~-. ..,--------,*/ Anyways, my point is that the code can become very unreadable and unmaintainable if no coding style guidelines are defined. Early in my journey, I engaged in all kinds of holy wars on code styles. I would read some article about why a particular convention was correct, while another was totally wrong. But I’ve finally come to a conclusion - These things don’t matter; Consistency and readability matters.\nThe development process of linux kernel is very chaotic with thousands of developers working completely remotely on the same code base. How do they do it without messing it all up??\nOut of many reasons, one is that all kernel developers try best to follow the code style guidelines laid out in the official kernel documentations 1. Here they provide all the necessary details and examples to put their point. And still, it is just a recommendation not forcing anybody to be very specific about it.\nFixing style issue problem In this task, we are provided with 2 different modules (Linux Kernel Modules)… and our job here is to fix the style coding as per the coding style.\nYou don’t have to read the complete coding style to fix it, smart people have already built a tool that can check these issues and provide a warning to us in a clean way. Linux provides a script/checkpatch.pl 2 script, for the same. This script can check the code for trivial style violations in patches and optionally corrects them. This tool can also be used for regular kernel source code files. Read more about this tool from official docs 3.\nThis is not a very unique idea, today we have linters and other tools that can check the style issues and report it or fix it automatically in your source code….in almost all the program languages. You can add one such tool in you pre-commit hook or most IDEs have plugins for this, you can use those too.\nAnyways, let’s pick up a file and run the checkpatch tool against it. The code looked fine to me at first… it had a good filename at top and has got indentations.\n/* * helloworld.c */ #include #include #include static int hello_init(void) { pr_debug(\"Hello World!\\n\"); return 0; } static void hello_exit(void) { pr_debug(\"See you later.\\n\"); } module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE(\"GPL\"); MODULE_AUTHOR(\"ayedaemon\"); MODULE_DESCRIPTION(\"Just a module\"); But it still does not follow the guidelines. You can check that using the tool - checkpatch.pl.\n## COMMAND - ../linux/scripts/checkpatch.pl -f helloworld.c WARNING: Missing or malformed SPDX-License-Identifier tag in line 1 #1: FILE: helloworld.c:1: +/* WARNING: It's generally not useful to have the filename in the file #2: FILE: helloworld.c:2: +* helloworld.c WARNING: Block comments should align the * on each line #2: FILE: helloworld.c:2: +/* +* helloworld.c total: 0 errors, 3 warnings, 24 lines checked There are 3 warnings reported by this script…\nAdd SPDX licence info in line 1 Filename at top is not useful Block comments should have * aligned (This will be discarded because according to point 2, we are going to remove that comment block) Now after fixing the code according to the provided suggestions, we get the below code:\n// SPDX-License-Identifier: GPL-2.0+ #include #include #include static int hello_init(void) { pr_debug(\"Hello World!\\n\"); return 0; } static void hello_exit(void) { pr_debug(\"See you later.\\n\"); } module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE(\"GPL\"); MODULE_AUTHOR(\"ayedaemon\"); MODULE_DESCRIPTION(\"Just a module\"); In other module file, we have another code that looks good at first but the checkpatch reults indicate otherwise.\nCode:-\n#include #include #include #include int do_work(int *my_int, int retval) { int x; int y = *my_int; int z; for (x = 0; x \u003c *my_int; ++x) udelay(10); if (y \u003c 10) /* * That was a long sleep, tell userspace about it */ pr_debug(\"We slept a long time!\"); z = x * y; return z; } int my_init(void) { int x = 10; x = do_work(\u0026x, x); return x; } void my_exit(void) { return; } module_init(my_init); module_exit(my_exit); This module is somewhat different than what we previously saw. Apart from the regular init and exit functions, this module has an extra function that is called by init function. That’s it. You don’t have to worry about the code and other logic at this point.. just focus on coding styles.\n# COMMAND - ../linux/scripts/checkpatch.pl -f coding_style.c WARNING: Missing or malformed SPDX-License-Identifier tag in line 1 #1: FILE: coding_style.c:1: +#include WARNING: void function return statements are not generally useful #35: FILE: coding_style.c:35: +\treturn; +} total: 0 errors, 2 warnings, 38 lines checked The script gives us 2 warnings for this module.\nSPDX licence (just as the previous one, we’ll talk more about it later.) void function return statements. (Void functions do not return anything; no return statements are required) For this case, I added the SPDX licence comment at line 1 and commented the return statement. If you want, you can remove it entirely from the code. For me, the new code looks like below:-\n// SPDX-License-Identifier: GPL-2.0+ #include #include #include #include int do_work(int *my_int, int retval) { int x; int y = *my_int; int z; for (x = 0; x \u003c *my_int; ++x) udelay(10); if (y \u003c 10) /* * That was a long sleep, tell userspace about it */ pr_debug(\"We slept a long time!\"); z = x * y; return z; } int my_init(void) { int x = 10; x = do_work(\u0026x, x); return x; } void my_exit(void) { // return; } module_init(my_init); module_exit(my_exit); Great!! you are now familiar with the coding style issues in the linux kernel code and has got the ability to fix such issues. If you want to be more automatic with this, you can also use the pre-commit hooks. Read more about git hooks from githooks.com 4\nhttps://www.kernel.org/doc/html/v4.10/process/coding-style.html ↩︎\nhttps://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl ↩︎\nhttps://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html ↩︎\nhttps://githooks.com/ ↩︎\n",
+  "wordCount" : "2010",
+  "inLanguage": "en",
+  "datePublished": "2022-06-17T16:14:27+05:30",
+  "dateModified": "2022-06-17T16:14:27+05:30",
+  "author":[{
+    "@type": "Person",
+    "name": "ayedaemon"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Connected",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ayedaemon.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ayedaemon.github.io/" accesskey="h" title="Connected (Alt + H)">Connected</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ayedaemon.github.io/post/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/series/" title="Series">
+                    <span>Series</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Eudyptula Task4
+    </h1>
+    <div class="post-description">
+      Task 4 for Eudyptula challenge
+    </div>
+    <div class="post-meta"><span title='2022-06-17 16:14:27 +0530 +0530'>June 17, 2022</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;2010 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href="https://github.com/ayedaemon/ayedaemon.github.io/content/post/2022/06/Eudyptula-task-4.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#coding-styles----what-and-why" aria-label="Coding styles &ndash; what and why?">Coding styles &ndash; what and why?</a><ul>
+                        
+                <li>
+                    <a href="#how-bad-can-it-go" aria-label="How bad can it go?">How bad can it go?</a></li></ul>
+                </li>
+                <li>
+                    <a href="#fixing-style-issue-problem" aria-label="Fixing style issue problem">Fixing style issue problem</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 04 of the Eudyptula Challenge
+</span></span><span class="line"><span class="cl">------------------------------------------
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Wonderful job in making it this far, I hope you have been having fun.
+</span></span><span class="line"><span class="cl">Oh, you&#39;re getting bored, just booting and installing kernels?  Well,
+</span></span><span class="line"><span class="cl">time for some pedantic things to make you feel that those kernel builds
+</span></span><span class="line"><span class="cl">are actually fun!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Part of the job of being a kernel developer is recognizing the proper
+</span></span><span class="line"><span class="cl">Linux kernel coding style.  The full description of this coding style
+</span></span><span class="line"><span class="cl">can be found in the kernel itself, in the Documentation/CodingStyle
+</span></span><span class="line"><span class="cl">file.  I&#39;d recommend going and reading that right now, it&#39;s pretty
+</span></span><span class="line"><span class="cl">simple stuff, and something that you are going to need to know and
+</span></span><span class="line"><span class="cl">understand.  There is also a tool in the kernel source tree in the
+</span></span><span class="line"><span class="cl">scripts/ directory called checkpatch.pl that can be used to test for
+</span></span><span class="line"><span class="cl">adhering to the coding style rules, as kernel programmers are lazy and
+</span></span><span class="line"><span class="cl">prefer to let scripts do their work for them...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">And why a coding standard at all?  That&#39;s because of your brain (yes,
+</span></span><span class="line"><span class="cl">yours, not mine, remember, I&#39;m just some dumb shell scripts).  Once your
+</span></span><span class="line"><span class="cl">brain learns the patterns, the information contained really starts to
+</span></span><span class="line"><span class="cl">sink in better.  So it&#39;s important that everyone follow the same
+</span></span><span class="line"><span class="cl">standard so that the patterns become consistent.  In other words, you
+</span></span><span class="line"><span class="cl">want to make it really easy for other people to find the bugs in your
+</span></span><span class="line"><span class="cl">code, and not be confused and distracted by the fact that you happen to
+</span></span><span class="line"><span class="cl">prefer 5 spaces instead of tabs for indentation.  Of course you would
+</span></span><span class="line"><span class="cl">never prefer such a thing, I&#39;d never accuse you of that, it was just an
+</span></span><span class="line"><span class="cl">example, please forgive my impertinence!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Anyway, the tasks for this round all deal with the Linux kernel coding
+</span></span><span class="line"><span class="cl">style.  Attached to this message are two kernel modules that do not
+</span></span><span class="line"><span class="cl">follow the proper Linux kernel coding style rules.  Please fix both of
+</span></span><span class="line"><span class="cl">them up, and send it back to me in such a way that does follow the
+</span></span><span class="line"><span class="cl">rules.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">What, you recognize one of these modules?  Imagine that, perhaps I was
+</span></span><span class="line"><span class="cl">right to accuse you of the using a &#34;wrong&#34; coding style :)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Yes, the logic in the second module is crazy, and probably wrong, but
+</span></span><span class="line"><span class="cl">don&#39;t focus on that, just look at the patterns here, and fix up the
+</span></span><span class="line"><span class="cl">coding style, do not remove lines of code.
+</span></span></code></pre></div><h3 id="coding-styles----what-and-why">Coding styles &ndash; what and why?<a hidden class="anchor" aria-hidden="true" href="#coding-styles----what-and-why">#</a></h3>
+<p>We all have different styles and preferences in everything in life. Even while writing code, everyone loves to imprint their personalities in the code that brings originality and a sense of ownership and responsibility.</p>
+<p>Coding styles are set of rules or suggestions to write code. The idea behind developing these sets of rules for coding style is very simple - to make code readable by everybody or just to make your brain habitual to a specific style so that you can easily understand the code writen by another person.</p>
+<p>The code style depends mainly on the language, few decisions are made depending on the context, and if you switch from one to another. Some of these decisions might be:</p>
+<ul>
+<li>Comments (how and when you use them)</li>
+<li>Tabs or spaces for indentation (the number of spaces is quite important)</li>
+<li>Appropriate naming of variables and functions.</li>
+<li>Code grouping an organization,</li>
+<li>Patterns to be used or avoided.</li>
+</ul>
+<p><strong>But what happens when a whole team is working on one project?</strong></p>
+<p>Everyone develops a certain style and for individual work, this is great&hellip; but when you need more people on your team, understanding different styles could become a problem to everyone.</p>
+<p>This has been on my mind a lot lately. For instance, during a code review, I often question whether I should bring specific ways of coding into the discussion or not. How does it affect the application; Is it readable, is it easy to maintain?</p>
+<p>Or perhaps I should leave it alone, thinking to myself — <em>Don’t be picky, it’s just their preference, it’s not a matter of right or wrong.</em></p>
+<p>Linuc kernel developers has done an amazing job to build a coding style that is followed by mostly everybody who is getting involved in kernel development process.</p>
+<h4 id="how-bad-can-it-go">How bad can it go?<a hidden class="anchor" aria-hidden="true" href="#how-bad-can-it-go">#</a></h4>
+<p>If we do not have a properly defined coding style, we might end up with mostly working but very unreadable code&hellip;. This can be very unhealty for a mere human being.</p>
+<p>Let&rsquo;s take a simple example (In C programming language) to understand the need of coding styles.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Above code is very simple in terms of functionality - It prints a huge paragraph. The same code can also be written in the below style&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> 
+</span></span><span class="line"><span class="cl"><span class="nf">main</span>
+</span></span><span class="line"><span class="cl"><span class="p">()</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nf">printf</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s">&#34;This is a very long line with some garbage text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pulvinar neque laoreet suspendisse interdum consectetur libero. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Turpis egestas sed tempus urna et. Ornare lectus sit amet est placerat. Quam elementum pulvinar etiam non quam. Consequat semper viverra nam libero. Nisl condimentum id venenatis a condimentum vitae. Vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">;</span><span class="k">return</span> 
+</span></span><span class="line"><span class="cl"><span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>I know nobody will ever write code in this style..but it is still a possible option to write a working code.</p>
+<p>Or you might be familiar with the below code&hellip;. Spoiler:- This prints a rotating donut. Read <a href="https://www.a1k0n.net/2011/07/20/donut-math.html">this amazing article</a> to understand the maths behind it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">             <span class="n">k</span><span class="p">;</span><span class="kt">double</span> <span class="nf">sin</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">         <span class="p">,</span><span class="nf">cos</span><span class="p">();</span><span class="nf">main</span><span class="p">(){</span><span class="kt">float</span> <span class="n">A</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">       <span class="mi">0</span><span class="p">,</span><span class="n">B</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">z</span><span class="p">[</span><span class="mi">1760</span><span class="p">];</span><span class="kt">char</span> <span class="n">b</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">1760</span><span class="p">];</span><span class="nf">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\x1b</span><span class="s">[2J&#34;</span><span class="p">);</span><span class="k">for</span><span class="p">(;;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">){</span><span class="nf">memset</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1760</span><span class="p">);</span><span class="nf">memset</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">7040</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">;</span><span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="mf">6.28</span><span class="o">&gt;</span><span class="n">j</span><span class="p">;</span><span class="n">j</span><span class="o">+=</span><span class="mf">0.07</span><span class="p">)</span><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="mf">6.28</span>
+</span></span><span class="line"><span class="cl"> <span class="o">&gt;</span><span class="n">i</span><span class="p">;</span><span class="n">i</span><span class="o">+=</span><span class="mf">0.02</span><span class="p">){</span><span class="kt">float</span> <span class="n">c</span><span class="o">=</span><span class="nf">sin</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">d</span><span class="o">=</span><span class="nf">cos</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="n">e</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl"> <span class="nf">sin</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">f</span><span class="o">=</span><span class="nf">sin</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="n">g</span><span class="o">=</span><span class="nf">cos</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">h</span><span class="o">=</span><span class="n">d</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span><span class="n">D</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">c</span><span class="o">*</span>
+</span></span><span class="line"><span class="cl"> <span class="n">h</span><span class="o">*</span><span class="n">e</span><span class="o">+</span><span class="n">f</span><span class="o">*</span><span class="n">g</span><span class="o">+</span><span class="mi">5</span><span class="p">),</span><span class="n">l</span><span class="o">=</span><span class="nf">cos</span>      <span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">m</span><span class="o">=</span><span class="nf">cos</span><span class="p">(</span><span class="n">B</span><span class="p">),</span><span class="n">n</span><span class="o">=</span><span class="n">s</span>\
+</span></span><span class="line"><span class="cl"><span class="nf">in</span><span class="p">(</span><span class="n">B</span><span class="p">),</span><span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">g</span><span class="o">-</span><span class="n">f</span><span class="o">*</span>        <span class="n">e</span><span class="p">;</span><span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="mi">40</span><span class="o">+</span><span class="mi">30</span><span class="o">*</span><span class="n">D</span><span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">m</span><span class="o">-</span><span class="n">t</span><span class="o">*</span><span class="n">n</span><span class="p">),</span><span class="n">y</span><span class="o">=</span>            <span class="mi">12</span><span class="o">+</span><span class="mi">15</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="p">(</span><span class="n">l</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">n</span>
+</span></span><span class="line"><span class="cl"><span class="o">+</span><span class="n">t</span><span class="o">*</span><span class="n">m</span><span class="p">),</span><span class="n">o</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">80</span><span class="o">*</span><span class="n">y</span><span class="p">,</span>          <span class="n">N</span><span class="o">=</span><span class="mi">8</span><span class="o">*</span><span class="p">((</span><span class="n">f</span><span class="o">*</span><span class="n">e</span><span class="o">-</span><span class="n">c</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">g</span>
+</span></span><span class="line"><span class="cl"> <span class="p">)</span><span class="o">*</span><span class="n">m</span><span class="o">-</span><span class="n">c</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">e</span><span class="o">-</span><span class="n">f</span><span class="o">*</span><span class="n">g</span><span class="o">-</span><span class="n">l</span>        <span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">n</span><span class="p">);</span><span class="k">if</span><span class="p">(</span><span class="mi">22</span><span class="o">&gt;</span><span class="n">y</span><span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">y</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">&amp;&amp;</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">&amp;&amp;</span><span class="mi">80</span><span class="o">&gt;</span><span class="n">x</span><span class="o">&amp;&amp;</span><span class="n">D</span><span class="o">&gt;</span><span class="n">z</span><span class="p">[</span><span class="n">o</span><span class="p">]){</span><span class="n">z</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span><span class="n">D</span><span class="p">;;;</span><span class="n">b</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl"> <span class="s">&#34;.,-~:;=!*#$@&#34;</span><span class="p">[</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">?</span><span class="nl">N</span><span class="p">:</span><span class="mi">0</span><span class="p">];}}</span><span class="cm">/*#****!!-*/</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\x1b</span><span class="s">[H&#34;</span><span class="p">);</span><span class="k">for</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="mi">1761</span><span class="o">&gt;</span><span class="n">k</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">putchar</span><span class="p">(</span><span class="n">k</span><span class="o">%</span><span class="mi">80</span><span class="o">?</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">:</span><span class="mi">10</span><span class="p">);</span><span class="n">A</span><span class="o">+=</span><span class="mf">0.04</span><span class="p">;</span><span class="n">B</span><span class="o">+=</span>
+</span></span><span class="line"><span class="cl">     <span class="mf">0.02</span><span class="p">;}}</span><span class="cm">/*****####*******!!=;:~
+</span></span></span><span class="line"><span class="cl"><span class="cm">       ~::==!!!**********!!!==::-
+</span></span></span><span class="line"><span class="cl"><span class="cm">         .,~~;;;========;;;:~-.
+</span></span></span><span class="line"><span class="cl"><span class="cm">             ..,--------,*/</span>
+</span></span></code></pre></div><p>Anyways, my point is that the code can become very unreadable and unmaintainable if no coding style guidelines are defined. Early in my journey, I engaged in all kinds of holy wars on code styles. I would read some article about why a particular convention was correct, while another was totally wrong. But I&rsquo;ve finally come to a conclusion - <strong>These things don&rsquo;t matter; Consistency and readability matters</strong>.</p>
+<p>The development process of linux kernel is very chaotic with thousands of developers working completely remotely on the same code base. How do they do it without messing it all up??</p>
+<p>Out of many reasons, one is that all kernel developers try best to follow the code style guidelines laid out in the official kernel documentations <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Here they provide all the necessary details and examples to put their point. And still, it is just a recommendation not forcing anybody to be very specific about it.</p>
+<h3 id="fixing-style-issue-problem">Fixing style issue problem<a hidden class="anchor" aria-hidden="true" href="#fixing-style-issue-problem">#</a></h3>
+<p>In this task, we are provided with 2 different modules (Linux Kernel Modules)&hellip; and our job here is to fix the style coding as per the coding style.</p>
+<p>You don&rsquo;t have to read the complete coding style to fix it, smart people have already built a tool that can check these issues and provide a warning to us in a clean way. Linux provides a <code>script/checkpatch.pl</code> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> script, for the same. This script can check the code for trivial style violations in patches and optionally corrects them. This tool can also be used for regular kernel source code files. Read more about this tool from official docs <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>This is not a very unique idea, today we have linters and other tools that can check the style issues and report it or fix it automatically in your source code&hellip;.in almost all the program languages. You can add one such tool in you <code>pre-commit</code> hook or most IDEs have plugins for this, you can use those too.</p>
+<p>Anyways, let&rsquo;s pick up a file and run the <code>checkpatch</code> tool against it. The code looked fine to me at first&hellip; it had a good filename at top and has got indentations.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">* helloworld.c
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/init.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="nf">hello_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	  <span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;Hello World!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">hello_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	  <span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;See you later.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">module_init</span><span class="p">(</span><span class="n">hello_init</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">module_exit</span><span class="p">(</span><span class="n">hello_exit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_LICENSE</span><span class="p">(</span><span class="s">&#34;GPL&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&#34;ayedaemon&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&#34;Just a module&#34;</span><span class="p">);</span>
+</span></span></code></pre></div><p>But it still does not follow the guidelines. You can check that using the tool - <code>checkpatch.pl</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">## COMMAND -  ../linux/scripts/checkpatch.pl -f helloworld.c
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+</span></span><span class="line"><span class="cl">#1: FILE: helloworld.c:1:
+</span></span><span class="line"><span class="cl">+/*
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">WARNING: It&#39;s generally not useful to have the filename in the file
+</span></span><span class="line"><span class="cl">#2: FILE: helloworld.c:2:
+</span></span><span class="line"><span class="cl">+* helloworld.c
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">WARNING: Block comments should align the * on each line
+</span></span><span class="line"><span class="cl">#2: FILE: helloworld.c:2:
+</span></span><span class="line"><span class="cl">+/*
+</span></span><span class="line"><span class="cl">+* helloworld.c
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">total: 0 errors, 3 warnings, 24 lines checked
+</span></span></code></pre></div><p>There are 3 warnings reported by this script&hellip;</p>
+<ol>
+<li>Add SPDX licence info in line 1</li>
+<li>Filename at top is not useful</li>
+<li>Block comments should have * aligned <em>(This will be discarded because according to point 2, we are going to remove that comment block)</em></li>
+</ol>
+<p>Now after fixing the code according to the provided suggestions, we get the below code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="c1">// SPDX-License-Identifier: GPL-2.0+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/init.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">int</span> <span class="nf">hello_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;Hello World!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="kt">void</span> <span class="nf">hello_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;See you later.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">module_init</span><span class="p">(</span><span class="n">hello_init</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">module_exit</span><span class="p">(</span><span class="n">hello_exit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_LICENSE</span><span class="p">(</span><span class="s">&#34;GPL&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&#34;ayedaemon&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&#34;Just a module&#34;</span><span class="p">);</span>
+</span></span></code></pre></div><p>In other module file, we have another code that looks good at first but the <code>checkpatch</code> reults indicate otherwise.</p>
+<p>Code:-</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/delay.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/slab.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">do_work</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">my_int</span><span class="p">,</span> <span class="kt">int</span> <span class="n">retval</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">my_int</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">my_int</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">udelay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">		 * That was a long sleep, tell userspace about it
+</span></span></span><span class="line"><span class="cl"><span class="cm">		 */</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;We slept a long time!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">my_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">x</span> <span class="o">=</span> <span class="nf">do_work</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">my_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">module_init</span><span class="p">(</span><span class="n">my_init</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">module_exit</span><span class="p">(</span><span class="n">my_exit</span><span class="p">);</span>
+</span></span></code></pre></div><p>This module is somewhat different than what we previously saw. Apart from the regular <code>init</code> and <code>exit</code> functions, this module has an extra function that is called by <code>init</code> function. That&rsquo;s it. You don&rsquo;t have to worry about the code and other logic at this point.. just focus on coding styles.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl"># COMMAND -  ../linux/scripts/checkpatch.pl -f coding_style.c
+</span></span><span class="line"><span class="cl">WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+</span></span><span class="line"><span class="cl">#1: FILE: coding_style.c:1:
+</span></span><span class="line"><span class="cl">+#include &lt;linux/module.h&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">WARNING: void function return statements are not generally useful
+</span></span><span class="line"><span class="cl">#35: FILE: coding_style.c:35:
+</span></span><span class="line"><span class="cl">+	return;
+</span></span><span class="line"><span class="cl">+}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">total: 0 errors, 2 warnings, 38 lines checked
+</span></span></code></pre></div><p>The script gives us 2 warnings for this module.</p>
+<ol>
+<li>SPDX licence <em>(just as the previous one, we&rsquo;ll talk more about it later.)</em></li>
+<li>void function return statements. <em>(Void functions do not return anything; no return statements are required)</em></li>
+</ol>
+<p>For this case, I added the SPDX licence comment at line 1 and commented the return statement. If you want, you can remove it entirely from the code. For me, the new code looks like below:-</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="c1">// SPDX-License-Identifier: GPL-2.0+
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/module.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/kernel.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/delay.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;linux/slab.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">do_work</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">my_int</span><span class="p">,</span> <span class="kt">int</span> <span class="n">retval</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">my_int</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">my_int</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">udelay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">		 * That was a long sleep, tell userspace about it
+</span></span></span><span class="line"><span class="cl"><span class="cm">		 */</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">pr_debug</span><span class="p">(</span><span class="s">&#34;We slept a long time!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">my_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">x</span> <span class="o">=</span> <span class="nf">do_work</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">my_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// return;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">module_init</span><span class="p">(</span><span class="n">my_init</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">module_exit</span><span class="p">(</span><span class="n">my_exit</span><span class="p">);</span>
+</span></span></code></pre></div><p>Great!! you are now familiar with the coding style issues in the linux kernel code and has got the ability to fix such issues. If you want to be more automatic with this, you can also use the pre-commit hooks. Read more about git hooks from <a href="https://githooks.com/">githooks.com</a> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.kernel.org/doc/html/v4.10/process/coding-style.html">https://www.kernel.org/doc/html/v4.10/process/coding-style.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl">https://elixir.bootlin.com/linux/latest/source/scripts/checkpatch.pl</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html">https://www.kernel.org/doc/html/latest/dev-tools/checkpatch.html</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://githooks.com/">https://githooks.com/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ayedaemon.github.io/tags/eudyptula/">Eudyptula</a></li>
+      <li><a href="https://ayedaemon.github.io/tags/linux/">Linux</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ayedaemon.github.io/">Connected</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

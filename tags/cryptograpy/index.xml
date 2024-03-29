@@ -6,12 +6,12 @@
     <description>Recent content in cryptograpy on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Dec 2020 13:15:55 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/cryptograpy/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Dec 2020 13:15:55 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/cryptograpy/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LUKS Disk Encryption</title>
       <link>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</link>
       <pubDate>Sat, 19 Dec 2020 13:15:55 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2020/12/luks-disk-encryption/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Linux Unified Key Encryption — Disk Encryption&lt;/p&gt;
@@ -20,8 +20,8 @@
 <p>Linux Unified Key Encryption — Disk Encryption</p>
 </blockquote>
 <p><strong>cryptsetup</strong> — <em>manage plain dm-crypt and LUKS encrypted volumes</em></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup &lt;OPTIONS&gt; &lt;action&gt; &lt;action-specific-options&gt; &lt;device&gt; &lt;dmname&gt;
-</span></span></code></pre></div><p>An encrypted blockdevice is protected by a key. A key is either:</p>
+<pre tabindex="0"><code>cryptsetup &lt;OPTIONS&gt; &lt;action&gt; &lt;action-specific-options&gt; &lt;device&gt; &lt;dmname&gt;
+</code></pre><p>An encrypted blockdevice is protected by a key. A key is either:</p>
 <ul>
 <li>a passphrase, or</li>
 <li>a keyfile</li>
@@ -62,12 +62,12 @@
 <h3 id="just-do-it-now-">Just Do It now ✔️</h3>
 <h3 id="installing-required-tools">Installing required tools</h3>
 <p>I am using a RHEL based OS which uses yum/dnf package managers.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum install cryptsetup -y
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">or
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">dnf install -y cryptsetup
-</span></span></code></pre></div><h3 id="creating-the-partition">Creating the partition</h3>
+<pre tabindex="0"><code>yum install cryptsetup -y
+
+or
+
+dnf install -y cryptsetup
+</code></pre><h3 id="creating-the-partition">Creating the partition</h3>
 <p><code>lsblk</code> - check the device name for the harddisk (sdb)</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*4c6x1UUNyksMWLCc-Yqyaw.png" alt=""  />
 </p>
@@ -101,15 +101,15 @@
 </p>
 <p><em>Type this on magic terminal —</em> <em>restorecon -vvRF /mnt/my_encrypted_backup/</em> <em>- This will restore the SELinux context back to defaults for the destination directory.</em></p>
 <h3 id="checking-luks-dumps">Checking luks dumps</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksDump /dev/sdb1
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*tWyJ8XLcwJuyRG-aUl8BZA.png" alt=""  />
+<pre tabindex="0"><code>cryptsetup luksDump /dev/sdb1
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*tWyJ8XLcwJuyRG-aUl8BZA.png" alt=""  />
 </p>
 <h3 id="adding-new-key">Adding new key</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir /etc/luks-keys/; dd if=/dev/random of=/etc/luks-keys/mybackup\_key bs=32 count=1
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*fE51gnVtgYGkSOeASgrzfQ.png" alt=""  />
+<pre tabindex="0"><code>mkdir /etc/luks-keys/; dd if=/dev/random of=/etc/luks-keys/mybackup\_key bs=32 count=1
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*fE51gnVtgYGkSOeASgrzfQ.png" alt=""  />
 </p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksAddKey /dev/sdb1 /etc/luks-keys/mybackup\_key
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*FBkoDsoqSHZ9AWw73ICg2Q.png" alt=""  />
+<pre tabindex="0"><code>cryptsetup luksAddKey /dev/sdb1 /etc/luks-keys/mybackup\_key
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*FBkoDsoqSHZ9AWw73ICg2Q.png" alt=""  />
 </p>
 <p>Checking the dumps again</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*7pWmoHcrHZmLXtGISkrCZQ.png" alt=""  />
@@ -126,16 +126,16 @@
 <ol>
 <li>If you want to unmount and remove the harddisk. You’ll have to follow the steps:</li>
 </ol>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">umount /mountpoints/sdb cryptsetup luksClose myencrypt
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*6JplORU1iMFii5fwR4Reqg.png" alt=""  />
+<pre tabindex="0"><code>umount /mountpoints/sdb cryptsetup luksClose myencrypt
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*6JplORU1iMFii5fwR4Reqg.png" alt=""  />
 
 <img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*TZ8IkBpyRwkufkvyPkIT2g.png" alt=""  />
 </p>
 <ol start="2">
 <li>If you want to open the luks partition with keyfile instead of the passphrase.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup -v luksOpen /dev/sdb1 myencrypt --key-file=/etc/luks-keys/mybackup\_key
-</span></span></code></pre></div><ol start="3">
+<pre tabindex="0"><code>cryptsetup -v luksOpen /dev/sdb1 myencrypt --key-file=/etc/luks-keys/mybackup\_key
+</code></pre><ol start="3">
 <li>What if someone changes the content of the keyfile?</li>
 </ol>
 <p>Creating a new key</p>
@@ -153,8 +153,8 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*wasZr_6cKCRIibLohoPJvQ.png" alt=""  />
 </p>
 <p>And make the below entry in <code>/etc/crypttab</code> file. (Check the UUID for your device - Don&rsquo;t copy mine!!)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">myencrypt    UUID=48a20857-6f26-4352-89d5-e778f2d98950     /etc/luks-keys/mybackup\_key    luks
-</span></span></code></pre></div><p>The above line is a combination of 4 fields:</p>
+<pre tabindex="0"><code>myencrypt    UUID=48a20857-6f26-4352-89d5-e778f2d98950     /etc/luks-keys/mybackup\_key    luks
+</code></pre><p>The above line is a combination of 4 fields:</p>
 <ul>
 <li>name of the mapped device.</li>
 <li>uuid of the encrypted partition</li>
@@ -162,8 +162,8 @@
 <li>type of encryption used — luks</li>
 </ul>
 <p>And then make below entry in <code>/etc/fstab</code> file.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/dev/mapper/myencrypt /mountpoints/sdb xfs defaults 0 0
-</span></span></code></pre></div><p><em>Want to learn more about</em> <a href="https://linux.die.net/man/5/crypttab"><em>crypttab</em></a> <em>and</em> <a href="https://linux.die.net/man/5/fstab"><em>fstab</em></a></p>
+<pre tabindex="0"><code>/dev/mapper/myencrypt /mountpoints/sdb xfs defaults 0 0
+</code></pre><p><em>Want to learn more about</em> <a href="https://linux.die.net/man/5/crypttab"><em>crypttab</em></a> <em>and</em> <a href="https://linux.die.net/man/5/fstab"><em>fstab</em></a></p>
 <p>Last step to verify if the above steps worked fine or not.</p>
 <ul>
 <li>Remount and verify (using mount command with &lsquo;a&rsquo; and &lsquo;v&rsquo; flags for clarity)</li>
@@ -175,6 +175,5 @@
 <p><img loading="lazy" src="https://miro.medium.com/max/480/0*IZmFYignS8jVnoSE.gif" alt=""  />
 </p>]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

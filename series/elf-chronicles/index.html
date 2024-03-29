@@ -1,9 +1,188 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>ELF Chronicles | Connected</title>
-<meta name=keywords content><meta name=description content="Ayedaemon's blog"><meta name=author content="ayedaemon"><link rel=canonical href=https://ayedaemon.github.io/series/elf-chronicles/><link crossorigin=anonymous href=/assets/css/stylesheet.5cfc680b1eeaeef9efbced92d46c2a9e876b72ee14fba85846afc4cff9e6e6f8.css integrity="sha256-XPxoCx7q7vnvvO2S1Gwqnodrcu4U+6hYRq/Ez/nm5vg=" rel="preload stylesheet" as=style><link rel=icon href=https://ayedaemon.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ayedaemon.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ayedaemon.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ayedaemon.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ayedaemon.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate type=application/rss+xml href=https://ayedaemon.github.io/series/elf-chronicles/index.xml><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:title" content="ELF Chronicles"><meta property="og:description" content="Ayedaemon's blog"><meta property="og:type" content="website"><meta property="og:url" content="https://ayedaemon.github.io/series/elf-chronicles/"><meta property="og:site_name" content="Connected"><meta name=twitter:card content="summary"><meta name=twitter:title content="ELF Chronicles"><meta name=twitter:description content="Ayedaemon's blog"></head><body class="list dark" id=top><header class=header><nav class=nav><div class=logo><a href=https://ayedaemon.github.io/ accesskey=h title="Connected (Alt + H)">Connected</a><div class=logo-switches></div></div><ul id=menu><li><a href=https://ayedaemon.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://ayedaemon.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://ayedaemon.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li><li><a href=https://ayedaemon.github.io/series/ title=Series><span>Series</span></a></li></ul></nav></header><main class=main><header class=page-header><div class=breadcrumbs><a href=https://ayedaemon.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://ayedaemon.github.io/series/>Series</a></div><h1>ELF Chronicles
-<a href=/series/elf-chronicles/index.xml title=RSS aria-label=RSS><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" height="23"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></h1></header><article class="post-entry tag-entry"><header class=entry-header><h2>ELF Chronicles: Program Headers</h2></header><div class=entry-content><p>In preceding articles, we’ve delved into the details of ELF file headers and section headers. Section headers provide insight into how data and instructions are organized based on their characteristics and grouped into distinct sections. These sections remain distinct due to variations in their types and permissions (… and few other things).
-Up to this point, our focus has been on the aspects of the ELF file as it resides on-disk....</p></div><footer class=entry-footer><span title='2023-10-20 15:21:49 +0530 +0530'>October 20, 2023</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;2040 words&nbsp;·&nbsp;ayedaemon</footer><a class=entry-link aria-label="post link to ELF Chronicles: Program Headers" href=https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2>ELF Chronicles: Section Headers</h2></header><div class=entry-content><p>Intro Assuming you’ve got ELF headers like Elf64_Ehdr or Elf32_Ehdr at your fingertips, and you’re armed with the know-how and tools to decipher their contents effortlessly.
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ELF Chronicles | Connected</title>
+<meta name="keywords" content="">
+<meta name="description" content="Blogs where I try to connect technical dots">
+<meta name="author" content="ayedaemon">
+<link rel="canonical" href="https://ayedaemon.github.io/series/elf-chronicles/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://ayedaemon.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ayedaemon.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ayedaemon.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ayedaemon.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ayedaemon.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://ayedaemon.github.io/series/elf-chronicles/index.xml">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:title" content="ELF Chronicles" />
+<meta property="og:description" content="Blogs where I try to connect technical dots" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ayedaemon.github.io/series/elf-chronicles/" />
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ELF Chronicles"/>
+<meta name="twitter:description" content="Blogs where I try to connect technical dots"/>
+
+</head>
+
+<body class="list dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ayedaemon.github.io/" accesskey="h" title="Connected (Alt + H)">Connected</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ayedaemon.github.io/post/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/series/" title="Series">
+                    <span>Series</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ayedaemon.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    ELF Chronicles
+    <a href="/series/elf-chronicles/index.xml" title="RSS" aria-label="RSS">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" height="23">
+        <path d="M4 11a9 9 0 0 1 9 9" />
+        <path d="M4 4a16 16 0 0 1 16 16" />
+        <circle cx="5" cy="19" r="1" />
+      </svg>
+    </a>
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">ELF Chronicles: Program Headers (3/?)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>In preceding articles, we’ve delved into the details of ELF file headers and section headers. Section headers provide insight into how data and instructions are organized based on their characteristics and grouped into distinct sections. These sections remain distinct due to variations in their types and permissions (… and few other things).
+Up to this point, our focus has been on the aspects of the ELF file as it resides on-disk....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-10-20 15:21:49 +0530 +0530'>October 20, 2023</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;2040 words&nbsp;·&nbsp;ayedaemon</footer>
+  <a class="entry-link" aria-label="post link to ELF Chronicles: Program Headers (3/?)" href="https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">ELF Chronicles: Section Headers (2/?)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Intro Assuming you’ve got ELF headers like Elf64_Ehdr or Elf32_Ehdr at your fingertips, and you’re armed with the know-how and tools to decipher their contents effortlessly.
 For this article I’ll be using the below C code to generate the ELF file.
-/* file: hello_world.c */ #include &lt;stdio.h> // A macro #define HELLO_MSG1 "Hello World1" // A global variable char HELLO_MSG2[] = "Hello World2"; // main function int main() { // local variable for main char HELLO_MSG3[] = "Hello World3"; // Print messages printf("%s\n", HELLO_MSG1); printf("%s\n", HELLO_MSG2); printf("%s\n", HELLO_MSG3); return 0; } You can get the ELF binary by compiling this code....</p></div><footer class=entry-footer><span title='2023-10-19 00:24:06 +0530 +0530'>October 19, 2023</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;3758 words&nbsp;·&nbsp;ayedaemon</footer><a class=entry-link aria-label="post link to ELF Chronicles: Section Headers" href=https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2>ELF Chronicles: ELF file Header</h2></header><div class=entry-content><p>Hexdumps In the fascinating world of computers, we’re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we’ve come up with our own nifty number system - “hexadecimal” or “hex” for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It’s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!...</p></div><footer class=entry-footer><span title='2023-10-18 13:34:57 +0530 +0530'>October 18, 2023</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2175 words&nbsp;·&nbsp;ayedaemon</footer><a class=entry-link aria-label="post link to ELF Chronicles: ELF file Header" href=https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/></a></article></main><footer class=footer><span>&copy; 2023 <a href=https://ayedaemon.github.io/>Connected</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script></body></html>
+/* file: hello_world.c */ #include &lt;stdio.h&gt; // A macro #define HELLO_MSG1 &#34;Hello World1&#34; // A global variable char HELLO_MSG2[] = &#34;Hello World2&#34;; // main function int main() { // local variable for main char HELLO_MSG3[] = &#34;Hello World3&#34;; // Print messages printf(&#34;%s\n&#34;, HELLO_MSG1); printf(&#34;%s\n&#34;, HELLO_MSG2); printf(&#34;%s\n&#34;, HELLO_MSG3); return 0; } You can get the ELF binary by compiling this code....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-10-19 00:24:06 +0530 +0530'>October 19, 2023</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;3758 words&nbsp;·&nbsp;ayedaemon</footer>
+  <a class="entry-link" aria-label="post link to ELF Chronicles: Section Headers (2/?)" href="https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">ELF Chronicles: ELF file Header (1/?)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hexdumps In the fascinating world of computers, we’re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we’ve come up with our own nifty number system - “hexadecimal” or “hex” for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It’s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-10-18 13:34:57 +0530 +0530'>October 18, 2023</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2175 words&nbsp;·&nbsp;ayedaemon</footer>
+  <a class="entry-link" aria-label="post link to ELF Chronicles: ELF file Header (1/?)" href="https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ayedaemon.github.io/">Connected</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>

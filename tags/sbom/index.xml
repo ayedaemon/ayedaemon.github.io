@@ -6,12 +6,12 @@
     <description>Recent content in sbom on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 27 May 2022 22:56:22 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/sbom/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 May 2022 22:56:22 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/sbom/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hands-on Intro to SBOM</title>
       <link>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</link>
       <pubDate>Fri, 27 May 2022 22:56:22 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2022/05/hands-on-intro-to-sbom/</guid>
       <description>The concept of a Bill Of Materials (BOM) is well-established in traditional manufacturing as part of supply chain management. A manufacturer uses a BOM to track the parts it uses to create a product. If defects are later found in a specific part, the BOM makes it easy to locate affected products. In software industry, this concept is fairly new and is used to keep track of all the ingredients of the software.</description>
       <content:encoded><![CDATA[<p>The concept of a Bill Of Materials (BOM) is well-established in traditional manufacturing as part of supply chain management. A manufacturer uses a BOM to track the parts it uses to create a product. If defects are later found in a specific part, the BOM makes it easy to locate affected products. In software industry, this concept is fairly new and is used to keep track of all the ingredients of the software.</p>
@@ -195,6 +195,5 @@ security ideas of minimum attack surface. <a href="https://www.redhat.com/en/blo
 <p><a href="https://www.ntia.gov/files/ntia/publications/sbom_myths_vs_facts_nov2021.pdf">Here is a NTIA publication</a> that covers explaination of some such myths V/S facts.</p>
 ]]></content:encoded>
     </item>
-    
   </channel>
 </rss>

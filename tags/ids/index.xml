@@ -6,12 +6,12 @@
     <description>Recent content in IDS on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Dec 2020 14:25:28 +0530</lastBuildDate><atom:link href="https://ayedaemon.github.io/tags/ids/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Dec 2020 14:25:28 +0530</lastBuildDate>
+    <atom:link href="https://ayedaemon.github.io/tags/ids/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Advanced Intrusion Detection Environment</title>
       <link>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</link>
       <pubDate>Sat, 19 Dec 2020 14:25:28 +0530</pubDate>
-      
       <guid>https://ayedaemon.github.io/post/2020/12/advanced-intrusion-detection-environment/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Host-based intrusion detection system (HIDS) for checking the integrity of files.&lt;/p&gt;
@@ -24,33 +24,33 @@
 <p><em>But there are other HIDS tools that can do this for you. Like,</em> <a href="https://www.splunk.com/"><em>Splunk</em></a> <em>and</em> <a href="https://www.ossec.net/"><em>OSSEC</em></a><em>.</em></p>
 <p>AIDE have provided a <a href="https://aide.github.io/doc/">pretty simple documentation</a> to undertand and get familiar with it.</p>
 <h3 id="how-to-install-it">How to install it?</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># Check what repo will provide you aide tool.  </span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">whatprovides</span> <span class="n">aide</span>  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># And then install it, if available.  </span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">aide</span> <span class="o">-</span><span class="n">y</span>
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"  />
+<pre tabindex="0"><code># Check what repo will provide you aide tool.  
+
+yum whatprovides aide  
+
+# And then install it, if available.  
+
+yum install aide -y
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"  />
 </p>
 <h3 id="next-step-">Next step ..??</h3>
 <p>Let’s check the files unpacked from the <strong>aide package</strong> we just installed.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*WBBWo0dITSPIgjfNqPTrZA.png" alt="aide-rpm-ql"  />
 </p>
 <p>We found a configuration file — <code>/etc/aide.conf</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># open the file with vim or your favourite text editor  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">vim /etc/aide.conf  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># The file looked very huge so I checked its length.  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">wc /etc/aide.conf  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># OUTPUT:  
-</span></span><span class="line"><span class="cl"># 312 765 7333 /etc/aide.conf
-</span></span></code></pre></div><p>Fortunately they have given a man page for the configurations settings.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">man 5 aide.conf
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*0HZv3rMcdAFMTbYiyPn_Xw.png" alt="aide.conf"  />
+<pre tabindex="0"><code># open the file with vim or your favourite text editor  
+
+vim /etc/aide.conf  
+
+# The file looked very huge so I checked its length.  
+
+wc /etc/aide.conf  
+
+# OUTPUT:  
+# 312 765 7333 /etc/aide.conf
+</code></pre><p>Fortunately they have given a man page for the configurations settings.</p>
+<pre tabindex="0"><code>man 5 aide.conf
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*0HZv3rMcdAFMTbYiyPn_Xw.png" alt="aide.conf"  />
 </p>
 <p>This gives me a good news. There are only 3 types of line in the configuration file.</p>
 <ul>
@@ -64,10 +64,10 @@
 <p>You can now check the config file and things will make more sense to you. Also you can check the key-value pairs from <a href="https://linux.die.net/man/5/aide.conf">man page</a>.</p>
 <h3 id="enough-for-configuration-how-to-use-it">Enough for configuration… How to use it?</h3>
 <p>Go to the <a href="https://linux.die.net/man/1/aide">man page</a> of aide.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># from terminal  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">man aide
-</span></span></code></pre></div><p>Again a reminder, and I quote.</p>
+<pre tabindex="0"><code># from terminal  
+
+man aide
+</code></pre><p>Again a reminder, and I quote.</p>
 <blockquote>
 <p>AIDE is an <strong>intrusion detection system</strong> for checking the <strong>integrity of files</strong>.</p>
 </blockquote>
@@ -91,19 +91,19 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*4RBSuCrL2W9C1Y9MspWl2w.png" alt="create-folder"  />
 </p>
 <p>Adding my new folder and files to aide.conf</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#-------------- My-Settings ---------------  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">myfilter = sha256  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">/fun-with-aide myfilter
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*aC940c2LfvDHrQu_D4nKoA.png" alt="add-to-conf"  />
+<pre tabindex="0"><code>#-------------- My-Settings ---------------  
+
+myfilter = sha256  
+
+/fun-with-aide myfilter
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*aC940c2LfvDHrQu_D4nKoA.png" alt="add-to-conf"  />
 </p>
 <p>This rule is a regular expression rule and will match the complete path of any file starting from /fun-with-aide, so this will include the files inside this folder.</p>
 <p>Now some simple steps to follow:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">init</span>
-</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">cp</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">gz</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">gz</span>
-</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">check</span>
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"  />
+<pre tabindex="0"><code>* aide --init
+* cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+* aide --check
+</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"  />
 </p>
 <p>What if we tinker with the file /fun-with-aide/file1?</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*wDbGmR7vps5vsqs3i8_Icg.png" alt="tinker-file1"  />
@@ -117,24 +117,24 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*ip12LNV58018AQ8G.gif" alt="yeah-automation"  />
 </p>
 <p>Check the below provided simple cron job script to automatically check for the changes. For more complex examples check <a href="https://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron">this</a> and <a href="https://rfxn.com/downloads/cron.aide">this</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># SOURCE: https://wiki.archlinux.org/index.php/AIDE  </span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">#!/bin/bash -e  </span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># these should be the same as what&#39;s defined in /etc/aide.conf  </span>
-</span></span><span class="line"><span class="cl"><span class="nv">database</span><span class="o">=</span>/var/lib/aide/aide.db.gz  
-</span></span><span class="line"><span class="cl">database<span class="se">\_</span>out<span class="o">=</span>/var/lib/aide/aide.db.new.gz  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> ! -f <span class="s2">&#34;</span><span class="nv">$database</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>  
-</span></span><span class="line"><span class="cl"> <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$database</span><span class="s2"> not found&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>  
-</span></span><span class="line"><span class="cl"> <span class="nb">exit</span> <span class="m">1</span>  
-</span></span><span class="line"><span class="cl"><span class="k">fi</span>  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">aide -u <span class="o">||</span> <span class="nb">true</span>  
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">mv <span class="nv">$database</span> <span class="nv">$database</span>.back  
-</span></span><span class="line"><span class="cl">mv <span class="nv">$database</span><span class="se">\_</span>out <span class="nv">$database</span>
-</span></span></code></pre></div><hr>
+<pre tabindex="0"><code># SOURCE: https://wiki.archlinux.org/index.php/AIDE  
+
+#!/bin/bash -e  
+
+# these should be the same as what&#39;s defined in /etc/aide.conf  
+database=/var/lib/aide/aide.db.gz  
+database\_out=/var/lib/aide/aide.db.new.gz  
+
+if [ ! -f &#34;$database&#34; ]; then  
+ echo &#34;$database not found&#34; &gt;&amp;2  
+ exit 1  
+fi  
+
+aide -u || true  
+
+mv $database $database.back  
+mv $database\_out $database
+</code></pre><hr>
 <p><strong>What about if attacker changed the database??</strong></p>
 <p>When I checked the file type of the <em>aide.db.gz</em>&hellip; It came out to be a gzip compressed data, from Unix, max compression file.</p>
 <p>This makes it very obvious to unzip this compressed file. I prefer using gunzip tool.</p>
@@ -159,6 +159,5 @@
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*S_aFpI3KDiWfts2v.gif" alt="end"  />
 </p>]]></content:encoded>
     </item>
-    
   </channel>
 </rss>
