@@ -1,72 +1,53 @@
 baseURL: https://ayedaemon.github.io/
 languageCode: en-us
-title: Connected
-theme: "hugo-PaperMod"
+title: "Connected"
+theme: ["PaperMod"]
 
-
-# googleAnalytics: UA-123-45
-
-paginate: 5
-buildDrafts: false
-buildFuture: false
-enableGitInfo : true
-
-minify:
-  disableXML: true
-  minifyOutput: true
 
 
 params:
-  env: production
-  title: "Connected"
-  description: "Ayedaemon's blog"
-  keywords: [Blog, ayedaemon, PaperMod]
-  author: ["ayedaemon"]
-  DateFormat: "January 2, 2006"
-
-  defaultTheme: dark # dark, light, auto
-  disableThemeToggle: true
-
-  ShowReadingTime: true
-  ShowShareButtons: false
-  ShowPostNavLinks: true
-  ShowBreadCrumbs: true
-  ShowCodeCopyButtons: true
-  ShowWordCount: true
-  ShowRssButtonInSectionTermList: true
-  UseHugoToc: true
-  disableSpecial1stPost: false
-  disableScrollToTop: false
-  comments: false
-  hidemeta: false
-  hideSummary: false
-  showtoc: true
-  tocopen: false
-
-  ShowFullTextinRSS: true
-
-
   # home-info mode
   homeInfoParams:
     Title: "Ayedaemon"
-    Content: An Information Security Engineer from India who is interested in DevOps culture and Security that isn’t based on Excel.
+    Content: "An Information Security Engineer from India who is interested in DevOps culture and Security that isn’t based on Excel."
 
   socialIcons:
-    - name: linkedin
+    - name: Linkedin
       url: "https://linkedin.com/in/ayedaemon"
-    - name: mastodon
+    - name: Mastodon
       url: "https://social.linux.pizza/@ayedaemon"
-    - name: github
-      url: "https://github.com/ayedaemon/"
     - name: email
       url: "mailto:ayedaemon@gmail.com"
 
 
+  env: "production"
+  description: "Blogs where I try to connect technical dots"
+  author: ["ayedaemon"]
+  keywords: ["blog", "ayedaemon", "connect3d"]
+  DateFormat: "January 2, 2006"
+  defaultTheme: dark
 
-  editPost:
-    URL: "https://github.com/ayedaemon/ayedaemon.github.io/tree/main/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+  hideSummary: false
+  comments: false
+  tocopen: false
+
+
+  ShowWordCount: true
+  ShowBreadCrumbs: false
+  ShowPostNavLinks: false
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowCodeCopyButtons: true
+  ShowFullTextinRSS: true
+  ShowRssButtonInSectionTermList: true
+  showtoc: true
+
+
+
+  disableThemeToggle: true
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  disableAnchoredHeadings: false
 
   fuseOpts:
     isCaseSensitive: false
@@ -75,13 +56,26 @@ params:
     distance: 1000
     threshold: 0.4
     minMatchCharLength: 0
-    keys: ["title", "permalink", "summary", "content"]
+    limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
+    keys: ["title", "permalink", "summary", "content"] ##  can be less but not more than shown in list
+
+  editPost:
+    URL: "https://github.com/ayedaemon/ayedaemon.github.io/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
+
+
+
 
 menu:
   main:
-    - identifier: categories
+    - identifier: archives
       name: Archives
-      url: /archives/
+      url: /post/
+      weight: 1
+    - identifier: series
+      name: Series
+      url: /series/
       weight: 10
     - identifier: tags
       name: Tags
@@ -91,37 +85,28 @@ menu:
       name: Search
       url: /search/
       weight: 30
-    - identifier: series
-      name: Series
-      url: /series/
-      weight: 40
-    # - identifier: about
-    #   name: About
-    #   url: /about/
+    # - identifier: example
+    #   name: example.org
+    #   url: https://example.org
     #   weight: 30
+
 
 pygmentsUseClasses: true
 markup:
-    # goldmark:
-    #     renderer:
-    #         unsafe: true
-    highlight:
-        anchorLineNos: true
-        codeFences: true
-        guessSyntax: true
-        lineNos: false
-        # noClasses: false
-        style: monokai
-
-
-taxonomies:
-    category: categories
-    tag: tags
-    series: series
-
+  highlight:
+    noClasses: false
+    # anchorLineNos: true
+    # codeFences: true
+    # guessSyntax: true
+    # lineNos: true
+    # style: monokai
 
 outputs:
   home:
     - HTML
     - RSS
-    - JSON # is necessary for searching
+    - JSON # necessary for search
+
+taxonomies:
+  tag: tags
+  series: series

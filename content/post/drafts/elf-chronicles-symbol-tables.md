@@ -1,5 +1,5 @@
 ---
-title: "Elf Chronicles: Symbol Tables"
+title: "Elf Chronicles: Symbol Tables (5/?)"
 date: 2023-10-29T22:15:08+05:30
 draft: true
 # showtoc: false

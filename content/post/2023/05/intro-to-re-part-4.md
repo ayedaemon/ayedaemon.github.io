@@ -1,10 +1,10 @@
 ---
-title: "Intro to Re: C : part-4"
+title: "Intro to RE: C : part-4"
 date: 2023-05-01T02:34:50+05:30
 draft: False
 showtoc: true
 tags: [RE, linux, C programming]
-series: [Reverse Engineering]
+series: ["RE:C"]
 description: Some things about process and stack memory
 # math: true
 # ShowBreadCrumbs: false
@@ -29,13 +29,13 @@ On a linux machine you can check the memory layout of a running program using `c
 55f5db53e000-55f5db53f000 rw-p 00008000 08:02 917947                     /usr/bin/cat
 55f5dd440000-55f5dd461000 rw-p 00000000 00:00 0                          [heap]
 7f0db2800000-7f0db2aea000 r--p 00000000 08:02 929341                     /usr/lib/locale/locale-archive
-7f0db2ba4000-7f0db2bc9000 rw-p 00000000 00:00 0 
+7f0db2ba4000-7f0db2bc9000 rw-p 00000000 00:00 0
 7f0db2bc9000-7f0db2beb000 r--p 00000000 08:02 923932                     /usr/lib/libc.so.6
 7f0db2beb000-7f0db2d45000 r-xp 00022000 08:02 923932                     /usr/lib/libc.so.6
 7f0db2d45000-7f0db2d9d000 r--p 0017c000 08:02 923932                     /usr/lib/libc.so.6
 7f0db2d9d000-7f0db2da1000 r--p 001d4000 08:02 923932                     /usr/lib/libc.so.6
 7f0db2da1000-7f0db2da3000 rw-p 001d8000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2da3000-7f0db2db2000 rw-p 00000000 00:00 0 
+7f0db2da3000-7f0db2db2000 rw-p 00000000 00:00 0
 7f0db2dd0000-7f0db2dd1000 r--p 00000000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
 7f0db2dd1000-7f0db2df7000 r-xp 00001000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
 7f0db2df7000-7f0db2e01000 r--p 00027000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
@@ -90,7 +90,7 @@ This segment contains uninitialized static data, both variables and constants. O
 This segment contains dynamically allocated memory. It is usually managed by malloc, calloc, realloc, free (and their sibling functions too). The heap segment is shared by all threads, shared libraries, and dynamically loaded modules in a process. Heap memory segment grows towards higher memory addresses.
 
 ### Stack
-This region of memory is used for managing function calls and local variables. It is an essential part of the execution environment and plays a crucial role in program flow control. 
+This region of memory is used for managing function calls and local variables. It is an essential part of the execution environment and plays a crucial role in program flow control.
 
 This is typically located in higher parts of the memory and grows towards lower parts (towards heap memory). A **stack pointer** register keeps track of the top of the stack, this gets adjusted each time a new value is pushed to or poped from the stack.
 
@@ -132,7 +132,7 @@ int main() {
       printf("Both values are equal\n");
    else
       printf("Both values are not equal\n");
-   
+
    return 10;
 }
 ```
@@ -166,39 +166,39 @@ Dump of assembler code for function main:
    // Prologue
    0x00000000000011a6 <+0>:	    push   rbp
    0x00000000000011a7 <+1>:	    mov    rbp,rsp
-   
+
    // Creating space in stack for variables. 0x10 is 16 bytes (4 bytes for each int variable)
    // 4(v1) + 4(v2) + 8 (padding)
    0x00000000000011aa <+4>:	    sub    rsp,0x10
-   
+
    // Function call and store value in [rbp-0x4]
    0x00000000000011ae <+8>:	    mov    eax,0x0
    0x00000000000011b3 <+13>:	call   0x1174 <func1>
    0x00000000000011b8 <+18>:	mov    DWORD PTR [rbp-0x4],eax
-   
+
    // Another function call and store value in [rbp-0x8]
    0x00000000000011bb <+21>:	mov    eax,0x0
    0x00000000000011c0 <+26>:	call   0x1149 <func2>
    0x00000000000011c5 <+31>:	mov    DWORD PTR [rbp-0x8],eax
-   
+
    // Compare values stored in [rbp-0x4] & [rbp-0x8]
    0x00000000000011c8 <+34>:	mov    eax,DWORD PTR [rbp-0x4]
    0x00000000000011cb <+37>:	cmp    eax,DWORD PTR [rbp-0x8]
-   
+
    // if not equal then jump to <main+59>
    0x00000000000011ce <+40>:	jne    0x11e1 <main+59>
    // else print this message
    0x00000000000011d0 <+42>:	lea    rax,[rip+0xe4d]        # 0x2024
    0x00000000000011d7 <+49>:	mov    rdi,rax
    0x00000000000011da <+52>:	call   0x1030 <puts@plt>
-   
+
    // And finally jump to <main+74> (epilogue)
    0x00000000000011df <+57>:	jmp    0x11f0 <main+74>
    // if comparision failed: land here and print this message
    0x00000000000011e1 <+59>:	lea    rax,[rip+0xe52]        # 0x203a
    0x00000000000011e8 <+66>:	mov    rdi,rax
    0x00000000000011eb <+69>:	call   0x1030 <puts@plt>
-   
+
    // Finally epilogue - set return value and leave
    0x00000000000011f0 <+74>:	mov    eax,0xa
    0x00000000000011f5 <+79>:	leave
@@ -261,9 +261,9 @@ End of assembler dump.
 
 After the `func1` has returned, it's time for `func2` to create it's own stack frame and it's own local variables.
 
-Coincidently, the memory location used by `func2` is exactly the same location that was used by `func1` earlier. And on top of that, both functions have `int` type variables which means that the memory location used by `var1` in `func1` will be used by `var2` in `func2`. 
+Coincidently, the memory location used by `func2` is exactly the same location that was used by `func1` earlier. And on top of that, both functions have `int` type variables which means that the memory location used by `var1` in `func1` will be used by `var2` in `func2`.
 
-Stack frame for both functions will *kind of* overlap each other. That should explain why we we're getting the same results and same memory locations in the program output earlier. 
+Stack frame for both functions will *kind of* overlap each other. That should explain why we we're getting the same results and same memory locations in the program output earlier.
 
 
 
@@ -471,7 +471,7 @@ Once the space in stack memory is created, the stack looks like this
 ```
 
 
-If you notice, these are the same memory locations which were used by `func1` to store `0x37` (`mov    DWORD PTR [rbp-0x4],0x37`).... and since the stack is not cleaned properly, the value from that function is still in the place it was left to be picked by our variable `var2`. 
+If you notice, these are the same memory locations which were used by `func1` to store `0x37` (`mov    DWORD PTR [rbp-0x4],0x37`).... and since the stack is not cleaned properly, the value from that function is still in the place it was left to be picked by our variable `var2`.
 
 This can be checked with `x/w ($rbp-0x4)`
 

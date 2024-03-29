@@ -2,12 +2,12 @@
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 draft: true
-# showtoc: false
-# tags:
-    # -
-# series:
-    # -
-# description:
+# weight: 1
+tags: []
+categories: []
+series: []
+comments: false
+description: ""
 # math: true
 # ShowBreadCrumbs: false
 # searchHidden: true

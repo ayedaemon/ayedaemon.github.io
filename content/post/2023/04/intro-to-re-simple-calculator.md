@@ -1,10 +1,10 @@
 ---
-title: "Intro to Re: C : A Simple Calculator"
+title: "Intro to RE: C : A Simple Calculator"
 date: 2023-04-03T21:59:48+05:30
 draft: false
 showtoc: false
 tags: [RE, linux, C programming]
-series: [Reverse Engineering]
+series: ["RE:C"]
 description: How to reverse engineer a simple calculator program from scratch
 # math: true
 # ShowBreadCrumbs: false
@@ -13,12 +13,12 @@ description: How to reverse engineer a simple calculator program from scratch
 ---
 
 
-We covered a wide range of topics in earlier articles that were helpful in comprehending how many lower-level processes operate. This blog will concentrate on applying those ideas to recreate C program after reverse engineering a simple calculator binary. 
+We covered a wide range of topics in earlier articles that were helpful in comprehending how many lower-level processes operate. This blog will concentrate on applying those ideas to recreate C program after reverse engineering a simple calculator binary.
 
 ![](https://media.giphy.com/media/Pmv6m86yGQCjkLjmqx/giphy.gif#center)
 
 
-It is always a good idea to observe how the target software responds to various inputs. This gives you a sense of the internal logic that might be operating. 
+It is always a good idea to observe how the target software responds to various inputs. This gives you a sense of the internal logic that might be operating.
 
 If we run this program without any arguments, we will get an error message stating that we need to pass more arguments as well as the usage guide is printed.
 
@@ -47,7 +47,7 @@ This works now and gives us the required output in a good looking way. That shou
 
 It's time to open up our hacker tools and disassemble the binary.
 
-Disassembly:- 
+Disassembly:-
 
 ```asm
 addFunc:
@@ -203,7 +203,7 @@ The first three lines are simply the function's label and prologue.
 
 Then there are two `mov` statements (lines 4 and 5) that involve `edi` (first argument) and `esi` (second argument) (second argument). They are the function arguments passed from the calling function to this function. These values are then saved in the `[rbp-4]` and `[rbp-8]` local variables.
 
-Given the variable size requirements (4 bytes each), it is safe to assume that the passed variables are of the `int` type. That is, we are passing this function two `int` values. 
+Given the variable size requirements (4 bytes each), it is safe to assume that the passed variables are of the `int` type. That is, we are passing this function two `int` values.
 
 Then, at lines 6, 7, and 8, we simply load the values from the variables into some registers and then add them up. In this case, the result of the add instruction will be stored in the `eax` register. Remember, this is also the register where the return value of a function is stored. So when we return back from this function, we have our addition result in the `eax` register.
 
@@ -277,9 +277,9 @@ die:
         call    exit
 ```
 
-The name implies that the purpose of this function is to terminate the execution of the `calc` program. Lines 8-9 show that this function is printing something using the `puts` function. The function's argument is a string starting at offset `.LC0` - `"Insufficient arguments passed"`. Lines 9-10 contain another call for `puts` with an argument from offset `.LC1` - `"Usage: ./calc <num1> <operator> <num2>"`. 
+The name implies that the purpose of this function is to terminate the execution of the `calc` program. Lines 8-9 show that this function is printing something using the `puts` function. The function's argument is a string starting at offset `.LC0` - `"Insufficient arguments passed"`. Lines 9-10 contain another call for `puts` with an argument from offset `.LC1` - `"Usage: ./calc <num1> <operator> <num2>"`.
 
-These both `puts` statements combined give the error message we got when we tried to execute the program without any arguments. 
+These both `puts` statements combined give the error message we got when we tried to execute the program without any arguments.
 
 Finally, it terminates with an `exit` function call (no return), and the function's argument was the integer value `1`. Typically, the return value for successful execution is zero, and all non-zero values denote some type of execution error. **So exiting with 1 indicates an error.**
 
@@ -365,7 +365,7 @@ main:
 
 The `main` function still appears to be too large to handle all at once, so I'll cut it into smaller chunks to bite off and digest properly.
 
-The prologue comes first... setting up the function frame; nothing new here. 
+The prologue comes first... setting up the function frame; nothing new here.
 
 ```asm
 main:
@@ -380,7 +380,7 @@ Then we make some space in the frame to store the local variables.
 ```
 
 
-And then storing `edi` and `rsi` values in there. If you remember these two registers indicate the first two arguments passed to a function. In this case, the arguments to main function will be the `argc` and `argv`. 
+And then storing `edi` and `rsi` values in there. If you remember these two registers indicate the first two arguments passed to a function. In this case, the arguments to main function will be the `argc` and `argv`.
 
 - `argc` --> Count of the cli arguments passed to it.
 - `argv` --> Pointer to the list of arguments passed.
@@ -483,7 +483,7 @@ Now, next instruction calls `atoi` function with the `argv[1]` as it's first arg
         call    atoi
 ```
 
-`atoi` function changes character value to respective integer value. As an example, `'1'` (in char) will be converted to `1` (in int). 
+`atoi` function changes character value to respective integer value. As an example, `'1'` (in char) will be converted to `1` (in int).
 
 ```asm
         mov     DWORD PTR [rbp-12], eax
@@ -565,7 +565,7 @@ Next few lines of disassembly code looks like a conditional branch.... So many "
         nop
 ```
 
-The value being compared is stored in `[rbp-17]` in this case. This contains the operator character from `argv[2]`. If you convert the values this is compared to to char equivalents, you'll get the following: 
+The value being compared is stored in `[rbp-17]` in this case. This contains the operator character from `argv[2]`. If you convert the values this is compared to to char equivalents, you'll get the following:
 
 - 47 is `/`,
 - 45 is `-`,
@@ -595,7 +595,7 @@ With some calculations, you can conclude where the control will jump. To sum up,
         mov     edi, eax
         call    rcx
         mov     esi, eax
-        
+
         movsx   edx, BYTE PTR [rbp-17]
         mov     ecx, DWORD PTR [rbp-16]
         mov     eax, DWORD PTR [rbp-12]
@@ -624,7 +624,7 @@ Now that we're in `.L13`,
 We assign the `number1`, `number2`, and the `function pointer` to `eax`, `edx`, and `rcx`, respectively. The `function` is then called with the arguments `number1` and `number2`. Finally, the outcome is saved.
 
 
-The remainder of the `.L13` consists entirely of calling a `printf` function with a format string and other local variables. The final result will look like this: `<number1> <operator> <number2> = <result_from_function>`. I'll leave it to you to dissect and solve the final puzzle piece. After printing, the function then exits gracefully. 
+The remainder of the `.L13` consists entirely of calling a `printf` function with a format string and other local variables. The final result will look like this: `<number1> <operator> <number2> = <result_from_function>`. I'll leave it to you to dissect and solve the final puzzle piece. After printing, the function then exits gracefully.
 
 
 Now we can put everything together, and the complete code should look something like this.
@@ -699,7 +699,7 @@ void main(int argc, char *argv[])
 ```
 
 
-This may not be what the original developer wrote, but it will certainly behave the same. That is the entire point of reverse engineering. Dissecting something with your tools to understand how it behaves and then creating something that mimics the behavior. 
+This may not be what the original developer wrote, but it will certainly behave the same. That is the entire point of reverse engineering. Dissecting something with your tools to understand how it behaves and then creating something that mimics the behavior.
 
 I'll encourage you to go and try to reverse engineer some more binaries. You can build your own if you want or just download some from online platforms like [crackme.one](https://crackmes.one/). Have fun!!
 
