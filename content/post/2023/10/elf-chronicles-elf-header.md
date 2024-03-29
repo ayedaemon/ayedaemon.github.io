@@ -1,5 +1,5 @@
 ---
-title: "ELF Chronicles: ELF file Header"
+title: "ELF Chronicles: ELF file Header (1/?)"
 date: 2023-10-18T13:34:57+05:30
 draft: false
 # showtoc: false

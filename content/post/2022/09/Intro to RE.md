@@ -1,10 +1,10 @@
 ---
-title: "Intro to Re: C : part-1"
+title: "Intro to RE: C : part-1"
 date: 2022-09-21T01:10:18+05:30
 draft: false
 # showtoc: false
 tags: [RE, linux, C programming]
-series: [Reverse Engineering]
+series: ["RE:C"]
 description: Basics of assembly and its relation with higher level constucts
 # math: true
 # ShowBreadCrumbs: false
@@ -13,7 +13,7 @@ description: Basics of assembly and its relation with higher level constucts
 ---
 
 ## Steps to generate a binary
-When we write a program using a language like C, it is not C source code which really gets executed. This C code passes through many steps and finally a binary file is generated out of it. This binary file is what gets executed on any computer. 
+When we write a program using a language like C, it is not C source code which really gets executed. This C code passes through many steps and finally a binary file is generated out of it. This binary file is what gets executed on any computer.
 
 There are many steps through which a C code is converted into a binary file:-
 1. Pre-processing
@@ -56,7 +56,7 @@ This takes the provided C program and does many things to it, few of these are m
 
 After pre-processing, the generated file is used to generate assembly instructions. These instructions are microprocessor (or CPU) specific. Microprocessor is a computer component that handles all kinds of conditional logic, arithmatic calculations and other logical activities.
 
-You might have heard about few types of micro processor families like intel x86 and ARM.. but there are [many more](https://en.wikipedia.org/wiki/List_of_microprocessor). Unfortunately, each family has their own instruction sets to perform different tasks. 
+You might have heard about few types of micro processor families like intel x86 and ARM.. but there are [many more](https://en.wikipedia.org/wiki/List_of_microprocessor). Unfortunately, each family has their own instruction sets to perform different tasks.
 
 We can convert our **pre-processed** code file to equivalent **assembly** code using `gcc`.
 
@@ -259,7 +259,7 @@ The assembly code has a syntax structure, which is a good point to start underst
 | OPCODE       | destination| source     |
 
 
-    or 
+    or
 
 
 ## Syntax by AT&T
@@ -307,7 +307,7 @@ Every C process ([not program](https://www.geeksforgeeks.org/difference-between-
 **Registers** are small storage areas in the processors, which are used by instructions to store multiple values. They can store anything upto their size limits. Different architectures have different size of registers ranging from 8 bit to 64 bit registers. There are even 128, 256, and 512-bit registers. [Here is a stackoverflow thread](https://stackoverflow.com/questions/52932539/what-are-the-128-bit-to-512-bit-registers-used-for) for the same.
 
 
-Back in early days (1972), Intel added few 8-bit general purpose registers to their microprocessors...general purpose registers are used for general purposes like storing return values, temporary calculation results, etc.. 
+Back in early days (1972), Intel added few 8-bit general purpose registers to their microprocessors...general purpose registers are used for general purposes like storing return values, temporary calculation results, etc..
 
 ```goat
 
@@ -424,7 +424,7 @@ Each element on the stack has an assigned stack address which can be used to ref
 
 Whenever a function is called it creates its stack frame, and all the local variables for that function will be stored in that function's stack frame. This introduces the need to track 2 values for the current stack frame.
 
-1. What is the base of the stack frame? Where did the stack frame start? 
+1. What is the base of the stack frame? Where did the stack frame start?
 2. What is the top most location of the stack frame? How much the stack has grown?
 
 These are tracked by 2 special purpose registers - `rbp` (64-bit base pointer register) and `rsp` (64-bit stack pointer register) respectively.
@@ -489,7 +489,7 @@ int main(){
 }
 ```
 
-This is roughly what the execution flow of the above program will look like... 
+This is roughly what the execution flow of the above program will look like...
 
 
 1. `main()` calls `func1()` function without any arguments.
@@ -507,7 +507,7 @@ If you visualise the stack just before the `main()` function is loaded on stack.
                        ┌───────────────────┐   ◄───────  rbp
                        │ * * * *           │
     Stack frame for    │ * * * *           │
-    previous function  │                   │   ◄───────  rsp  
+    previous function  │                   │   ◄───────  rsp
                        │                   │
 
 ```
@@ -520,7 +520,7 @@ After this, the `main()` function loads its variables on the stack.. this will c
                      │ * * * *           │
   Stack frame for    │ * * * *           │
   previous function  │                   │
-                     │ return address    │  ◄───────  rbp  ◄───────  rsp 
+                     │ return address    │  ◄───────  rbp  ◄───────  rsp
                      │                   │
 ```
 
@@ -545,7 +545,7 @@ Here, the above 2 lines make what we call **Prologue**. This pushes previous `rb
 
 then it moves `0x00` to `eax` register... Purpose of this is to reset `eax` register as `0` so that when the `func1` returns, we are sure that it is not a garbage value. *Remember:- `eax` is another general purpose register that is used by called functions to save the return value. This then can be read by the caller function to know what that function returned.*
 
-After reseting `eax`, it `call`s `func1()` function... this will transfer the control to `func1()`. 
+After reseting `eax`, it `call`s `func1()` function... this will transfer the control to `func1()`.
 
 ```asm
 
@@ -792,7 +792,7 @@ It is a good idea to visualize how the stack will look after this function has b
                             │                                │    .
                             │                                │    .
                 rbp - 0x28  │                                │    .
-                            │                                │.....  
+                            │                                │.....
                             │                                │
                             │                                │
 
@@ -867,7 +867,7 @@ rbp + 0x18   │  0x8                           │
              │                                │
 rbp + 0x10   │  0x7                           │
              │                                │
-rbp + 0x08   │  return address of func1 func  │ 
+rbp + 0x08   │  return address of func1 func  │
              │                                │ ◄───────  rbp
 rbp - 0x04   │                                │
 ```
@@ -922,7 +922,7 @@ Now we can take a look again to the stack and understand what memory locations a
                                      │                                │    .
                                      │  0x5                           │    .
                                      │                                │    .
-                        rbp - 0x28   │  0x6                           │.....   
+                        rbp - 0x28   │  0x6                           │.....
 
            Low Addr
 
@@ -964,7 +964,7 @@ After this, the stack will look something like as shown below:
                  │                                │
    Low Addr      │  0x7                           │  ◄───────  rsp
                  │                                │
-                 │                                │ 
+                 │                                │
 
 ```
 
@@ -1005,7 +1005,7 @@ This will then increase the stack pointer by `0x10` and save return value to a l
                              │                                │
                              │  * * * *                       │
                              │                                │
-                             │  return address of prev func   │    
+                             │  return address of prev func   │
                              │                                │    ◄───────  rsp
      Low Addr
 
@@ -1040,9 +1040,9 @@ Most of the times, you'll see similar instructions being executed like `push`, `
 
 2. `pop` : Opposite to **push** instruction, this removes the top of the stack and increments the stack pointer.
 
-3. `mov` : This is used to move some values from one location to another. This instruction is quite versatile and can move the values from/to register, stack memory locations, etc... For example, 
+3. `mov` : This is used to move some values from one location to another. This instruction is quite versatile and can move the values from/to register, stack memory locations, etc... For example,
 
- - `mov rax, 0x10` will move `0x10` constant value to `rax` register. 
+ - `mov rax, 0x10` will move `0x10` constant value to `rax` register.
 
  - `mov rdi, rax` will move the `rax` register value to `rdi` register.
 
@@ -1051,7 +1051,7 @@ Most of the times, you'll see similar instructions being executed like `push`, `
  - `mov [rbp-0x8], rax` will move the value from `rax` register to memory location poined by `rbp-0x08`.
 
 
-4. `add` and `sub` : adds and substracts one value from another value. For example, 
+4. `add` and `sub` : adds and substracts one value from another value. For example,
 
  - `add rax, 0x10` will add `0x10` to value at `rax` register. And the result will be stored in `rax` register.
  - `sub rax, 0x10` wil subtract `0x10` from value at `rax` register. And the result will be stored in `rax` register.
@@ -1069,6 +1069,6 @@ Most of the times, you'll see similar instructions being executed like `push`, `
 
 ## Conclusion
 
-You're all set! This all could be a lot to take in all at once. But atleast you now have a rudimentary grasp of how a C code is compiled and how everything functions at the low level. I hope you now have enough information and self-assurance to begin your adventures into reverse engineering. 
+You're all set! This all could be a lot to take in all at once. But atleast you now have a rudimentary grasp of how a C code is compiled and how everything functions at the low level. I hope you now have enough information and self-assurance to begin your adventures into reverse engineering.
 
 Have fun!! ✌️

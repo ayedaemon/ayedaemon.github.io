@@ -1,10 +1,10 @@
 ---
-title: "Intro to Re: C : part-3"
+title: "Intro to RE: C : part-3"
 date: 2023-04-01T21:59:33+05:30
 draft: false
 showtoc: true
 tags: [RE, linux, C programming]
-series: [Reverse Engineering]
+series: ["RE:C"]
 description: Blog covers how disassembly of basic operations and functions in C programming looks like.
 # math: true
 # ShowBreadCrumbs: false
@@ -12,13 +12,13 @@ description: Blog covers how disassembly of basic operations and functions in C 
 # hideMeta: true
 ---
 
-In the previous blog, I discussed some of the basic C program's disassembly structures, concentrating on the variables and their memory layouts. This article, a follow-up to the previous one, focuses on basic operations and functions in C programs. 
+In the previous blog, I discussed some of the basic C program's disassembly structures, concentrating on the variables and their memory layouts. This article, a follow-up to the previous one, focuses on basic operations and functions in C programs.
 
 
 ![](https://media.giphy.com/media/3BUYbmXltgQ4zu0Tv5/giphy.gif#center)
 
 
-In the previous blogs, we have seen what an empty C program looks like  
+In the previous blogs, we have seen what an empty C program looks like
 
 ```c
 void main() {}
@@ -35,7 +35,7 @@ main:
         ret
 ```
 
-## Arithmatic operators 
+## Arithmatic operators
 
 Now if we want to work with operations, we'll have to add 2 local variables to the function. Something like in the below example.
 
@@ -88,7 +88,7 @@ main:
 
 We can see a few new instructions in the disassembly code that are responsible for the `int c = a + b` instruction in the source code.
 
-When we look at them separately, it becomes quite natural to understand. 
+When we look at them separately, it becomes quite natural to understand.
 
 ```asm
 main:
@@ -132,7 +132,7 @@ main:
         mov     eax, DWORD PTR [rbp-4]      ; load first variable in EAX
         sub     eax, DWORD PTR [rbp-8]      ; subtract EAX with second variable, then save the result in EAX
         mov     DWORD PTR [rbp-12], eax     ; save the new value of EAX in the third register
-        
+
         nop
         pop     rbp
         ret
@@ -165,7 +165,7 @@ main:
 ```
 
 
-### Division and modulo 
+### Division and modulo
 
 If you are not aware, the division operation is about calculating the quotient and the modulo operation is about the remainder.
 
@@ -180,27 +180,27 @@ void main() {
 Disassembly:
 
 ```asm
-main:   
+main:
         ; prologue
         push    rbp
         mov     rbp, rsp
-        
+
         ; first and second variable
         mov     DWORD PTR [rbp-4], 1
         mov     DWORD PTR [rbp-8], 2
-        
+
         ; division
         mov     eax, DWORD PTR [rbp-4]      ; Load first variable in EAX
         cdq                                 ; Convert double to quad value;
         idiv    DWORD PTR [rbp-8]           ; perform idiv operation with second variable
         mov     DWORD PTR [rbp-12], eax     ; Store new EAX value in third variable
-        
+
         ; modulo
         mov     eax, DWORD PTR [rbp-4]      ; Load the first value again
         cdq                                 ; Convert double to quad value;
         idiv    DWORD PTR [rbp-8]           ; perform idiv operation with second variable
         mov     DWORD PTR [rbp-16], edx     ; Store the EDX value in fourth variable
-        
+
         ; epilogue
         nop
         pop     rbp
@@ -213,35 +213,35 @@ If you didn't notice, the **division result** was stored in the `EAX` register, 
 Its OKAY if you are having questions like-
 
 - How?
-- why EDX?? 
+- why EDX??
 - WTF is going on???
 - Does it perform both operations even if either one of them is required????
 
 These instructions, however, are not as simple to understand as others. So allow me to attempt to explain what's going on.
 
-To begin, you must comprehend the cdq instruction's magic. This converts a `Doubleword` to a `Quadword` by extending the sign bit of `EAX` into the `EDX` register. For the purposes of this blog, consider the `EAX` and `EDX` to be joined together to form a large quadword register. So, if `EDX` contains `0x12` and `EAX` contains `0x3456789a`, the resulting value is `0x123456789a`. Does that make sense? 
+To begin, you must comprehend the cdq instruction's magic. This converts a `Doubleword` to a `Quadword` by extending the sign bit of `EAX` into the `EDX` register. For the purposes of this blog, consider the `EAX` and `EDX` to be joined together to form a large quadword register. So, if `EDX` contains `0x12` and `EAX` contains `0x3456789a`, the resulting value is `0x123456789a`. Does that make sense?
 
-So when a `idiv` (or other `div` derivatives) operation is performed, both the quotient and the remainder are calculated. The instruction stores the quotient in `EAX` and the remainder in `EDX` register. 
+So when a `idiv` (or other `div` derivatives) operation is performed, both the quotient and the remainder are calculated. The instruction stores the quotient in `EAX` and the remainder in `EDX` register.
 
-Now that you understand the concept, you can think about removing some of the repeated instructions to make your program smaller and run faster. 
+Now that you understand the concept, you can think about removing some of the repeated instructions to make your program smaller and run faster.
 
 ```asm
-main:   
+main:
         ; prologue
         push    rbp
         mov     rbp, rsp
-        
+
         ; first and second variable
         mov     DWORD PTR [rbp-4], 1
         mov     DWORD PTR [rbp-8], 2
-        
+
         ; division and modulo
         mov     eax, DWORD PTR [rbp-4]      ; Load first variable in EAX
         cdq                                 ; Convert double to quad value;
         idiv    DWORD PTR [rbp-8]           ; perform idiv operation with second variable
         mov     DWORD PTR [rbp-12], eax     ; Store new EAX value in third variable (quotient)
         mov     DWORD PTR [rbp-16], edx     ; Store the EDX value in fourth variable (remainder)
-        
+
         ; epilogue
         nop
         pop     rbp
@@ -254,7 +254,7 @@ Another point worth mentioning is that `div` operations cannot be used without o
 
 ## Increment/Decrement operators
 
-That's all there is to arithmetic operators. Let's move on to the increment and decrement operators... 
+That's all there is to arithmetic operators. Let's move on to the increment and decrement operators...
 
 ```c
 void main() {
@@ -264,7 +264,7 @@ void main() {
 }
 ```
 
-Disassembly:- 
+Disassembly:-
 
 ```asm
 main:
@@ -280,10 +280,10 @@ main:
         lea     edx, [rax+1]                ; increment the value and store it in EDX
         mov     DWORD PTR [rbp-4], edx      ; update the incremented value in the variable A
         mov     DWORD PTR [rbp-8], eax      ; Load the old EAX value in variable B;
-        
+
         ; int C = ++A;
         add     DWORD PTR [rbp-4], 1        ; Increment the value of variable A
-        mov     eax, DWORD PTR [rbp-4]      ; Load the updated value of variable A in EAX 
+        mov     eax, DWORD PTR [rbp-4]      ; Load the updated value of variable A in EAX
         mov     DWORD PTR [rbp-12], eax     ; Store the EAX value in variable C
 
         ; epilogue
@@ -300,7 +300,7 @@ At this level, I believe you can see that this operator is nothing special. I'll
 
 ## Bitwise operators
 We can now proceed to examine the bitwise operators from a low-level perspective.
-(PS: They are my personal favourites) 
+(PS: They are my personal favourites)
 
 
 ```c
@@ -406,7 +406,7 @@ If you look at their binary representation, shift operators are very straightfor
 
 ```
 
-- After shifting left 4 times. 
+- After shifting left 4 times.
 
 ```goat
 
@@ -422,7 +422,7 @@ If you look at their binary representation, shift operators are very straightfor
 ```
 
 
-Blocks with "." are the freshly shifted block from outside the memory frame. These blocks are packed with zeroes. This makes our resulting value `2^4 = 16`. 
+Blocks with "." are the freshly shifted block from outside the memory frame. These blocks are packed with zeroes. This makes our resulting value `2^4 = 16`.
 
 
 ```goat
@@ -435,7 +435,7 @@ Blocks with "." are the freshly shifted block from outside the memory frame. The
 
 
 
-If we shift it right 4 times we'll get our initial value. 
+If we shift it right 4 times we'll get our initial value.
 
 ```goat
 
@@ -471,8 +471,8 @@ void main() {
     int a = 589;
     int X = a*2;
     int Y = a << 1;
-}  
-``` 
+}
+```
 
 
 ```
@@ -498,9 +498,9 @@ main:
 
 At a lower level, they are identical. Nothing particularly useful, but it's good to know what's happening behind the scenes.
 
-## Branching 
+## Branching
 
-Now comes the branching. Every good program employs branching for one reason or another. This is very useful to understand when considering reverse engineering. 
+Now comes the branching. Every good program employs branching for one reason or another. This is very useful to understand when considering reverse engineering.
 
 ### If-else
 
@@ -613,7 +613,7 @@ void main() {
 }
 ```
 
-Disassembly:- 
+Disassembly:-
 
 ```asm
 main:
@@ -703,7 +703,7 @@ Graph diagram for the above disassembly will look something like this
 
 
 
-With all that out of the way, let us take a brief look at how function calling works at the low level. 
+With all that out of the way, let us take a brief look at how function calling works at the low level.
 
 ## Functions
 
@@ -768,7 +768,7 @@ main:
         ret
 ```
 
-If you examine the pattern, you will notice that the arguments are loaded in a particular sequence - from right to left. The first six arguments remain in the registers `edi`, `esi`, `edx`, `ecx`, `r8d` & `r9d` (from left to right). The rest of the arguments are stored on the stack. 
+If you examine the pattern, you will notice that the arguments are loaded in a particular sequence - from right to left. The first six arguments remain in the registers `edi`, `esi`, `edx`, `ecx`, `r8d` & `r9d` (from left to right). The rest of the arguments are stored on the stack.
 
 This pattern is followed by any function that you wish to invoke from your code.
 
@@ -876,8 +876,8 @@ main:
 
         ; Getting memory block for variables
         sub     rsp, 16
-        
-        ; first printf 
+
+        ; first printf
         mov     esi, 10
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
@@ -885,14 +885,14 @@ main:
 
         ; Storing return value (eax) of printf in the local variable
         mov     DWORD PTR [rbp-4], eax
-        
+
         ; second printf
         mov     eax, DWORD PTR [rbp-4]
         mov     esi, eax
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         ; epologue
         nop
         leave
@@ -940,19 +940,19 @@ main:
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         ; printf("%p\n", *main);
         mov     esi, OFFSET FLAT:main
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         ; printf("%p\n", &main);
         mov     esi, OFFSET FLAT:main
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         nop
         pop     rbp
         ret
@@ -960,7 +960,7 @@ main:
 
 They are all precisely the same!! The assembly code for all three lines remains unchanged.
 
-To test whether it behaves the same way with other functions as well, let's add another function to the code. 
+To test whether it behaves the same way with other functions as well, let's add another function to the code.
 
 
 ```c
@@ -991,25 +991,25 @@ func:
 main:
         push    rbp
         mov     rbp, rsp
-        
+
         ; printf("%p\n", func);
         mov     esi, OFFSET FLAT:func
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         ; printf("%p\n", *func);
         mov     esi, OFFSET FLAT:func
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         ;printf("%p\n", &func);
         mov     esi, OFFSET FLAT:func
         mov     edi, OFFSET FLAT:.LC0
         mov     eax, 0
         call    printf
-        
+
         nop
         pop     rbp
         ret
@@ -1045,19 +1045,19 @@ func:
 main:
         push    rbp
         mov     rbp, rsp
-        
+
         ; func();
         mov     eax, 0
         call    func
-        
+
         ; (*func)();
         mov     eax, 0
         call    func
-        
+
         ; (&func)();
         mov     eax, 0
         call    func
-        
+
         nop
         pop     rbp
         ret
@@ -1101,23 +1101,23 @@ func:
 main:
         push    rbp
         mov     rbp, rsp
-        
+
         ; func(5);
         mov     edi, 5
         call    func
-        
+
         ; func(6);
         mov     edi, 6
         call    func
-        
+
         ; func(7);
         mov     edi, 7
         call    func
-        
+
         ; func(8);
         mov     edi, 8
         call    func
-        
+
         nop
         pop     rbp
         ret

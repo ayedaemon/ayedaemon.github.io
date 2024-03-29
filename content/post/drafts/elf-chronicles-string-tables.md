@@ -1,5 +1,5 @@
 ---
-title: "Elf Chronicles: String Tables"
+title: "Elf Chronicles: String Tables (4/?)"
 date: 2023-10-29T15:12:36+05:30
 draft: true
 # showtoc: false
