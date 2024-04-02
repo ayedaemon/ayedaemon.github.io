@@ -1,655 +1,204 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>ELF Chronicles: ELF file Header (1/?) | Connected</title>
-<meta name="keywords" content="C, ELF, RE">
-<meta name="description" content="Exploring ELF file headers">
-<meta name="author" content="ayedaemon">
-<link rel="canonical" href="https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://ayedaemon.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ayedaemon.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ayedaemon.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ayedaemon.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ayedaemon.github.io/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-</noscript><meta property="og:title" content="ELF Chronicles: ELF file Header (1/?)" />
-<meta property="og:description" content="Exploring ELF file headers" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2023-10-18T13:34:57+05:30" />
-<meta property="article:modified_time" content="2023-10-18T13:34:57+05:30" />
-<meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/" />
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="ELF Chronicles: ELF file Header (1/?)"/>
-<meta name="twitter:description" content="Exploring ELF file headers"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://ayedaemon.github.io/post/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "ELF Chronicles: ELF file Header (1/?)",
-      "item": "https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "ELF Chronicles: ELF file Header (1/?)",
-  "name": "ELF Chronicles: ELF file Header (1\/?)",
-  "description": "Exploring ELF file headers",
-  "keywords": [
-    "C", "ELF", "RE"
-  ],
-  "articleBody": "Hexdumps In the fascinating world of computers, we’re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we’ve come up with our own nifty number system - “hexadecimal” or “hex” for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It’s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!\nNow, let’s take a gander at this binary enigma, a message that only the most extraordinary folks can decipher with ease:\n011010000110010101101100011011000110111100001010 For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.\nStep one involves breaking down the binary data into byte-sized chunks, each containing 8 bits:\n01101000 01100101 01101100 01101100 01101111 00001010 Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like CyberChef.\nNo matter your chosen method, the results remains the same:\n68 65 6c 6c 6f 0a The binary code’s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It’s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!\nFrom Code to Binary Lets’s go on a journey that turns elegant C code into a mysterious binary blob, a language of ones and zeros that only computers understand. (** coughs compilation **)\n/* file: hello_world.c */ #include // A macro #define HELLO_MSG1 \"Hello World1\" // A global variable char HELLO_MSG2[] = \"Hello World2\"; // main function int main() { // local variable for main char HELLO_MSG3[] = \"Hello World3\"; // Print messages printf(\"%s\\n\", HELLO_MSG1); printf(\"%s\\n\", HELLO_MSG2); printf(\"%s\\n\", HELLO_MSG3); return 0; } After compiling the above C code we get an ELF (Executable and Linkable Format) file. (Compilation command - gcc hello_world.c -o hello_world)\nThis generated file, at its core, is nothing more than a delightful binary blob. It’s the computer’s secret handshake, speaking directly in ones and zeros, no pleasantries. And the icing on the cake is that we mere humans, with our clever programming prowess, can craft tools to translate this binary jargon into friendly hexadecimal, or we can simply cozy up to good ol’ hexdump and xxd for the job. Whichever suits your fancy, we’ve got options!\nELF Header Here’s a snapshot of the first 64 bytes in the compiled binary file:\n# In binary representation ❯ xxd -b -l 64 ./hello_world 00000000: 01111111 01000101 01001100 01000110 00000010 00000001 .ELF.. 00000006: 00000001 00000000 00000000 00000000 00000000 00000000 ...... 0000000c: 00000000 00000000 00000000 00000000 00000011 00000000 ...... 00000012: 00111110 00000000 00000001 00000000 00000000 00000000 \u003e..... 00000018: 01010000 00010000 00000000 00000000 00000000 00000000 P..... 0000001e: 00000000 00000000 01000000 00000000 00000000 00000000 ..@... 00000024: 00000000 00000000 00000000 00000000 00101000 00110101 ....(5 0000002a: 00000000 00000000 00000000 00000000 00000000 00000000 ...... 00000030: 00000000 00000000 00000000 00000000 01000000 00000000 ....@. 00000036: 00111000 00000000 00001101 00000000 01000000 00000000 8...@. 0000003c: 00011110 00000000 00011101 00000000 .... # In hex representation ❯ xxd -l 64 ./hello_world 00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000 .ELF............ 00000010: 0300 3e00 0100 0000 5010 0000 0000 0000 ..\u003e.....P....... 00000020: 4000 0000 0000 0000 2835 0000 0000 0000 @.......(5...... 00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00 ....@.8...@..... Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code’s purpose.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L207 */ #define EI_NIDENT\t16 typedef struct elf32_hdr { unsigned char\te_ident[EI_NIDENT]; Elf32_Half\te_type; Elf32_Half\te_machine; Elf32_Word\te_version; Elf32_Addr\te_entry; /* Entry point */ Elf32_Off\te_phoff; Elf32_Off\te_shoff; Elf32_Word\te_flags; Elf32_Half\te_ehsize; Elf32_Half\te_phentsize; Elf32_Half\te_phnum; Elf32_Half\te_shentsize; Elf32_Half\te_shnum; Elf32_Half\te_shstrndx; } Elf32_Ehdr; typedef struct elf64_hdr { unsigned char\te_ident[EI_NIDENT];\t/* ELF \"magic number\" */ Elf64_Half e_type; Elf64_Half e_machine; Elf64_Word e_version; Elf64_Addr e_entry;\t/* Entry point virtual address */ Elf64_Off e_phoff;\t/* Program header table file offset */ Elf64_Off e_shoff;\t/* Section header table file offset */ Elf64_Word e_flags; Elf64_Half e_ehsize; Elf64_Half e_phentsize; Elf64_Half e_phnum; Elf64_Half e_shentsize; Elf64_Half e_shnum; Elf64_Half e_shstrndx; } Elf64_Ehdr; Since I’m on a 64 bit system, I’ll use Elf64_Ehdr to show what each byte in the above data chunk represents.\n❯ xxd -l 64 ./hello_world 00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000 .ELF............ 00000010: 0300 3e00 0100 0000 5010 0000 0000 0000 ..\u003e.....P....... 00000020: 4000 0000 0000 0000 2835 0000 0000 0000 @.......(5...... 00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00 ....@.8...@..... // After mapping the linux ELF struct to the above data e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 e_type = 03 00 e_machine = 3e 00 e_version = 01 00 00 00 e_entry = 50 10 00 00 00 00 00 00 e_phoff = 40 00 00 00 00 00 00 00 e_shoff = 28 35 00 00 00 00 00 00 e_flags = 00 00 00 00 e_ehsize = 40 00 e_phentsize = 38 00 e_phnum = 0d 00 e_shentsize = 40 00 e_shnum = 1e 00 e_shstrndx = 1d 00 Shall we dissect each of these mysterious members in the struct?\n1. e_ident[EI_NIDENT] The first 16 bytes of the ELF header are collectively referred to as the “ident” or “identification” field. It includes a magic number and various identification information. Here is a table that tells more about what all identification information is present in it.\ne_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000 EI_MAG0 = 7f EI_MAG1 = 45 (E) EI_MAG2 = 4c (L) EI_MAG3 = 46 (F) EI_CLASS = 02 EI_DATA = 01 EI_VERSION = 01 EI_OSABI = 00 EI_ABIVERSION = 00 EI_PAD = 00 0000 0000 0000 Ah, you might wonder, “How on earth do I know this?” Well, my friend, it’s a detective game we play, and our magnifying glass is the kernel source code.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334 */ #define\tEI_MAG0\t0\t/* e_ident[] indexes */ #define\tEI_MAG1\t1 #define\tEI_MAG2\t2 #define\tEI_MAG3\t3 #define\tEI_CLASS\t4 /* 1=32Bit; 2=64Bit */ #define\tEI_DATA\t5 /* Endianness ==\u003e 1=Little; 2=Big */ #define\tEI_VERSION\t6 /* ELF header version */ #define\tEI_OSABI\t7 /* OS ABI ==\u003e 0=None(same as SysV); 3=Linux */ #define\tEI_PAD\t8 /* Starting of padding - currently unused */ ==\u003e This information tells me that my ELF binary is a 64-Bit (EI_CLASS = 02), Little endian (EI_DATA = 01) binary.\n2. e_type This member tells what type of ELF file it is.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69 */ #define ET_NONE 0 // No file type #define ET_REL 1 #define ET_EXEC 2 #define ET_DYN 3 #define ET_CORE 4 #define ET_LOPROC 0xff00 // Processor-specific #define ET_HIPROC 0xffff // Processor-specific Since my binary is little endian, e_type = 03 00 should be read as e_type = 00 03. That tells me that I’ve a ET_DYN type of file.\n3. e_machine This member tells us about the target architecture for the file. In linux kernel uapi, there is a complete header file dedicated for target machines.\nFor my binary file, machine type is 3e (e_machine = 3e 00; Should be read as 00 3e).\n(Integer representation of 3e is 62)\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31 */ #define EM_X86_64\t62\t/* AMD x86-64 */ 4. e_version This member specifies the version of the ELF file. This is different from the EI_VERSION which tells only about the ELF header version.\nFor my binary file, version is 1 (remember, to convert the value to little endian)\nThese are the versions defined in linux kernel uapi header\n#define EV_NONE\t0\t/* e_version, EI_VERSION */ #define EV_CURRENT\t1 #define EV_NUM\t2 5. e_entry This member is quite interesting. This tells about the virtual/memory address where program execution begins. This is the starting point of the program.\nYou might think, “Aha, this must always point to the main() function!” Well, here’s a plot twist for you!\nFor my binary file, the entry point is 1050 (e_entry = 50 10 00 00 00 00 00 00).\nAccording to our trusty objdump, this value does not point to the main function but points to the _start function. (..which in turn executes the main function. Here is an article that explains this.)\n❯ objdump -D --disassembler-options=intel hello_world | grep -i \"1050\" 0000000000001050 \u003c_start\u003e: 6. e_phoff This is the program header offset. The starting point in the ELF file where program headers can be found.\n7. e_shoff Just like e_phoff, this member stores the offset of the section headers of the ELF file.\n8. e_flags This member provides processor-specific flags associated with the file.\n9. e_ehsize This member tells the size of the the ELF header. For my binary, value of this member is 40 (64 in decimal). Now you take a guess why I started analyzing first 64 bytes of the file.\n10. e_phentsize This is the size of each entry in program header.\n11. e_phnum This is the count of entries in program header\n12. e_shentsize This is the size of each entry in section header.\n13. e_shnum This is the count of entries in section header\n14. e_shstrndx Now, this little guy is what we call the “Section string index”. This points to the index in section headers which holds all of the strings.\n(We’ll talk more about section headers and program headers in later articles.)\nPracticals How to edit a binary file? If you think it through, you just need a program that can read/write binary data and convert that data to hex for us to view. You can build your own tool to do this or you can use other tools that can already do this.\nI would like to propose my favorite - vim + xxd\nHere are the steps to it.\nOpen the file in vim in binary mode (use -b flag) vim -b argv_printer Pass the data to xxd (you can also use the additional flags that xxd supports) Press : to go into commmand mode then type %!xxd -c 1 to pass the binary data through this command. :%!xxd -c 1 Edit the hex values you want (just like you would edit any other text file, press i and go on) Reverse the hex to binary Go to command mode again by pressing : then type %!xxd -r :%!xxd -r Now save and quit the vim editor If you don’t know steps for that consider learning vim first or, use another hex editor Change the ELF magic number Open the file with vim and edit the EI_MAG part. # Before 00000000: 7f . 00000001: 45 E 00000002: 4c L 00000003: 46 F # After 00000000: 7f . 00000001: 48 E 00000002: 45 L 00000003: 58 F Note that I’ve only changed the hex values and not the ascii values for it.\nrevert the hex to binary data (:%!xxd -r) write and quit vim (I’m still not telling you the command) analyze it ❯ ./hello_world zsh: exec format error: ./hello_world ❯ readelf --file-header --wide hello_world readelf: Error: Not an ELF file - it has the wrong magic bytes at the start The reason for this behaviour is written in kernel code.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L348 */ #define\tELFMAG\t\"\\177ELF\" #define\tSELFMAG\t4 /* https://elixir.bootlin.com/linux/v6.5.7/source/fs/binfmt_elf.c#L848 */ retval = -ENOEXEC; if (memcmp(elf_ex-\u003ee_ident, ELFMAG, SELFMAG) != 0) goto out; Change the executable class (64 bit -\u003e 32 bit) Open the file with vim and edit the EI_CLASS part. # Before 00000004: 02 . # After 00000004: 01 . revert the hex to binary data (:%!xxd -r) write and quit vim (I’m still not telling you the command) analyze it # Runs perfectly fine ❯ ./hello_world Hello World1 Hello World2 Hello World3 # file command tells another tale ❯ file hello_world hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header This is clearly a parsing problem. There are no checks on the kernel for the EI_CLASS (or I should say I could not find any, if you find one, please let me know.)\n…more (DIY, kind of) There are few more interesting things you can play around with\nEI_OSABI e_machine e_entry Conclusion ELF headers emerge as the silent orchestrators of the executable files… The backstage bosses of the show. In this article, we cracked open their secrets (with not-so-real-world tricks) and diving into their nitty-gritty using hexdumps. Think of this as the cool architect of the software world, shaping how things work under the hood.\nMastering these headers is like getting a backstage pass to rock the binary world - tweaking, fixing, and making stuff dance to your tune. So next time you run an executable on *unix machines, remember, ELF header are the groove makers behind the scenes!\nUseful links (ELF Specification 1.1) https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf ",
-  "wordCount" : "2175",
-  "inLanguage": "en",
-  "datePublished": "2023-10-18T13:34:57+05:30",
-  "dateModified": "2023-10-18T13:34:57+05:30",
-  "author":[{
-    "@type": "Person",
-    "name": "ayedaemon"
-  }],
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Connected",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://ayedaemon.github.io/favicon.ico"
-    }
-  }
-}
-</script>
-</head>
-
-<body class=" dark" id="top">
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://ayedaemon.github.io/" accesskey="h" title="Connected (Alt + H)">Connected</a>
-            <div class="logo-switches">
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="https://ayedaemon.github.io/post/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/series/" title="Series">
-                    <span>Series</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/tags/" title="Tags">
-                    <span>Tags</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
-                    <span>Search</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main">
-
-<article class="post-single">
-  <header class="post-header">
-    
-    <h1 class="post-title entry-hint-parent">
-      ELF Chronicles: ELF file Header (1/?)
-    </h1>
-    <div class="post-description">
-      Exploring ELF file headers
-    </div>
-    <div class="post-meta"><span title='2023-10-18 13:34:57 +0530 +0530'>October 18, 2023</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2175 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href="https://github.com/ayedaemon/ayedaemon.github.io/content/post/2023/10/elf-chronicles-elf-header.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
-
-</div>
-  </header> <div class="toc">
-    <details >
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">Table of Contents</span>
-        </summary>
-
-        <div class="inner"><ul>
-                <li>
-                    <a href="#hexdumps" aria-label="Hexdumps">Hexdumps</a></li>
-                <li>
-                    <a href="#from-code-to-binary" aria-label="From Code to Binary">From Code to Binary</a></li>
-                <li>
-                    <a href="#elf-header" aria-label="ELF Header">ELF Header</a><ul>
-                        
-                <li>
-                    <a href="#1-e_identei_nident" aria-label="1. e_ident[EI_NIDENT]">1. e_ident[EI_NIDENT]</a></li>
-                <li>
-                    <a href="#2-e_type" aria-label="2. e_type">2. e_type</a></li>
-                <li>
-                    <a href="#3-e_machine" aria-label="3. e_machine">3. e_machine</a></li>
-                <li>
-                    <a href="#4-e_version" aria-label="4. e_version">4. e_version</a></li>
-                <li>
-                    <a href="#5-e_entry" aria-label="5. e_entry">5. e_entry</a></li>
-                <li>
-                    <a href="#6-e_phoff" aria-label="6. e_phoff">6. e_phoff</a></li>
-                <li>
-                    <a href="#7-e_shoff" aria-label="7. e_shoff">7. e_shoff</a></li>
-                <li>
-                    <a href="#8-e_flags" aria-label="8. e_flags">8. e_flags</a></li>
-                <li>
-                    <a href="#9-e_ehsize" aria-label="9. e_ehsize">9. e_ehsize</a></li>
-                <li>
-                    <a href="#10-e_phentsize" aria-label="10. e_phentsize">10. e_phentsize</a></li>
-                <li>
-                    <a href="#11-e_phnum" aria-label="11. e_phnum">11. e_phnum</a></li>
-                <li>
-                    <a href="#12-e_shentsize" aria-label="12. e_shentsize">12. e_shentsize</a></li>
-                <li>
-                    <a href="#13-e_shnum" aria-label="13. e_shnum">13. e_shnum</a></li>
-                <li>
-                    <a href="#14-e_shstrndx" aria-label="14. e_shstrndx">14. e_shstrndx</a></li></ul>
-                </li>
-                <li>
-                    <a href="#practicals" aria-label="Practicals">Practicals</a><ul>
-                        
-                <li>
-                    <a href="#how-to-edit-a-binary-file" aria-label="How to edit a binary file?">How to edit a binary file?</a></li>
-                <li>
-                    <a href="#change-the-elf-magic-number" aria-label="Change the ELF magic number">Change the ELF magic number</a></li>
-                <li>
-                    <a href="#change-the-executable-class-64-bit---32-bit" aria-label="Change the executable class (64 bit -&gt; 32 bit)">Change the executable class (64 bit -&gt; 32 bit)</a></li>
-                <li>
-                    <a href="#more-diy-kind-of" aria-label="&hellip;more (DIY, kind of)">&hellip;more (DIY, kind of)</a></li></ul>
-                </li>
-                <li>
-                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
-                <li>
-                    <a href="#useful-links" aria-label="Useful links">Useful links</a>
-                </li>
-            </ul>
-        </div>
-    </details>
-</div>
-
-  <div class="post-content"><h2 id="hexdumps">Hexdumps<a hidden class="anchor" aria-hidden="true" href="#hexdumps">#</a></h2>
-<p>In the fascinating world of computers, we&rsquo;re stuck conversing in binary, a rather dull language of just <em>ones</em> and <em>zeros</em>. But because we <em>mere</em> humans love things to be a tad more exciting and concise, we&rsquo;ve come up with our own nifty number system - &ldquo;<code>hexadecimal</code>&rdquo; or &ldquo;<code>hex</code>&rdquo; for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It&rsquo;s got your usual digits from <code>0 to 9</code>, plus those fancy <code>A to F</code> letters to make data a bit more, well, <em>hexadecimal-chic</em>!</p>
-<p>Now, let&rsquo;s take a gander at this binary enigma, a message that only the most extraordinary folks can decipher with ease:</p>
-<pre tabindex="0"><code>011010000110010101101100011011000110111100001010
-</code></pre><p>For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.</p>
-<p>Step one involves breaking down the binary data into byte-sized chunks, each containing 8 bits:</p>
-<pre tabindex="0"><code>01101000 01100101 01101100 01101100 01101111 00001010
-</code></pre><p>Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like <a href="https://cyberchef.org/#recipe=From_Binary('Space',8)To_Hex('Space',0)&amp;input=MDExMDEwMDAgMDExMDAxMDEgMDExMDExMDAgMDExMDExMDAgMDExMDExMTEgMDAwMDEwMTA">CyberChef</a>.</p>
-<p>No matter your chosen method, the results remains the same:</p>
-<pre tabindex="0"><code>68 65 6c 6c 6f 0a
-</code></pre><p>The binary code&rsquo;s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It&rsquo;s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!</p>
-<h2 id="from-code-to-binary">From Code to Binary<a hidden class="anchor" aria-hidden="true" href="#from-code-to-binary">#</a></h2>
-<p>Lets&rsquo;s go on a journey that turns elegant C code into a mysterious binary blob, a language of ones and zeros that only computers understand. (** <em>coughs compilation</em> **)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* file: hello_world.c */</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="c1">// A macro
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#define HELLO_MSG1 &#34;Hello World1&#34;
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="c1">// A global variable
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">char</span> <span class="n">HELLO_MSG2</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;Hello World2&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// main function
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// local variable for main
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">char</span> <span class="n">HELLO_MSG3</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;Hello World3&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// Print messages
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">HELLO_MSG1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">HELLO_MSG2</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">HELLO_MSG3</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>After compiling the above C code we get an ELF (Executable and Linkable Format) file. (Compilation command - <code>gcc hello_world.c -o hello_world</code>)</p>
-<p>This generated file, at its core, is nothing more than a delightful binary blob. It&rsquo;s the computer&rsquo;s secret handshake, speaking directly in ones and zeros, no pleasantries. And the icing on the cake is that we <em>mere</em> humans, with our clever programming prowess, can craft tools to translate this binary jargon into friendly hexadecimal, or we can simply cozy up to good ol&rsquo; <code>hexdump</code> and <code>xxd</code> for the job. Whichever suits your fancy, we&rsquo;ve got options!</p>
-<h2 id="elf-header">ELF Header<a hidden class="anchor" aria-hidden="true" href="#elf-header">#</a></h2>
-<p>Here&rsquo;s a snapshot of the first 64 bytes in the compiled binary file:</p>
-<pre tabindex="0"><code># In binary representation
-❯ xxd -b -l 64 ./hello_world
-00000000: 01111111 01000101 01001100 01000110 00000010 00000001  .ELF..
-00000006: 00000001 00000000 00000000 00000000 00000000 00000000  ......
-0000000c: 00000000 00000000 00000000 00000000 00000011 00000000  ......
-00000012: 00111110 00000000 00000001 00000000 00000000 00000000  &gt;.....
-00000018: 01010000 00010000 00000000 00000000 00000000 00000000  P.....
-0000001e: 00000000 00000000 01000000 00000000 00000000 00000000  ..@...
-00000024: 00000000 00000000 00000000 00000000 00101000 00110101  ....(5
-0000002a: 00000000 00000000 00000000 00000000 00000000 00000000  ......
-00000030: 00000000 00000000 00000000 00000000 01000000 00000000  ....@.
-00000036: 00111000 00000000 00001101 00000000 01000000 00000000  8...@.
-0000003c: 00011110 00000000 00011101 00000000                    ....
-
-# In hex representation
-❯ xxd -l 64 ./hello_world
-00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
-00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
-00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
-00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
-</code></pre><p>Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code&rsquo;s purpose.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L207
-</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="cp">#define EI_NIDENT	16
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">elf32_hdr</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">e_ident</span><span class="p">[</span><span class="n">EI_NIDENT</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_type</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_machine</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Word</span>	<span class="n">e_version</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Addr</span>	<span class="n">e_entry</span><span class="p">;</span>  <span class="cm">/* Entry point */</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Off</span>	    <span class="n">e_phoff</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Off</span>	    <span class="n">e_shoff</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Word</span>	<span class="n">e_flags</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_ehsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_phentsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_phnum</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_shentsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_shnum</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf32_Half</span>	<span class="n">e_shstrndx</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">Elf32_Ehdr</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">elf64_hdr</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="kt">unsigned</span> <span class="kt">char</span>	<span class="n">e_ident</span><span class="p">[</span><span class="n">EI_NIDENT</span><span class="p">];</span>	<span class="cm">/* ELF &#34;magic number&#34; */</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_type</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_machine</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Word</span>    <span class="n">e_version</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Addr</span>    <span class="n">e_entry</span><span class="p">;</span>		<span class="cm">/* Entry point virtual address */</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Off</span>     <span class="n">e_phoff</span><span class="p">;</span>		<span class="cm">/* Program header table file offset */</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Off</span>     <span class="n">e_shoff</span><span class="p">;</span>		<span class="cm">/* Section header table file offset */</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Word</span>    <span class="n">e_flags</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_ehsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_phentsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_phnum</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_shentsize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_shnum</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Elf64_Half</span>    <span class="n">e_shstrndx</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="n">Elf64_Ehdr</span><span class="p">;</span>
-</span></span></code></pre></div><p>Since I&rsquo;m on a 64 bit system, I&rsquo;ll use <code>Elf64_Ehdr</code> to show what each byte in the above data chunk represents.</p>
-<pre tabindex="0"><code>❯ xxd -l 64 ./hello_world
-00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
-00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
-00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
-00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
-
-
-// After mapping the linux ELF struct to the above data
-
-e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
-e_type      = 03 00
-e_machine   = 3e 00
-e_version   = 01 00 00 00
-e_entry     = 50 10 00 00 00 00 00 00
-e_phoff     = 40 00 00 00 00 00 00 00
-e_shoff     = 28 35 00 00 00 00 00 00
-e_flags     = 00 00 00 00
-e_ehsize    = 40 00
-e_phentsize = 38 00
-e_phnum     = 0d 00
-e_shentsize = 40 00
-e_shnum     = 1e 00
-e_shstrndx  = 1d 00
-</code></pre><p>Shall we dissect each of these mysterious members in the struct?</p>
-<p><img loading="lazy" src="https://media.giphy.com/media/QaNQJZhjd2QrDUBNcg/giphy.gif#center" alt=""  />
-</p>
-<h3 id="1-e_identei_nident">1. <strong>e_ident[EI_NIDENT]</strong><a hidden class="anchor" aria-hidden="true" href="#1-e_identei_nident">#</a></h3>
-<p>The first 16 bytes of the ELF header are collectively referred to as the &ldquo;ident&rdquo; or &ldquo;identification&rdquo; field. It includes a magic number and various identification information. Here is a table that tells more about what all identification information is present in it.</p>
-<pre tabindex="0"><code>e_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000
-    EI_MAG0 = 7f
-    EI_MAG1 = 45 (E)
-    EI_MAG2 = 4c (L)
-    EI_MAG3 = 46 (F)
-    EI_CLASS = 02
-    EI_DATA = 01
-    EI_VERSION = 01
-    EI_OSABI = 00
-    EI_ABIVERSION = 00
-    EI_PAD = 00 0000 0000 0000
-</code></pre><p>Ah, you might wonder, &ldquo;How on earth do I know this?&rdquo; Well, my friend, it&rsquo;s a detective game we play, and our magnifying glass is the kernel source code.</p>
-<pre tabindex="0"><code>/*
-https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334
-*/
-
-#define	EI_MAG0		0		/* e_ident[] indexes */
-#define	EI_MAG1		1
-#define	EI_MAG2		2
-#define	EI_MAG3		3
-#define	EI_CLASS	4       /* 1=32Bit; 2=64Bit */
-#define	EI_DATA		5       /* Endianness ==&gt; 1=Little; 2=Big */
-#define	EI_VERSION	6       /* ELF header version */
-#define	EI_OSABI	7       /* OS ABI ==&gt; 0=None(same as SysV); 3=Linux */
-#define	EI_PAD		8       /* Starting of padding - currently unused */
-</code></pre><p><strong>==&gt;</strong> This information tells me that my ELF binary is a <code>64-Bit</code> (EI_CLASS = 02), <code>Little</code> endian (EI_DATA = 01) binary.</p>
-<h3 id="2-e_type">2. <strong>e_type</strong><a hidden class="anchor" aria-hidden="true" href="#2-e_type">#</a></h3>
-<p>This member tells what type of ELF file it is.</p>
-<pre tabindex="0"><code>/*
-https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69
-*/
-
-#define ET_NONE   0         // No file type
-#define ET_REL    1
-#define ET_EXEC   2
-#define ET_DYN    3
-#define ET_CORE   4
-#define ET_LOPROC 0xff00    // Processor-specific
-#define ET_HIPROC 0xffff    // Processor-specific
-</code></pre><p>Since my binary is little endian, <code>e_type = 03 00</code> should be read as <code>e_type = 00 03</code>. That tells me that I&rsquo;ve a <code>ET_DYN</code> type of file.</p>
-<h3 id="3-e_machine">3. <strong>e_machine</strong><a hidden class="anchor" aria-hidden="true" href="#3-e_machine">#</a></h3>
-<p>This member tells us about the target architecture for the file. In linux kernel uapi, there is <a href="https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h">a complete header file dedicated for target machines</a>.</p>
-<p>For my binary file, machine type is <code>3e</code> (e_machine = <em>3e 00</em>; Should be read as <em>00 3e</em>).</p>
-<p><em>(Integer representation of <code>3e</code> is <code>62</code>)</em></p>
-<pre tabindex="0"><code>/*
-https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31
-*/
-
-#define EM_X86_64	62	/* AMD x86-64 */
-</code></pre><h3 id="4-e_version">4. <strong>e_version</strong><a hidden class="anchor" aria-hidden="true" href="#4-e_version">#</a></h3>
-<p>This member specifies the version of the ELF file. This is different from the <code>EI_VERSION</code> which tells only about the ELF header version.</p>
-<p>For my binary file, version is <code>1</code> (remember, to convert the value to little endian)</p>
-<p>These are the versions defined in linux kernel uapi header</p>
-<pre tabindex="0"><code>#define EV_NONE		0		/* e_version, EI_VERSION */
-#define EV_CURRENT	1
-#define EV_NUM		2
-</code></pre><h3 id="5-e_entry">5. <strong>e_entry</strong><a hidden class="anchor" aria-hidden="true" href="#5-e_entry">#</a></h3>
-<p>This member is quite interesting. This tells about the virtual/memory address where program execution begins. This is the starting point of the program.</p>
-<p>You might think, &ldquo;Aha, this must always point to the <code>main()</code> function!&rdquo; Well, here&rsquo;s a plot twist for you!</p>
-<p>For my binary file, the entry point is <code>1050</code> (e_entry = 50 10 00 00 00 00 00 00).</p>
-<p>According to our trusty <code>objdump</code>, this value does not point to the <code>main</code> function but points to the <code>_start</code> function. <em>(..which in turn executes the <code>main</code> function. Here is <a href="https://ayedaemon.github.io/post/2022/01/debugging-c-code/#the-whole-picture">an article</a> that explains this.)</em></p>
-<pre tabindex="0"><code>❯ objdump  -D --disassembler-options=intel hello_world | grep -i &#34;1050&#34;
-
-0000000000001050 &lt;_start&gt;:
-</code></pre><h3 id="6-e_phoff">6. <strong>e_phoff</strong><a hidden class="anchor" aria-hidden="true" href="#6-e_phoff">#</a></h3>
-<p>This is the program header offset. The starting point in the ELF file where program headers can be found.</p>
-<h3 id="7-e_shoff">7. <strong>e_shoff</strong><a hidden class="anchor" aria-hidden="true" href="#7-e_shoff">#</a></h3>
-<p>Just like <code>e_phoff</code>, this member stores the offset of the section headers of the ELF file.</p>
-<h3 id="8-e_flags">8. <strong>e_flags</strong><a hidden class="anchor" aria-hidden="true" href="#8-e_flags">#</a></h3>
-<p>This member provides processor-specific flags associated with the file.</p>
-<h3 id="9-e_ehsize">9. <strong>e_ehsize</strong><a hidden class="anchor" aria-hidden="true" href="#9-e_ehsize">#</a></h3>
-<p>This member tells the size of the the ELF header. For my binary, value of this member is <code>40</code> (64 in decimal). Now you take a guess why I started analyzing first 64 bytes of the file.</p>
-<h3 id="10-e_phentsize">10. <strong>e_phentsize</strong><a hidden class="anchor" aria-hidden="true" href="#10-e_phentsize">#</a></h3>
-<p>This is the size of each entry in program header.</p>
-<h3 id="11-e_phnum">11. <strong>e_phnum</strong><a hidden class="anchor" aria-hidden="true" href="#11-e_phnum">#</a></h3>
-<p>This is the count of entries in program header</p>
-<h3 id="12-e_shentsize">12. <strong>e_shentsize</strong><a hidden class="anchor" aria-hidden="true" href="#12-e_shentsize">#</a></h3>
-<p>This is the size of each entry in section header.</p>
-<h3 id="13-e_shnum">13. <strong>e_shnum</strong><a hidden class="anchor" aria-hidden="true" href="#13-e_shnum">#</a></h3>
-<p>This is the count of entries in section header</p>
-<h3 id="14-e_shstrndx">14. <strong>e_shstrndx</strong><a hidden class="anchor" aria-hidden="true" href="#14-e_shstrndx">#</a></h3>
-<p>Now, this little guy is what we call the &ldquo;Section string index&rdquo;. This points to the index in section headers which holds all of the strings.</p>
-<p><em>(We&rsquo;ll talk more about section headers and program headers in later articles.)</em></p>
-<h2 id="practicals">Practicals<a hidden class="anchor" aria-hidden="true" href="#practicals">#</a></h2>
-<h3 id="how-to-edit-a-binary-file">How to edit a binary file?<a hidden class="anchor" aria-hidden="true" href="#how-to-edit-a-binary-file">#</a></h3>
-<p>If you think it through, you just need a program that can read/write binary data and convert that data to hex for us to view. You can build your own tool to do this or you can use other tools that can already do this.</p>
-<p>I would like to propose my favorite - <code>vim</code> + <code>xxd</code></p>
-<p>Here are the steps to it.</p>
-<ul>
-<li>Open the file in vim in binary mode (use <code>-b</code> flag)</li>
-</ul>
-<pre tabindex="0"><code>vim -b argv_printer
-</code></pre><ul>
-<li>Pass the data to <code>xxd</code> (you can also use the additional flags that xxd supports)
-<ul>
-<li>Press <code>:</code> to go into commmand mode</li>
-<li>then type <code>%!xxd -c 1</code> to pass the binary data through this command.</li>
-</ul>
-</li>
-</ul>
-<pre tabindex="0"><code>:%!xxd -c 1
-</code></pre><ul>
-<li>Edit the hex values you want (just like you would edit any other text file, press <code>i</code> and go on)</li>
-<li>Reverse the hex to binary
-<ul>
-<li>Go to command mode again by pressing <code>:</code></li>
-<li>then type <code>%!xxd -r</code></li>
-</ul>
-</li>
-</ul>
-<pre tabindex="0"><code>:%!xxd -r
-</code></pre><ul>
-<li>Now save and quit the vim editor
-<ul>
-<li>If you don&rsquo;t know steps for that consider learning vim first</li>
-<li>or, use another hex editor</li>
-</ul>
-</li>
-</ul>
-<h3 id="change-the-elf-magic-number">Change the ELF magic number<a hidden class="anchor" aria-hidden="true" href="#change-the-elf-magic-number">#</a></h3>
-<ul>
-<li>Open the file with vim and edit the <code>EI_MAG</code> part.</li>
-</ul>
-<pre tabindex="0"><code># Before
-  00000000: 7f  .
-  00000001: 45  E
-  00000002: 4c  L
-  00000003: 46  F
-
-# After
-  00000000: 7f  .
-  00000001: 48  E
-  00000002: 45  L
-  00000003: 58  F
-</code></pre><p><em>Note that I&rsquo;ve only changed the hex values and not the ascii values for it.</em></p>
-<ul>
-<li>revert the hex to binary data (<code>:%!xxd -r</code>)</li>
-<li>write and quit vim (I&rsquo;m still not telling you the command)</li>
-<li>analyze it</li>
-</ul>
-<pre tabindex="0"><code>❯ ./hello_world
-zsh: exec format error: ./hello_world
-
-
-❯ readelf --file-header --wide hello_world
-readelf: Error: Not an ELF file - it has the wrong magic bytes at the start
-</code></pre><p>The reason for this behaviour is written in kernel code.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L348
-</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
-</span></span><span class="line"><span class="cl"><span class="cp">#define	ELFMAG		&#34;\177ELF&#34;
-</span></span></span><span class="line"><span class="cl"><span class="cp">#define	SELFMAG		4
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="cm">/*
-</span></span></span><span class="line"><span class="cl"><span class="cm">https://elixir.bootlin.com/linux/v6.5.7/source/fs/binfmt_elf.c#L848
-</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
-</span></span><span class="line"><span class="cl"><span class="n">retval</span> <span class="o">=</span> <span class="o">-</span><span class="n">ENOEXEC</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nf">memcmp</span><span class="p">(</span><span class="n">elf_ex</span><span class="o">-&gt;</span><span class="n">e_ident</span><span class="p">,</span> <span class="n">ELFMAG</span><span class="p">,</span> <span class="n">SELFMAG</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">		<span class="k">goto</span> <span class="n">out</span><span class="p">;</span>
-</span></span></code></pre></div><h3 id="change-the-executable-class-64-bit---32-bit">Change the executable class (64 bit -&gt; 32 bit)<a hidden class="anchor" aria-hidden="true" href="#change-the-executable-class-64-bit---32-bit">#</a></h3>
-<ul>
-<li>Open the file with vim and edit the <code>EI_CLASS</code> part.</li>
-</ul>
-<pre tabindex="0"><code># Before
-  00000004: 02  .
-
-# After
-  00000004: 01  .
-</code></pre><ul>
-<li>revert the hex to binary data (<code>:%!xxd -r</code>)</li>
-<li>write and quit vim (I&rsquo;m still not telling you the command)</li>
-<li>analyze it</li>
-</ul>
-<pre tabindex="0"><code># Runs perfectly fine
-❯ ./hello_world
-Hello World1
-Hello World2
-Hello World3
-
-
-# file command tells another tale
-❯ file hello_world
-hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header
-</code></pre><p>This is clearly a parsing problem. There are no checks on the kernel for the <code>EI_CLASS</code> (or I should say I could not find any, if you find one, please let me know.)</p>
-<h3 id="more-diy-kind-of">&hellip;more (DIY, kind of)<a hidden class="anchor" aria-hidden="true" href="#more-diy-kind-of">#</a></h3>
-<p>There are few more interesting things you can play around with</p>
-<ul>
-<li><code>EI_OSABI</code></li>
-<li><code>e_machine</code></li>
-<li><code>e_entry</code></li>
-</ul>
-<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
-<p>ELF headers emerge as the silent orchestrators of the executable files&hellip; The backstage bosses of the show. In this article, we cracked open their secrets (with not-so-real-world tricks) and diving into their nitty-gritty using hexdumps. Think of this as the cool architect of the software world, shaping how things work under the hood.</p>
-<p>Mastering these headers is like getting a backstage pass to rock the binary world - tweaking, fixing, and making stuff dance to your tune. So next time you run an executable on *unix machines, remember, ELF header are the groove makers behind the scenes!</p>
-<hr>
-<h2 id="useful-links">Useful links<a hidden class="anchor" aria-hidden="true" href="#useful-links">#</a></h2>
-<ol>
-<li>(ELF Specification 1.1) <a href="https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf">https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf</a></li>
-</ol>
-
-
-  </div>
-
-  <footer class="post-footer">
-    <ul class="post-tags">
-      <li><a href="https://ayedaemon.github.io/tags/c/">C</a></li>
-      <li><a href="https://ayedaemon.github.io/tags/elf/">ELF</a></li>
-      <li><a href="https://ayedaemon.github.io/tags/re/">RE</a></li>
-    </ul>
-  </footer>
-</article>
-    </main>
-    
-<footer class="footer">
-    <span>&copy; 2024 <a href="https://ayedaemon.github.io/">Connected</a></span>
-    <span>
-        Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
-    </span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-        <path d="M12 6H0l6-6z" />
-    </svg>
-</a>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try {
-                document.execCommand('copy');
-                copyingDone();
-            } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-            
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
-</script>
-</body>
-
-</html>
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>ELF Chronicles: ELF file Header (1/?) | Connected</title>
+<meta name=keywords content="C,ELF,RE"><meta name=description content="Exploring ELF file headers"><meta name=author content="ayedaemon"><link rel=canonical href=https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/><link crossorigin=anonymous href=/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z+V9+cO1A=" rel="preload stylesheet" as=style><link rel=icon href=https://ayedaemon.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ayedaemon.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ayedaemon.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ayedaemon.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ayedaemon.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:title" content="ELF Chronicles: ELF file Header (1/?)"><meta property="og:description" content="Exploring ELF file headers"><meta property="og:type" content="article"><meta property="og:url" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"><meta property="article:section" content="post"><meta property="article:published_time" content="2023-10-18T13:34:57+05:30"><meta property="article:modified_time" content="2024-04-02T17:19:43+05:30"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-program-headers/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/10/elf-chronicles-section-headers/"><meta name=twitter:card content="summary"><meta name=twitter:title content="ELF Chronicles: ELF file Header (1/?)"><meta name=twitter:description content="Exploring ELF file headers"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://ayedaemon.github.io/post/"},{"@type":"ListItem","position":2,"name":"ELF Chronicles: ELF file Header (1/?)","item":"https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"ELF Chronicles: ELF file Header (1/?)","name":"ELF Chronicles: ELF file Header (1\/?)","description":"Exploring ELF file headers","keywords":["C","ELF","RE"],"articleBody":"Hexdumps In the fascinating world of computers, we’re stuck conversing in binary, a rather dull language of just ones and zeros. But because we mere humans love things to be a tad more exciting and concise, we’ve come up with our own nifty number system - “hexadecimal” or “hex” for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It’s got your usual digits from 0 to 9, plus those fancy A to F letters to make data a bit more, well, hexadecimal-chic!\nNow, let’s take a gander at this binary enigma, a message that only the most extraordinary folks can decipher with ease:\n011010000110010101101100011011000110111100001010 For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.\nStep one involves breaking down the binary data into byte-sized chunks, each containing 8 bits:\n01101000 01100101 01101100 01101100 01101111 00001010 Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like CyberChef.\nNo matter your chosen method, the results remains the same:\n68 65 6c 6c 6f 0a The binary code’s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It’s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!\nFrom Code to Binary Lets’s go on a journey that turns elegant C code into a mysterious binary blob, a language of ones and zeros that only computers understand. (** coughs compilation **)\n/* file: hello_world.c */ #include // A macro #define HELLO_MSG1 \"Hello World1\" // A global variable char HELLO_MSG2[] = \"Hello World2\"; // main function int main() { // local variable for main char HELLO_MSG3[] = \"Hello World3\"; // Print messages printf(\"%s\\n\", HELLO_MSG1); printf(\"%s\\n\", HELLO_MSG2); printf(\"%s\\n\", HELLO_MSG3); return 0; } After compiling the above C code we get an ELF (Executable and Linkable Format) file. (Compilation command - gcc hello_world.c -o hello_world)\nThis generated file, at its core, is nothing more than a delightful binary blob. It’s the computer’s secret handshake, speaking directly in ones and zeros, no pleasantries. And the icing on the cake is that we mere humans, with our clever programming prowess, can craft tools to translate this binary jargon into friendly hexadecimal, or we can simply cozy up to good ol’ hexdump and xxd for the job. Whichever suits your fancy, we’ve got options!\nELF Header Here’s a snapshot of the first 64 bytes in the compiled binary file:\n# In binary representation ❯ xxd -b -l 64 ./hello_world 00000000: 01111111 01000101 01001100 01000110 00000010 00000001 .ELF.. 00000006: 00000001 00000000 00000000 00000000 00000000 00000000 ...... 0000000c: 00000000 00000000 00000000 00000000 00000011 00000000 ...... 00000012: 00111110 00000000 00000001 00000000 00000000 00000000 \u003e..... 00000018: 01010000 00010000 00000000 00000000 00000000 00000000 P..... 0000001e: 00000000 00000000 01000000 00000000 00000000 00000000 ..@... 00000024: 00000000 00000000 00000000 00000000 00101000 00110101 ....(5 0000002a: 00000000 00000000 00000000 00000000 00000000 00000000 ...... 00000030: 00000000 00000000 00000000 00000000 01000000 00000000 ....@. 00000036: 00111000 00000000 00001101 00000000 01000000 00000000 8...@. 0000003c: 00011110 00000000 00011101 00000000 .... # In hex representation ❯ xxd -l 64 ./hello_world 00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000 .ELF............ 00000010: 0300 3e00 0100 0000 5010 0000 0000 0000 ..\u003e.....P....... 00000020: 4000 0000 0000 0000 2835 0000 0000 0000 @.......(5...... 00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00 ....@.8...@..... Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code’s purpose.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L207 */ #define EI_NIDENT\t16 typedef struct elf32_hdr { unsigned char\te_ident[EI_NIDENT]; Elf32_Half\te_type; Elf32_Half\te_machine; Elf32_Word\te_version; Elf32_Addr\te_entry; /* Entry point */ Elf32_Off\te_phoff; Elf32_Off\te_shoff; Elf32_Word\te_flags; Elf32_Half\te_ehsize; Elf32_Half\te_phentsize; Elf32_Half\te_phnum; Elf32_Half\te_shentsize; Elf32_Half\te_shnum; Elf32_Half\te_shstrndx; } Elf32_Ehdr; typedef struct elf64_hdr { unsigned char\te_ident[EI_NIDENT];\t/* ELF \"magic number\" */ Elf64_Half e_type; Elf64_Half e_machine; Elf64_Word e_version; Elf64_Addr e_entry;\t/* Entry point virtual address */ Elf64_Off e_phoff;\t/* Program header table file offset */ Elf64_Off e_shoff;\t/* Section header table file offset */ Elf64_Word e_flags; Elf64_Half e_ehsize; Elf64_Half e_phentsize; Elf64_Half e_phnum; Elf64_Half e_shentsize; Elf64_Half e_shnum; Elf64_Half e_shstrndx; } Elf64_Ehdr; Since I’m on a 64 bit system, I’ll use Elf64_Ehdr to show what each byte in the above data chunk represents.\n❯ xxd -l 64 ./hello_world 00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000 .ELF............ 00000010: 0300 3e00 0100 0000 5010 0000 0000 0000 ..\u003e.....P....... 00000020: 4000 0000 0000 0000 2835 0000 0000 0000 @.......(5...... 00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00 ....@.8...@..... // After mapping the linux ELF struct to the above data e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 e_type = 03 00 e_machine = 3e 00 e_version = 01 00 00 00 e_entry = 50 10 00 00 00 00 00 00 e_phoff = 40 00 00 00 00 00 00 00 e_shoff = 28 35 00 00 00 00 00 00 e_flags = 00 00 00 00 e_ehsize = 40 00 e_phentsize = 38 00 e_phnum = 0d 00 e_shentsize = 40 00 e_shnum = 1e 00 e_shstrndx = 1d 00 Shall we dissect each of these mysterious members in the struct?\n1. e_ident[EI_NIDENT] The first 16 bytes of the ELF header are collectively referred to as the “ident” or “identification” field. It includes a magic number and various identification information. Here is a table that tells more about what all identification information is present in it.\ne_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000 EI_MAG0 = 7f EI_MAG1 = 45 (E) EI_MAG2 = 4c (L) EI_MAG3 = 46 (F) EI_CLASS = 02 EI_DATA = 01 EI_VERSION = 01 EI_OSABI = 00 EI_ABIVERSION = 00 EI_PAD = 00 0000 0000 0000 Ah, you might wonder, “How on earth do I know this?” Well, my friend, it’s a detective game we play, and our magnifying glass is the kernel source code.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334 */ #define\tEI_MAG0\t0\t/* e_ident[] indexes */ #define\tEI_MAG1\t1 #define\tEI_MAG2\t2 #define\tEI_MAG3\t3 #define\tEI_CLASS\t4 /* 1=32Bit; 2=64Bit */ #define\tEI_DATA\t5 /* Endianness ==\u003e 1=Little; 2=Big */ #define\tEI_VERSION\t6 /* ELF header version */ #define\tEI_OSABI\t7 /* OS ABI ==\u003e 0=None(same as SysV); 3=Linux */ #define\tEI_PAD\t8 /* Starting of padding - currently unused */ ==\u003e This information tells me that my ELF binary is a 64-Bit (EI_CLASS = 02), Little endian (EI_DATA = 01) binary.\n2. e_type This member tells what type of ELF file it is.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69 */ #define ET_NONE 0 // No file type #define ET_REL 1 #define ET_EXEC 2 #define ET_DYN 3 #define ET_CORE 4 #define ET_LOPROC 0xff00 // Processor-specific #define ET_HIPROC 0xffff // Processor-specific Since my binary is little endian, e_type = 03 00 should be read as e_type = 00 03. That tells me that I’ve a ET_DYN type of file.\n3. e_machine This member tells us about the target architecture for the file. In linux kernel uapi, there is a complete header file dedicated for target machines.\nFor my binary file, machine type is 3e (e_machine = 3e 00; Should be read as 00 3e).\n(Integer representation of 3e is 62)\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31 */ #define EM_X86_64\t62\t/* AMD x86-64 */ 4. e_version This member specifies the version of the ELF file. This is different from the EI_VERSION which tells only about the ELF header version.\nFor my binary file, version is 1 (remember, to convert the value to little endian)\nThese are the versions defined in linux kernel uapi header\n#define EV_NONE\t0\t/* e_version, EI_VERSION */ #define EV_CURRENT\t1 #define EV_NUM\t2 5. e_entry This member is quite interesting. This tells about the virtual/memory address where program execution begins. This is the starting point of the program.\nYou might think, “Aha, this must always point to the main() function!” Well, here’s a plot twist for you!\nFor my binary file, the entry point is 1050 (e_entry = 50 10 00 00 00 00 00 00).\nAccording to our trusty objdump, this value does not point to the main function but points to the _start function. (..which in turn executes the main function. Here is an article that explains this.)\n❯ objdump -D --disassembler-options=intel hello_world | grep -i \"1050\" 0000000000001050 \u003c_start\u003e: 6. e_phoff This is the program header offset. The starting point in the ELF file where program headers can be found.\n7. e_shoff Just like e_phoff, this member stores the offset of the section headers of the ELF file.\n8. e_flags This member provides processor-specific flags associated with the file.\n9. e_ehsize This member tells the size of the the ELF header. For my binary, value of this member is 40 (64 in decimal). Now you take a guess why I started analyzing first 64 bytes of the file.\n10. e_phentsize This is the size of each entry in program header.\n11. e_phnum This is the count of entries in program header\n12. e_shentsize This is the size of each entry in section header.\n13. e_shnum This is the count of entries in section header\n14. e_shstrndx Now, this little guy is what we call the “Section string index”. This points to the index in section headers which holds all of the strings.\n(We’ll talk more about section headers and program headers in later articles.)\nPracticals How to edit a binary file? If you think it through, you just need a program that can read/write binary data and convert that data to hex for us to view. You can build your own tool to do this or you can use other tools that can already do this.\nI would like to propose my favorite - vim + xxd\nHere are the steps to it.\nOpen the file in vim in binary mode (use -b flag) vim -b argv_printer Pass the data to xxd (you can also use the additional flags that xxd supports) Press : to go into commmand mode then type %!xxd -c 1 to pass the binary data through this command. :%!xxd -c 1 Edit the hex values you want (just like you would edit any other text file, press i and go on) Reverse the hex to binary Go to command mode again by pressing : then type %!xxd -r :%!xxd -r Now save and quit the vim editor If you don’t know steps for that consider learning vim first or, use another hex editor Change the ELF magic number Open the file with vim and edit the EI_MAG part. # Before 00000000: 7f . 00000001: 45 E 00000002: 4c L 00000003: 46 F # After 00000000: 7f . 00000001: 48 E 00000002: 45 L 00000003: 58 F Note that I’ve only changed the hex values and not the ascii values for it.\nrevert the hex to binary data (:%!xxd -r) write and quit vim (I’m still not telling you the command) analyze it ❯ ./hello_world zsh: exec format error: ./hello_world ❯ readelf --file-header --wide hello_world readelf: Error: Not an ELF file - it has the wrong magic bytes at the start The reason for this behaviour is written in kernel code.\n/* https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L348 */ #define\tELFMAG\t\"\\177ELF\" #define\tSELFMAG\t4 /* https://elixir.bootlin.com/linux/v6.5.7/source/fs/binfmt_elf.c#L848 */ retval = -ENOEXEC; if (memcmp(elf_ex-\u003ee_ident, ELFMAG, SELFMAG) != 0) goto out; Change the executable class (64 bit -\u003e 32 bit) Open the file with vim and edit the EI_CLASS part. # Before 00000004: 02 . # After 00000004: 01 . revert the hex to binary data (:%!xxd -r) write and quit vim (I’m still not telling you the command) analyze it # Runs perfectly fine ❯ ./hello_world Hello World1 Hello World2 Hello World3 # file command tells another tale ❯ file hello_world hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header This is clearly a parsing problem. There are no checks on the kernel for the EI_CLASS (or I should say I could not find any, if you find one, please let me know.)\n…more (DIY, kind of) There are few more interesting things you can play around with\nEI_OSABI e_machine e_entry Conclusion ELF headers emerge as the silent orchestrators of the executable files… The backstage bosses of the show. In this article, we cracked open their secrets (with not-so-real-world tricks) and diving into their nitty-gritty using hexdumps. Think of this as the cool architect of the software world, shaping how things work under the hood.\nMastering these headers is like getting a backstage pass to rock the binary world - tweaking, fixing, and making stuff dance to your tune. So next time you run an executable on *unix machines, remember, ELF header are the groove makers behind the scenes!\nUseful links (ELF Specification 1.1) https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf ","wordCount":"2175","inLanguage":"en","datePublished":"2023-10-18T13:34:57+05:30","dateModified":"2024-04-02T17:19:43+05:30","author":[{"@type":"Person","name":"ayedaemon"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://ayedaemon.github.io/post/2023/10/elf-chronicles-elf-header/"},"publisher":{"@type":"Organization","name":"Connected","logo":{"@type":"ImageObject","url":"https://ayedaemon.github.io/favicon.ico"}}}</script></head><body class=dark id=top><header class=header><nav class=nav><div class=logo><a href=https://ayedaemon.github.io/ accesskey=h title="Connected (Alt + H)">Connected</a><div class=logo-switches></div></div><ul id=menu><li><a href=https://ayedaemon.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://ayedaemon.github.io/series/ title=Series><span>Series</span></a></li><li><a href=https://ayedaemon.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://ayedaemon.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">ELF Chronicles: ELF file Header (1/?)</h1><div class=post-description>Exploring ELF file headers</div><div class=post-meta><span title='2023-10-18 13:34:57 +0530 +0530'>October 18, 2023</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2175 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href=https://github.com/ayedaemon/ayedaemon.github.io/tree/main/content/post/2023/10/elf-chronicles-elf-header.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#hexdumps aria-label=Hexdumps>Hexdumps</a></li><li><a href=#from-code-to-binary aria-label="From Code to Binary">From Code to Binary</a></li><li><a href=#elf-header aria-label="ELF Header">ELF Header</a><ul><li><a href=#1-e_identei_nident aria-label="1. e_ident[EI_NIDENT]">1. e_ident[EI_NIDENT]</a></li><li><a href=#2-e_type aria-label="2. e_type">2. e_type</a></li><li><a href=#3-e_machine aria-label="3. e_machine">3. e_machine</a></li><li><a href=#4-e_version aria-label="4. e_version">4. e_version</a></li><li><a href=#5-e_entry aria-label="5. e_entry">5. e_entry</a></li><li><a href=#6-e_phoff aria-label="6. e_phoff">6. e_phoff</a></li><li><a href=#7-e_shoff aria-label="7. e_shoff">7. e_shoff</a></li><li><a href=#8-e_flags aria-label="8. e_flags">8. e_flags</a></li><li><a href=#9-e_ehsize aria-label="9. e_ehsize">9. e_ehsize</a></li><li><a href=#10-e_phentsize aria-label="10. e_phentsize">10. e_phentsize</a></li><li><a href=#11-e_phnum aria-label="11. e_phnum">11. e_phnum</a></li><li><a href=#12-e_shentsize aria-label="12. e_shentsize">12. e_shentsize</a></li><li><a href=#13-e_shnum aria-label="13. e_shnum">13. e_shnum</a></li><li><a href=#14-e_shstrndx aria-label="14. e_shstrndx">14. e_shstrndx</a></li></ul></li><li><a href=#practicals aria-label=Practicals>Practicals</a><ul><li><a href=#how-to-edit-a-binary-file aria-label="How to edit a binary file?">How to edit a binary file?</a></li><li><a href=#change-the-elf-magic-number aria-label="Change the ELF magic number">Change the ELF magic number</a></li><li><a href=#change-the-executable-class-64-bit---32-bit aria-label="Change the executable class (64 bit -> 32 bit)">Change the executable class (64 bit -> 32 bit)</a></li><li><a href=#more-diy-kind-of aria-label="&mldr;more (DIY, kind of)">&mldr;more (DIY, kind of)</a></li></ul></li><li><a href=#conclusion aria-label=Conclusion>Conclusion</a></li><li><a href=#useful-links aria-label="Useful links">Useful links</a></li></ul></div></details></div><div class=post-content><h2 id=hexdumps>Hexdumps<a hidden class=anchor aria-hidden=true href=#hexdumps>#</a></h2><p>In the fascinating world of computers, we&rsquo;re stuck conversing in binary, a rather dull language of just <em>ones</em> and <em>zeros</em>. But because we <em>mere</em> humans love things to be a tad more exciting and concise, we&rsquo;ve come up with our own nifty number system - &ldquo;<code>hexadecimal</code>&rdquo; or &ldquo;<code>hex</code>&rdquo; for short. This system ditches the binary bore and adds a touch of flair with 16 snazzy symbols. It&rsquo;s got your usual digits from <code>0 to 9</code>, plus those fancy <code>A to F</code> letters to make data a bit more, well, <em>hexadecimal-chic</em>!</p><p>Now, let&rsquo;s take a gander at this binary enigma, a message that only the most extraordinary folks can decipher with ease:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>011010000110010101101100011011000110111100001010
+</span></span></code></pre></div><p>For us ordinary humans, this is a bit like deciphering alien hieroglyphics. So, we follow a procedure to unravel the secrets hidden within.</p><p>Step one involves breaking down the binary data into byte-sized chunks, each containing 8 bits:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>01101000 01100101 01101100 01101100 01101111 00001010
+</span></span></code></pre></div><p>Now, we embark on the magical journey of converting each chunk into its hexadecimal form. The legendary figures of the past might have used pen and paper, but in our tech-savvy era, we turn to tools like <a href="https://cyberchef.org/#recipe=From_Binary('Space',8)To_Hex('Space',0)&amp;input=MDExMDEwMDAgMDExMDAxMDEgMDExMDExMDAgMDExMDExMDAgMDExMDExMTEgMDAwMDEwMTA">CyberChef</a>.</p><p>No matter your chosen method, the results remains the same:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>68 65 6c 6c 6f 0a
+</span></span></code></pre></div><p>The binary code&rsquo;s cryptic riddle got a facelift, and voilà! We now have this friendly hexadecimal version. It&rsquo;s just what the doctor ordered for us humans to have a casual chat with the binary data, no sweat!</p><h2 id=from-code-to-binary>From Code to Binary<a hidden class=anchor aria-hidden=true href=#from-code-to-binary>#</a></h2><p>Lets&rsquo;s go on a journey that turns elegant C code into a mysterious binary blob, a language of ones and zeros that only computers understand. (** <em>coughs compilation</em> **)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/* file: hello_world.c */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=c1>// A macro
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=cp>#define HELLO_MSG1 &#34;Hello World1&#34;
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=c1>// A global variable
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>char</span> <span class=n>HELLO_MSG2</span><span class=p>[]</span> <span class=o>=</span> <span class=s>&#34;Hello World2&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// main function
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// local variable for main
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kt>char</span> <span class=n>HELLO_MSG3</span><span class=p>[]</span> <span class=o>=</span> <span class=s>&#34;Hello World3&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Print messages
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>HELLO_MSG1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>HELLO_MSG2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>HELLO_MSG3</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>After compiling the above C code we get an ELF (Executable and Linkable Format) file. (Compilation command - <code>gcc hello_world.c -o hello_world</code>)</p><p>This generated file, at its core, is nothing more than a delightful binary blob. It&rsquo;s the computer&rsquo;s secret handshake, speaking directly in ones and zeros, no pleasantries. And the icing on the cake is that we <em>mere</em> humans, with our clever programming prowess, can craft tools to translate this binary jargon into friendly hexadecimal, or we can simply cozy up to good ol&rsquo; <code>hexdump</code> and <code>xxd</code> for the job. Whichever suits your fancy, we&rsquo;ve got options!</p><h2 id=elf-header>ELF Header<a hidden class=anchor aria-hidden=true href=#elf-header>#</a></h2><p>Here&rsquo;s a snapshot of the first 64 bytes in the compiled binary file:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># In binary representation
+</span></span><span class=line><span class=cl>❯ xxd -b -l 64 ./hello_world
+</span></span><span class=line><span class=cl>00000000: 01111111 01000101 01001100 01000110 00000010 00000001  .ELF..
+</span></span><span class=line><span class=cl>00000006: 00000001 00000000 00000000 00000000 00000000 00000000  ......
+</span></span><span class=line><span class=cl>0000000c: 00000000 00000000 00000000 00000000 00000011 00000000  ......
+</span></span><span class=line><span class=cl>00000012: 00111110 00000000 00000001 00000000 00000000 00000000  &gt;.....
+</span></span><span class=line><span class=cl>00000018: 01010000 00010000 00000000 00000000 00000000 00000000  P.....
+</span></span><span class=line><span class=cl>0000001e: 00000000 00000000 01000000 00000000 00000000 00000000  ..@...
+</span></span><span class=line><span class=cl>00000024: 00000000 00000000 00000000 00000000 00101000 00110101  ....(5
+</span></span><span class=line><span class=cl>0000002a: 00000000 00000000 00000000 00000000 00000000 00000000  ......
+</span></span><span class=line><span class=cl>00000030: 00000000 00000000 00000000 00000000 01000000 00000000  ....@.
+</span></span><span class=line><span class=cl>00000036: 00111000 00000000 00001101 00000000 01000000 00000000  8...@.
+</span></span><span class=line><span class=cl>0000003c: 00011110 00000000 00011101 00000000                    ....
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># In hex representation
+</span></span><span class=line><span class=cl>❯ xxd -l 64 ./hello_world
+</span></span><span class=line><span class=cl>00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
+</span></span><span class=line><span class=cl>00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
+</span></span><span class=line><span class=cl>00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
+</span></span><span class=line><span class=cl>00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
+</span></span></code></pre></div><p>Now, you may wonder, what on earth does this mean? Well, these intriguing bytes are like puzzle pieces, and depending on the machine type, they map to specific structures in the Linux kernel. Our quest, quite simply, is to unravel this digital enigma and shed light on the code&rsquo;s purpose.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L207
+</span></span></span><span class=line><span class=cl><span class=cm>*/</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#define EI_NIDENT	16
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=n>elf32_hdr</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=kt>char</span>	<span class=n>e_ident</span><span class=p>[</span><span class=n>EI_NIDENT</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_type</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_machine</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Word</span>	<span class=n>e_version</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Addr</span>	<span class=n>e_entry</span><span class=p>;</span>  <span class=cm>/* Entry point */</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Off</span>	    <span class=n>e_phoff</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Off</span>	    <span class=n>e_shoff</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Word</span>	<span class=n>e_flags</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_ehsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_phentsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_phnum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_shentsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_shnum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf32_Half</span>	<span class=n>e_shstrndx</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>Elf32_Ehdr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=n>elf64_hdr</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>unsigned</span> <span class=kt>char</span>	<span class=n>e_ident</span><span class=p>[</span><span class=n>EI_NIDENT</span><span class=p>];</span>	<span class=cm>/* ELF &#34;magic number&#34; */</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_type</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_machine</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Word</span>    <span class=n>e_version</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Addr</span>    <span class=n>e_entry</span><span class=p>;</span>		<span class=cm>/* Entry point virtual address */</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Off</span>     <span class=n>e_phoff</span><span class=p>;</span>		<span class=cm>/* Program header table file offset */</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Off</span>     <span class=n>e_shoff</span><span class=p>;</span>		<span class=cm>/* Section header table file offset */</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Word</span>    <span class=n>e_flags</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_ehsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_phentsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_phnum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_shentsize</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_shnum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>Elf64_Half</span>    <span class=n>e_shstrndx</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>Elf64_Ehdr</span><span class=p>;</span>
+</span></span></code></pre></div><p>Since I&rsquo;m on a 64 bit system, I&rsquo;ll use <code>Elf64_Ehdr</code> to show what each byte in the above data chunk represents.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>❯ xxd -l 64 ./hello_world
+</span></span><span class=line><span class=cl>00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............
+</span></span><span class=line><span class=cl>00000010: 0300 3e00 0100 0000 5010 0000 0000 0000  ..&gt;.....P.......
+</span></span><span class=line><span class=cl>00000020: 4000 0000 0000 0000 2835 0000 0000 0000  @.......(5......
+</span></span><span class=line><span class=cl>00000030: 0000 0000 4000 3800 0d00 4000 1e00 1d00  ....@.8...@.....
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// After mapping the linux ELF struct to the above data
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>e_ident[16] = 7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+</span></span><span class=line><span class=cl>e_type      = 03 00
+</span></span><span class=line><span class=cl>e_machine   = 3e 00
+</span></span><span class=line><span class=cl>e_version   = 01 00 00 00
+</span></span><span class=line><span class=cl>e_entry     = 50 10 00 00 00 00 00 00
+</span></span><span class=line><span class=cl>e_phoff     = 40 00 00 00 00 00 00 00
+</span></span><span class=line><span class=cl>e_shoff     = 28 35 00 00 00 00 00 00
+</span></span><span class=line><span class=cl>e_flags     = 00 00 00 00
+</span></span><span class=line><span class=cl>e_ehsize    = 40 00
+</span></span><span class=line><span class=cl>e_phentsize = 38 00
+</span></span><span class=line><span class=cl>e_phnum     = 0d 00
+</span></span><span class=line><span class=cl>e_shentsize = 40 00
+</span></span><span class=line><span class=cl>e_shnum     = 1e 00
+</span></span><span class=line><span class=cl>e_shstrndx  = 1d 00
+</span></span></code></pre></div><p>Shall we dissect each of these mysterious members in the struct?</p><p><img loading=lazy src=https://media.giphy.com/media/QaNQJZhjd2QrDUBNcg/giphy.gif#center alt></p><h3 id=1-e_identei_nident>1. <strong>e_ident[EI_NIDENT]</strong><a hidden class=anchor aria-hidden=true href=#1-e_identei_nident>#</a></h3><p>The first 16 bytes of the ELF header are collectively referred to as the &ldquo;ident&rdquo; or &ldquo;identification&rdquo; field. It includes a magic number and various identification information. Here is a table that tells more about what all identification information is present in it.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>e_ident[16] = 7f45 4c46 0201 0100 0000 0000 0000 0000
+</span></span><span class=line><span class=cl>    EI_MAG0 = 7f
+</span></span><span class=line><span class=cl>    EI_MAG1 = 45 (E)
+</span></span><span class=line><span class=cl>    EI_MAG2 = 4c (L)
+</span></span><span class=line><span class=cl>    EI_MAG3 = 46 (F)
+</span></span><span class=line><span class=cl>    EI_CLASS = 02
+</span></span><span class=line><span class=cl>    EI_DATA = 01
+</span></span><span class=line><span class=cl>    EI_VERSION = 01
+</span></span><span class=line><span class=cl>    EI_OSABI = 00
+</span></span><span class=line><span class=cl>    EI_ABIVERSION = 00
+</span></span><span class=line><span class=cl>    EI_PAD = 00 0000 0000 0000
+</span></span></code></pre></div><p>Ah, you might wonder, &ldquo;How on earth do I know this?&rdquo; Well, my friend, it&rsquo;s a detective game we play, and our magnifying glass is the kernel source code.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L334
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#define	EI_MAG0		0		/* e_ident[] indexes */
+</span></span><span class=line><span class=cl>#define	EI_MAG1		1
+</span></span><span class=line><span class=cl>#define	EI_MAG2		2
+</span></span><span class=line><span class=cl>#define	EI_MAG3		3
+</span></span><span class=line><span class=cl>#define	EI_CLASS	4       /* 1=32Bit; 2=64Bit */
+</span></span><span class=line><span class=cl>#define	EI_DATA		5       /* Endianness ==&gt; 1=Little; 2=Big */
+</span></span><span class=line><span class=cl>#define	EI_VERSION	6       /* ELF header version */
+</span></span><span class=line><span class=cl>#define	EI_OSABI	7       /* OS ABI ==&gt; 0=None(same as SysV); 3=Linux */
+</span></span><span class=line><span class=cl>#define	EI_PAD		8       /* Starting of padding - currently unused */
+</span></span></code></pre></div><p><strong>==></strong> This information tells me that my ELF binary is a <code>64-Bit</code> (EI_CLASS = 02), <code>Little</code> endian (EI_DATA = 01) binary.</p><h3 id=2-e_type>2. <strong>e_type</strong><a hidden class=anchor aria-hidden=true href=#2-e_type>#</a></h3><p>This member tells what type of ELF file it is.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L69
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#define ET_NONE   0         // No file type
+</span></span><span class=line><span class=cl>#define ET_REL    1
+</span></span><span class=line><span class=cl>#define ET_EXEC   2
+</span></span><span class=line><span class=cl>#define ET_DYN    3
+</span></span><span class=line><span class=cl>#define ET_CORE   4
+</span></span><span class=line><span class=cl>#define ET_LOPROC 0xff00    // Processor-specific
+</span></span><span class=line><span class=cl>#define ET_HIPROC 0xffff    // Processor-specific
+</span></span></code></pre></div><p>Since my binary is little endian, <code>e_type = 03 00</code> should be read as <code>e_type = 00 03</code>. That tells me that I&rsquo;ve a <code>ET_DYN</code> type of file.</p><h3 id=3-e_machine>3. <strong>e_machine</strong><a hidden class=anchor aria-hidden=true href=#3-e_machine>#</a></h3><p>This member tells us about the target architecture for the file. In linux kernel uapi, there is <a href=https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h>a complete header file dedicated for target machines</a>.</p><p>For my binary file, machine type is <code>3e</code> (e_machine = <em>3e 00</em>; Should be read as <em>00 3e</em>).</p><p><em>(Integer representation of <code>3e</code> is <code>62</code>)</em></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>/*
+</span></span><span class=line><span class=cl>https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf-em.h#L31
+</span></span><span class=line><span class=cl>*/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>#define EM_X86_64	62	/* AMD x86-64 */
+</span></span></code></pre></div><h3 id=4-e_version>4. <strong>e_version</strong><a hidden class=anchor aria-hidden=true href=#4-e_version>#</a></h3><p>This member specifies the version of the ELF file. This is different from the <code>EI_VERSION</code> which tells only about the ELF header version.</p><p>For my binary file, version is <code>1</code> (remember, to convert the value to little endian)</p><p>These are the versions defined in linux kernel uapi header</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#define EV_NONE		0		/* e_version, EI_VERSION */
+</span></span><span class=line><span class=cl>#define EV_CURRENT	1
+</span></span><span class=line><span class=cl>#define EV_NUM		2
+</span></span></code></pre></div><h3 id=5-e_entry>5. <strong>e_entry</strong><a hidden class=anchor aria-hidden=true href=#5-e_entry>#</a></h3><p>This member is quite interesting. This tells about the virtual/memory address where program execution begins. This is the starting point of the program.</p><p>You might think, &ldquo;Aha, this must always point to the <code>main()</code> function!&rdquo; Well, here&rsquo;s a plot twist for you!</p><p>For my binary file, the entry point is <code>1050</code> (e_entry = 50 10 00 00 00 00 00 00).</p><p>According to our trusty <code>objdump</code>, this value does not point to the <code>main</code> function but points to the <code>_start</code> function. <em>(..which in turn executes the <code>main</code> function. Here is <a href=https://ayedaemon.github.io/post/2022/01/debugging-c-code/#the-whole-picture>an article</a> that explains this.)</em></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>❯ objdump  -D --disassembler-options=intel hello_world | grep -i &#34;1050&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>0000000000001050 &lt;_start&gt;:
+</span></span></code></pre></div><h3 id=6-e_phoff>6. <strong>e_phoff</strong><a hidden class=anchor aria-hidden=true href=#6-e_phoff>#</a></h3><p>This is the program header offset. The starting point in the ELF file where program headers can be found.</p><h3 id=7-e_shoff>7. <strong>e_shoff</strong><a hidden class=anchor aria-hidden=true href=#7-e_shoff>#</a></h3><p>Just like <code>e_phoff</code>, this member stores the offset of the section headers of the ELF file.</p><h3 id=8-e_flags>8. <strong>e_flags</strong><a hidden class=anchor aria-hidden=true href=#8-e_flags>#</a></h3><p>This member provides processor-specific flags associated with the file.</p><h3 id=9-e_ehsize>9. <strong>e_ehsize</strong><a hidden class=anchor aria-hidden=true href=#9-e_ehsize>#</a></h3><p>This member tells the size of the the ELF header. For my binary, value of this member is <code>40</code> (64 in decimal). Now you take a guess why I started analyzing first 64 bytes of the file.</p><h3 id=10-e_phentsize>10. <strong>e_phentsize</strong><a hidden class=anchor aria-hidden=true href=#10-e_phentsize>#</a></h3><p>This is the size of each entry in program header.</p><h3 id=11-e_phnum>11. <strong>e_phnum</strong><a hidden class=anchor aria-hidden=true href=#11-e_phnum>#</a></h3><p>This is the count of entries in program header</p><h3 id=12-e_shentsize>12. <strong>e_shentsize</strong><a hidden class=anchor aria-hidden=true href=#12-e_shentsize>#</a></h3><p>This is the size of each entry in section header.</p><h3 id=13-e_shnum>13. <strong>e_shnum</strong><a hidden class=anchor aria-hidden=true href=#13-e_shnum>#</a></h3><p>This is the count of entries in section header</p><h3 id=14-e_shstrndx>14. <strong>e_shstrndx</strong><a hidden class=anchor aria-hidden=true href=#14-e_shstrndx>#</a></h3><p>Now, this little guy is what we call the &ldquo;Section string index&rdquo;. This points to the index in section headers which holds all of the strings.</p><p><em>(We&rsquo;ll talk more about section headers and program headers in later articles.)</em></p><h2 id=practicals>Practicals<a hidden class=anchor aria-hidden=true href=#practicals>#</a></h2><h3 id=how-to-edit-a-binary-file>How to edit a binary file?<a hidden class=anchor aria-hidden=true href=#how-to-edit-a-binary-file>#</a></h3><p>If you think it through, you just need a program that can read/write binary data and convert that data to hex for us to view. You can build your own tool to do this or you can use other tools that can already do this.</p><p>I would like to propose my favorite - <code>vim</code> + <code>xxd</code></p><p>Here are the steps to it.</p><ul><li>Open the file in vim in binary mode (use <code>-b</code> flag)</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>vim -b argv_printer
+</span></span></code></pre></div><ul><li>Pass the data to <code>xxd</code> (you can also use the additional flags that xxd supports)<ul><li>Press <code>:</code> to go into commmand mode</li><li>then type <code>%!xxd -c 1</code> to pass the binary data through this command.</li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>:%!xxd -c 1
+</span></span></code></pre></div><ul><li>Edit the hex values you want (just like you would edit any other text file, press <code>i</code> and go on)</li><li>Reverse the hex to binary<ul><li>Go to command mode again by pressing <code>:</code></li><li>then type <code>%!xxd -r</code></li></ul></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>:%!xxd -r
+</span></span></code></pre></div><ul><li>Now save and quit the vim editor<ul><li>If you don&rsquo;t know steps for that consider learning vim first</li><li>or, use another hex editor</li></ul></li></ul><h3 id=change-the-elf-magic-number>Change the ELF magic number<a hidden class=anchor aria-hidden=true href=#change-the-elf-magic-number>#</a></h3><ul><li>Open the file with vim and edit the <code>EI_MAG</code> part.</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># Before
+</span></span><span class=line><span class=cl>  00000000: 7f  .
+</span></span><span class=line><span class=cl>  00000001: 45  E
+</span></span><span class=line><span class=cl>  00000002: 4c  L
+</span></span><span class=line><span class=cl>  00000003: 46  F
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># After
+</span></span><span class=line><span class=cl>  00000000: 7f  .
+</span></span><span class=line><span class=cl>  00000001: 48  E
+</span></span><span class=line><span class=cl>  00000002: 45  L
+</span></span><span class=line><span class=cl>  00000003: 58  F
+</span></span></code></pre></div><p><em>Note that I&rsquo;ve only changed the hex values and not the ascii values for it.</em></p><ul><li>revert the hex to binary data (<code>:%!xxd -r</code>)</li><li>write and quit vim (I&rsquo;m still not telling you the command)</li><li>analyze it</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>❯ ./hello_world
+</span></span><span class=line><span class=cl>zsh: exec format error: ./hello_world
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>❯ readelf --file-header --wide hello_world
+</span></span><span class=line><span class=cl>readelf: Error: Not an ELF file - it has the wrong magic bytes at the start
+</span></span></code></pre></div><p>The reason for this behaviour is written in kernel code.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>https://elixir.bootlin.com/linux/v6.5.7/source/include/uapi/linux/elf.h#L348
+</span></span></span><span class=line><span class=cl><span class=cm>*/</span>
+</span></span><span class=line><span class=cl><span class=cp>#define	ELFMAG		&#34;\177ELF&#34;
+</span></span></span><span class=line><span class=cl><span class=cp>#define	SELFMAG		4
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>https://elixir.bootlin.com/linux/v6.5.7/source/fs/binfmt_elf.c#L848
+</span></span></span><span class=line><span class=cl><span class=cm>*/</span>
+</span></span><span class=line><span class=cl><span class=n>retval</span> <span class=o>=</span> <span class=o>-</span><span class=n>ENOEXEC</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=nf>memcmp</span><span class=p>(</span><span class=n>elf_ex</span><span class=o>-&gt;</span><span class=n>e_ident</span><span class=p>,</span> <span class=n>ELFMAG</span><span class=p>,</span> <span class=n>SELFMAG</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>goto</span> <span class=n>out</span><span class=p>;</span>
+</span></span></code></pre></div><h3 id=change-the-executable-class-64-bit---32-bit>Change the executable class (64 bit -> 32 bit)<a hidden class=anchor aria-hidden=true href=#change-the-executable-class-64-bit---32-bit>#</a></h3><ul><li>Open the file with vim and edit the <code>EI_CLASS</code> part.</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># Before
+</span></span><span class=line><span class=cl>  00000004: 02  .
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># After
+</span></span><span class=line><span class=cl>  00000004: 01  .
+</span></span></code></pre></div><ul><li>revert the hex to binary data (<code>:%!xxd -r</code>)</li><li>write and quit vim (I&rsquo;m still not telling you the command)</li><li>analyze it</li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># Runs perfectly fine
+</span></span><span class=line><span class=cl>❯ ./hello_world
+</span></span><span class=line><span class=cl>Hello World1
+</span></span><span class=line><span class=cl>Hello World2
+</span></span><span class=line><span class=cl>Hello World3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># file command tells another tale
+</span></span><span class=line><span class=cl>❯ file hello_world
+</span></span><span class=line><span class=cl>hello_world: ELF 32-bit LSB pie executable, x86-64, version 1 (SYSV), no program header, no section header
+</span></span></code></pre></div><p>This is clearly a parsing problem. There are no checks on the kernel for the <code>EI_CLASS</code> (or I should say I could not find any, if you find one, please let me know.)</p><h3 id=more-diy-kind-of>&mldr;more (DIY, kind of)<a hidden class=anchor aria-hidden=true href=#more-diy-kind-of>#</a></h3><p>There are few more interesting things you can play around with</p><ul><li><code>EI_OSABI</code></li><li><code>e_machine</code></li><li><code>e_entry</code></li></ul><h2 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h2><p>ELF headers emerge as the silent orchestrators of the executable files&mldr; The backstage bosses of the show. In this article, we cracked open their secrets (with not-so-real-world tricks) and diving into their nitty-gritty using hexdumps. Think of this as the cool architect of the software world, shaping how things work under the hood.</p><p>Mastering these headers is like getting a backstage pass to rock the binary world - tweaking, fixing, and making stuff dance to your tune. So next time you run an executable on *unix machines, remember, ELF header are the groove makers behind the scenes!</p><hr><h2 id=useful-links>Useful links<a hidden class=anchor aria-hidden=true href=#useful-links>#</a></h2><ol><li>(ELF Specification 1.1) <a href=https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf>https://flint.cs.yale.edu/cs422/doc/ELF_Format.pdf</a></li></ol></div><footer class=post-footer><ul class=post-tags><li><a href=https://ayedaemon.github.io/tags/c/>C</a></li><li><a href=https://ayedaemon.github.io/tags/elf/>ELF</a></li><li><a href=https://ayedaemon.github.io/tags/re/>RE</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2024 <a href=https://ayedaemon.github.io/>Connected</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

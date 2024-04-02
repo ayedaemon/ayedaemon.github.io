@@ -6,7 +6,7 @@
     <description>Recent content in mbr on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Sep 2022 01:10:18 +0530</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2024 17:19:43 +0530</lastBuildDate>
     <atom:link href="https://ayedaemon.github.io/tags/mbr/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Fun with Master Boot Record</title>
@@ -64,8 +64,8 @@
 <p><img loading="lazy" src="https://qph.fs.quoracdn.net/main-qimg-0763e88136c511a9f93c49ce3e84360f#center" alt="source: quora"  />
 </p>
 <p>The first 512 bytes (or first sector) of a hard drive is where the MBR is located. And since everything in Linux is a &ldquo;file&rdquo;, if we want to extract MBR data, all we have to do is to read the first 512 bytes of our bootable hard disk file and then write that content to another local file for further analysis. In most of the linux platforms, we can do this by <a href="https://www.man7.org/linux/man-pages/man1/dd.1.html"><code>dd</code></a> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> command.</p>
-<pre tabindex="0"><code>dd if=/dev/sda of=mbr.sample bs=512 count=1
-</code></pre><p>The above command will read a 512-byte block (once) from <code>/dev/sda</code> and save it in the <code>mbr.sample</code> file. Then we can the check the type of this file using <code>file</code> command.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">dd if=/dev/sda of=mbr.sample bs=512 count=1
+</span></span></code></pre></div><p>The above command will read a 512-byte block (once) from <code>/dev/sda</code> and save it in the <code>mbr.sample</code> file. Then we can the check the type of this file using <code>file</code> command.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">file mbr.sample
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">## Output</span>
@@ -261,19 +261,19 @@ The bootloader is simply a software that reads and loads other applications from
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">times</span> <span class="mi">510</span><span class="p">-(</span><span class="no">$-$$</span><span class="p">)</span> <span class="no">db</span> <span class="mi">0</span>       <span class="c1">;$ - Start addr; $$ - current addr
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nf">dw</span> <span class="mi">0xAA55</span>
 </span></span></code></pre></div><p>We can calculate the exact number of zeros required for padding using these special characters. Let&rsquo;s compile it and put it to the test.</p>
-<pre tabindex="0"><code>nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
-
-qemu-system-x86_64 custom_bootloader.bin
-</code></pre><p>This produces the same results as before, and the output file size remains 512 bytes. Let&rsquo;s add some more instructions to help us write some text on the screen.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">nasm</span> <span class="o">-</span><span class="n">fbin</span> <span class="n">custom_bootloader</span><span class="o">.</span><span class="n">asm</span> <span class="o">-</span><span class="n">o</span> <span class="n">custom_bootloader</span><span class="o">.</span><span class="n">bin</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">qemu</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">x86_64</span> <span class="n">custom_bootloader</span><span class="o">.</span><span class="n">bin</span>
+</span></span></code></pre></div><p>This produces the same results as before, and the output file size remains 512 bytes. Let&rsquo;s add some more instructions to help us write some text on the screen.</p>
 <p>Unlike userspace and kernelspace programs, we do not have any helper functions that can take a string and automatically print it to the screen. We&rsquo;ll have to tell the BIOS to do what we want here. And the only way I&rsquo;m aware of is through <strong>interrupts</strong>. It is the same facility that operating systems and application programmes use to access BIOS functions.</p>
 <p><a href="https://en.wikipedia.org/wiki/BIOS_interrupt_call#Interrupt_table">Here</a> is a list of common BIOS interrupts. Not all BIOS (especially older ones) support all of these interrupts. The basic idea of using interrupts is we place proper values in some specific registers, and then trigger the interrupt. The interrupt routine will then fetch the values from those registers and based on that, it&rsquo;ll perform some action.</p>
 <p>Anyway, using the above table, I determined that we needed to use interrupt vector <code>10h</code> (or 0x10) with interrupt vector <code>03h</code> (or 0x03) in <code>AH</code> register. Consider it as invoking the 10h function with the parameter value 03h. This returns the cursor&rsquo;s current position and shape.</p>
-<pre tabindex="0"><code>mov ah, 0x03;
-int 10h
-
-times 510-($-$$) db 0
-dw 0xAA55
-</code></pre><p>We can see that some initial bytes are written to the binary file after compiling and inspecting the hexdump&hellip;. And, thanks to <code>$</code> and <code>$$</code>, the file size remains 512 bytes.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mov ah, 0x03;
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>We can see that some initial bytes are written to the binary file after compiling and inspecting the hexdump&hellip;. And, thanks to <code>$</code> and <code>$$</code>, the file size remains 512 bytes.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Compiling the binary</span>
 </span></span><span class="line"><span class="cl">nasm -fbin custom_bootloader.asm -o custom_bootloader.bin
 </span></span><span class="line"><span class="cl">
@@ -287,77 +287,77 @@ dw 0xAA55
 </span></span><span class="line"><span class="cl"><span class="c1"># 000001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  |..............U.|</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># 00000200</span>
 </span></span></code></pre></div><p>This switches the BIOS to TTY mode, allowing me to print characters using the same interrupt <code>10h</code> but with a different value in the <code>ah</code> register.</p>
-<pre tabindex="0"><code>mov ah, 0x03
-int 10h
-
-mov ah, 0xE
-mov al, &#39;H&#39;
-int 0x10
-
-mov al, &#39;E&#39;
-int 0x10
-
-mov al, &#39;Y&#39;
-int 0x10
-
-times 510-($-$$) db 0
-dw 0xAA55
-</code></pre><p>When we compile and run this with qemu, we get the message &ldquo;HEY&rdquo; printed on the screen.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mov ah, 0x03
+</span></span><span class="line"><span class="cl">int 10h
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov ah, 0xE
+</span></span><span class="line"><span class="cl">mov al, &#39;H&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov al, &#39;E&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mov al, &#39;Y&#39;
+</span></span><span class="line"><span class="cl">int 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">times 510-($-$$) db 0
+</span></span><span class="line"><span class="cl">dw 0xAA55
+</span></span></code></pre></div><p>When we compile and run this with qemu, we get the message &ldquo;HEY&rdquo; printed on the screen.</p>
 <p><img loading="lazy" src="https://i.imgur.com/9YAcZ03.png#center" alt=""  />
 </p>
 <p>Now that we know how to write characters on the screen, let&rsquo;s make a string and loop through it until the end, printing each character on the screen one by one using the same interrupt combination.</p>
-<pre tabindex="0"><code>; Setup TTY mode
-mov ax, 0x03
-int 10h
-
-
-mov si, msg      ; si register now points to msg
-mov ah, 0Eh      ; Use write function from 10h interrupt
-
-.loop:
-    lodsb          ; load first char from msg and point to next char
-    or al, al      ; Check if end of string
-    jz halt        ; if end of string, jump to halt
-    int 10h        ; else, print char via interrupt
-    jmp .loop      ; loop
-
-halt:
-
-msg: db &#34;Hack the world&#34;, 0
-
-times 510-($-$$) db 0
-dw 0xAA55
-</code></pre><p>Unfortunately, testing the above code does not produce the desired results, but instead produces some garbage values.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">;</span> <span class="n">Setup</span> <span class="n">TTY</span> <span class="n">mode</span>
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">ax</span><span class="p">,</span> <span class="mh">0x03</span>
+</span></span><span class="line"><span class="cl"><span class="ne">int</span> <span class="mi">10</span><span class="n">h</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">si</span><span class="p">,</span> <span class="n">msg</span>      <span class="p">;</span> <span class="n">si</span> <span class="n">register</span> <span class="n">now</span> <span class="n">points</span> <span class="n">to</span> <span class="n">msg</span>
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">ah</span><span class="p">,</span> <span class="mi">0</span><span class="n">Eh</span>      <span class="p">;</span> <span class="n">Use</span> <span class="n">write</span> <span class="n">function</span> <span class="n">from</span> <span class="mi">10</span><span class="n">h</span> <span class="n">interrupt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">loop</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lodsb</span>          <span class="p">;</span> <span class="nb">load</span> <span class="n">first</span> <span class="n">char</span> <span class="n">from</span> <span class="n">msg</span> <span class="ow">and</span> <span class="n">point</span> <span class="n">to</span> <span class="n">next</span> <span class="n">char</span>
+</span></span><span class="line"><span class="cl">    <span class="ow">or</span> <span class="n">al</span><span class="p">,</span> <span class="n">al</span>      <span class="p">;</span> <span class="n">Check</span> <span class="k">if</span> <span class="n">end</span> <span class="n">of</span> <span class="n">string</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jz</span> <span class="n">halt</span>        <span class="p">;</span> <span class="k">if</span> <span class="n">end</span> <span class="n">of</span> <span class="n">string</span><span class="p">,</span> <span class="n">jump</span> <span class="n">to</span> <span class="n">halt</span>
+</span></span><span class="line"><span class="cl">    <span class="ne">int</span> <span class="mi">10</span><span class="n">h</span>        <span class="p">;</span> <span class="k">else</span><span class="p">,</span> <span class="nb">print</span> <span class="n">char</span> <span class="n">via</span> <span class="n">interrupt</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jmp</span> <span class="o">.</span><span class="n">loop</span>      <span class="p">;</span> <span class="n">loop</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">halt</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">msg</span><span class="p">:</span> <span class="n">db</span> <span class="s2">&#34;Hack the world&#34;</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">times</span> <span class="mi">510</span><span class="o">-</span><span class="p">(</span><span class="o">$-$$</span><span class="p">)</span> <span class="n">db</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">dw</span> <span class="mh">0xAA55</span>
+</span></span></code></pre></div><p>Unfortunately, testing the above code does not produce the desired results, but instead produces some garbage values.</p>
 <p><img loading="lazy" src="https://i.imgur.com/LUbZu5D.png#center" alt=""  />
 </p>
 <p>Further investigation revealed that our bootloader in memory is not properly aligned. This led me down another rabbit hole, this time about how the contents of the computer&rsquo;s physical memory look when the BIOS jumps to my bootloader code. Here is a <a href="https://wiki.osdev.org/Memory_Map_(x86)">dedicated page</a> on the same topic here which covers a lot of details about it.</p>
 <p>For us, we need to add a few more instructions to our code to properly align it. Finally, our code will look like this.</p>
-<pre tabindex="0"><code>bits 16      ; BIOS works in 16 bit mode
-org 0x7c00   ; MBR is loaded at 0x7c00 memory location
-
-mov ax, 0x03
-int 10h
-
-
-mov si, msg
-mov ah, 0Eh
-
-.loop:
-    lodsb
-    or al, al
-    jz halt
-    int 10h
-    jmp .loop
-
-halt:
-cli     ; disable further interrupts
-hlt     ; halt
-
-msg: db &#34;Hack the world!!&#34;, 0
-
-times 510-($-$$) db 0
-dw 0xAA55
-</code></pre><p>This time we get the desired result after compiling and testing the above.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">bits</span> <span class="mi">16</span>      <span class="p">;</span> <span class="n">BIOS</span> <span class="n">works</span> <span class="ow">in</span> <span class="mi">16</span> <span class="n">bit</span> <span class="n">mode</span>
+</span></span><span class="line"><span class="cl"><span class="n">org</span> <span class="mh">0x7c00</span>   <span class="p">;</span> <span class="n">MBR</span> <span class="n">is</span> <span class="n">loaded</span> <span class="n">at</span> <span class="mh">0x7c00</span> <span class="n">memory</span> <span class="n">location</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">ax</span><span class="p">,</span> <span class="mh">0x03</span>
+</span></span><span class="line"><span class="cl"><span class="ne">int</span> <span class="mi">10</span><span class="n">h</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">si</span><span class="p">,</span> <span class="n">msg</span>
+</span></span><span class="line"><span class="cl"><span class="n">mov</span> <span class="n">ah</span><span class="p">,</span> <span class="mi">0</span><span class="n">Eh</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">loop</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lodsb</span>
+</span></span><span class="line"><span class="cl">    <span class="ow">or</span> <span class="n">al</span><span class="p">,</span> <span class="n">al</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jz</span> <span class="n">halt</span>
+</span></span><span class="line"><span class="cl">    <span class="ne">int</span> <span class="mi">10</span><span class="n">h</span>
+</span></span><span class="line"><span class="cl">    <span class="n">jmp</span> <span class="o">.</span><span class="n">loop</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">halt</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">cli</span>     <span class="p">;</span> <span class="n">disable</span> <span class="n">further</span> <span class="n">interrupts</span>
+</span></span><span class="line"><span class="cl"><span class="n">hlt</span>     <span class="p">;</span> <span class="n">halt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">msg</span><span class="p">:</span> <span class="n">db</span> <span class="s2">&#34;Hack the world!!&#34;</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">times</span> <span class="mi">510</span><span class="o">-</span><span class="p">(</span><span class="o">$-$$</span><span class="p">)</span> <span class="n">db</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">dw</span> <span class="mh">0xAA55</span>
+</span></span></code></pre></div><p>This time we get the desired result after compiling and testing the above.
 <img loading="lazy" src="https://i.imgur.com/6eV40TA.png#center" alt=""  />
 </p>
 <p>We successfully created a bootloader that prints some message on the screen.</p>

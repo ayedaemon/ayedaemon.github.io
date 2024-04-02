@@ -6,7 +6,7 @@
     <description>Recent content in RE:C on Connected</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 01 May 2023 02:34:50 +0530</lastBuildDate>
+    <lastBuildDate>Tue, 02 Apr 2024 17:19:43 +0530</lastBuildDate>
     <atom:link href="https://ayedaemon.github.io/series/rec/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Intro to RE: C : part-4</title>
@@ -17,32 +17,32 @@
       <content:encoded><![CDATA[<p>When an operating system (OS) runs a program, the program is first loaded into main memory. Memory is utilized for both program&rsquo;s machine instructions and program&rsquo;s data&hellip;this includes parameters, dynamic variables, (un)initialized variables, and so on.</p>
 <p>Most computers today use paged memory allocations, which allow the amount of memory assigned to a program to increase/decrease as the needs of the application change. Memory is allocated to the program and reclaimed by the operating system in fixed-size chunks known as <code>pages</code>. When a program is loaded into a paged-memory computer, the operating system initially allocates a small number of pages to the program and then allocates additional memory as needed.</p>
 <p>On a linux machine you can check the memory layout of a running program using <code>cat /proc/&lt;proc_id&gt;/map</code>.</p>
-<pre tabindex="0"><code>&gt; cat /proc/self/maps
-
-55f5db535000-55f5db537000 r--p 00000000 08:02 917947                     /usr/bin/cat
-55f5db537000-55f5db53b000 r-xp 00002000 08:02 917947                     /usr/bin/cat
-55f5db53b000-55f5db53d000 r--p 00006000 08:02 917947                     /usr/bin/cat
-55f5db53d000-55f5db53e000 r--p 00007000 08:02 917947                     /usr/bin/cat
-55f5db53e000-55f5db53f000 rw-p 00008000 08:02 917947                     /usr/bin/cat
-55f5dd440000-55f5dd461000 rw-p 00000000 00:00 0                          [heap]
-7f0db2800000-7f0db2aea000 r--p 00000000 08:02 929341                     /usr/lib/locale/locale-archive
-7f0db2ba4000-7f0db2bc9000 rw-p 00000000 00:00 0
-7f0db2bc9000-7f0db2beb000 r--p 00000000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2beb000-7f0db2d45000 r-xp 00022000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2d45000-7f0db2d9d000 r--p 0017c000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2d9d000-7f0db2da1000 r--p 001d4000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2da1000-7f0db2da3000 rw-p 001d8000 08:02 923932                     /usr/lib/libc.so.6
-7f0db2da3000-7f0db2db2000 rw-p 00000000 00:00 0
-7f0db2dd0000-7f0db2dd1000 r--p 00000000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
-7f0db2dd1000-7f0db2df7000 r-xp 00001000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
-7f0db2df7000-7f0db2e01000 r--p 00027000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
-7f0db2e01000-7f0db2e03000 r--p 00031000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
-7f0db2e03000-7f0db2e05000 rw-p 00033000 08:02 923793                     /usr/lib/ld-linux-x86-64.so.2
-7ffd55089000-7ffd550aa000 rw-p 00000000 00:00 0                          [stack]
-7ffd550f6000-7ffd550fa000 r--p 00000000 00:00 0                          [vvar]
-7ffd550fa000-7ffd550fc000 r-xp 00000000 00:00 0                          [vdso]
-ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre><p>When you read the contents of <code>/proc/self/map</code>, you will encounter multiple lines, with each line representing a separate memory mapping region. Each line contains various fields separated by whitespace, representing different attributes of the memory mapping. The common fields include:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">&gt;</span> <span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="bp">self</span><span class="o">/</span><span class="n">maps</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5db535000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5db537000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">917947</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">cat</span>
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5db537000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5db53b000</span> <span class="n">r</span><span class="o">-</span><span class="n">xp</span> <span class="mi">00002000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">917947</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">cat</span>
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5db53b000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5db53d000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00006000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">917947</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">cat</span>
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5db53d000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5db53e000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00007000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">917947</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">cat</span>
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5db53e000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5db53f000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00008000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">917947</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">cat</span>
+</span></span><span class="line"><span class="cl"><span class="mi">55</span><span class="n">f5dd440000</span><span class="o">-</span><span class="mi">55</span><span class="n">f5dd461000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>                          <span class="p">[</span><span class="n">heap</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2800000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2aea000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">929341</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">locale</span><span class="o">/</span><span class="n">locale</span><span class="o">-</span><span class="n">archive</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2ba4000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2bc9000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2bc9000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2beb000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923932</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2beb000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2d45000</span> <span class="n">r</span><span class="o">-</span><span class="n">xp</span> <span class="mi">00022000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923932</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2d45000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2d9d000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">0017</span><span class="n">c000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923932</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2d9d000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2da1000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">001</span><span class="n">d4000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923932</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2da1000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2da3000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">001</span><span class="n">d8000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923932</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mi">6</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2da3000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2db2000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2dd0000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2dd1000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923793</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2dd1000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2df7000</span> <span class="n">r</span><span class="o">-</span><span class="n">xp</span> <span class="mi">00001000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923793</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2df7000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2e01000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00027000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923793</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2e01000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2e03000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00031000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923793</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">f0db2e03000</span><span class="o">-</span><span class="mi">7</span><span class="n">f0db2e05000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00033000</span> <span class="mi">08</span><span class="p">:</span><span class="mi">02</span> <span class="mi">923793</span>                     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">ld</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mf">64.</span><span class="n">so</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">ffd55089000</span><span class="o">-</span><span class="mi">7</span><span class="n">ffd550aa000</span> <span class="n">rw</span><span class="o">-</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>                          <span class="p">[</span><span class="n">stack</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">ffd550f6000</span><span class="o">-</span><span class="mi">7</span><span class="n">ffd550fa000</span> <span class="n">r</span><span class="o">--</span><span class="n">p</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>                          <span class="p">[</span><span class="n">vvar</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">7</span><span class="n">ffd550fa000</span><span class="o">-</span><span class="mi">7</span><span class="n">ffd550fc000</span> <span class="n">r</span><span class="o">-</span><span class="n">xp</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>                          <span class="p">[</span><span class="n">vdso</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">ffffffffff600000</span><span class="o">-</span><span class="n">ffffffffff601000</span> <span class="o">--</span><span class="n">xp</span> <span class="mi">00000000</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="mi">0</span>                  <span class="p">[</span><span class="n">vsyscall</span><span class="p">]</span>
+</span></span></code></pre></div><p>When you read the contents of <code>/proc/self/map</code>, you will encounter multiple lines, with each line representing a separate memory mapping region. Each line contains various fields separated by whitespace, representing different attributes of the memory mapping. The common fields include:</p>
 <ul>
 <li><strong>Start and End Addresses</strong>: The starting and ending virtual addresses of the memory mapping region.</li>
 <li><strong>Permissions</strong>: The permissions assigned to the memory mapping, such as read, write, and execute.</li>
@@ -116,10 +116,10 @@ ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsysca
 <li>Compare both values and print appropriate message.</li>
 </ol>
 <p>That&rsquo;s it. Quite straightforward, isn&rsquo;t it?. Let&rsquo;s see the output of this program before jumping to conclusions.</p>
-<pre tabindex="0"><code>var1 (0x7ffeaf266d1c) = 55
-var2 (0x7ffeaf266d1c) = 55
-Both values are equal
-</code></pre><p><img loading="lazy" src="https://media.giphy.com/media/edGzBC6GDOhutW32ps/giphy.gif#center" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">var1</span> <span class="p">(</span><span class="mh">0x7ffeaf266d1c</span><span class="p">)</span> <span class="o">=</span> <span class="mi">55</span>
+</span></span><span class="line"><span class="cl"><span class="n">var2</span> <span class="p">(</span><span class="mh">0x7ffeaf266d1c</span><span class="p">)</span> <span class="o">=</span> <span class="mi">55</span>
+</span></span><span class="line"><span class="cl"><span class="n">Both</span> <span class="n">values</span> <span class="n">are</span> <span class="n">equal</span>
+</span></span></code></pre></div><p><img loading="lazy" src="https://media.giphy.com/media/edGzBC6GDOhutW32ps/giphy.gif#center" alt=""  />
 </p>
 <p>Both <code>var1</code> and <code>var2</code> have same values and infact have same memory addresses&hellip; even though they belong to different functions and have separate stack frame and everything.</p>
 <p>To understand this we&rsquo;ll have to go deeper with a debugger (I&rsquo;m using GDB).</p>
@@ -282,91 +282,91 @@ Both values are equal
 </span></span><span class="line"><span class="cl">0x7fffffffe250:	0x0000000000000000	0x00007fffffffe338
 </span></span></code></pre></div><p>Now our stack has a new item in it, that is <code>rbp</code> value. If you notice, previously the top of the stack was at <code>0x7fffffffe218</code>, but after adding one item the top of stack is <code>0x7fffffffe210</code>. It decreased, which indicates that stack grows downwards; towards lower memory addresses.</p>
 <p>The stack does not change up until the breakpoint 2 on <code>0x5555555551aa &lt;main+4&gt;:	    sub    rsp,0x10</code>&hellip; But on stepping another instruction, we can see a new space of <strong>16 bytes</strong> in the stack.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
-0x7fffffffe240:	0x00007fffffffe328	0x8f2aa2d53bd1951c
-</code></pre><p>Before this, the stack pointer was on <code>0x7fffffffe210</code>, now the stack pointer is on <code>0x7fffffffe200</code>&hellip; so <code>0x7fffffffe210 - 0x7fffffffe200 = 0x10 (16)</code>. Simple maths!!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span><span class="line"><span class="cl">0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
+</span></span><span class="line"><span class="cl">0x7fffffffe240:	0x00007fffffffe328	0x8f2aa2d53bd1951c
+</span></span></code></pre></div><p>Before this, the stack pointer was on <code>0x7fffffffe210</code>, now the stack pointer is on <code>0x7fffffffe200</code>&hellip; so <code>0x7fffffffe210 - 0x7fffffffe200 = 0x10 (16)</code>. Simple maths!!</p>
 <p>We just moved the stack pointer down to create space required, no cleaning was done&hellip; hence the stack is already filled with some garbage value that resided in the memory long before the stack occupied this new memory region.</p>
 <p>Now let&rsquo;s call the function <code>func1</code> and see what that function call will add to the stack.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1f8:	0x00005555555551b8	0x0000000000000000
-0x7fffffffe208:	0x00007ffff7ffdab0	0x0000000000000001
-0x7fffffffe218:	0x00007ffff7de0790	0x00007fffffffe310
-0x7fffffffe228:	0x00005555555551a6	0x0000000155554040
-0x7fffffffe238:	0x00007fffffffe328	0x00007fffffffe328
-</code></pre><p>Just after making the function call and before executing the first instruction of the <code>func1</code>, we have a new value in the stack. This new value is the return address for the main function, which will be used to continue execution after the func1 call is finished.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/i 0x00005555555551b8
-   0x5555555551b8 &lt;main+18&gt;:	mov    DWORD PTR [rbp-0x4],eax
-</code></pre><p>(Note: if this value is somehow overwritten, we can make our function to return to another function or instruction. This is something which comes under a technique called Return Oriented Programming aka ROP.)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1f8:	0x00005555555551b8	0x0000000000000000
+</span></span><span class="line"><span class="cl">0x7fffffffe208:	0x00007ffff7ffdab0	0x0000000000000001
+</span></span><span class="line"><span class="cl">0x7fffffffe218:	0x00007ffff7de0790	0x00007fffffffe310
+</span></span><span class="line"><span class="cl">0x7fffffffe228:	0x00005555555551a6	0x0000000155554040
+</span></span><span class="line"><span class="cl">0x7fffffffe238:	0x00007fffffffe328	0x00007fffffffe328
+</span></span></code></pre></div><p>Just after making the function call and before executing the first instruction of the <code>func1</code>, we have a new value in the stack. This new value is the return address for the main function, which will be used to continue execution after the func1 call is finished.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/i 0x00005555555551b8
+</span></span><span class="line"><span class="cl">   0x5555555551b8 &lt;main+18&gt;:	mov    DWORD PTR [rbp-0x4],eax
+</span></span></code></pre></div><p>(Note: if this value is somehow overwritten, we can make our function to return to another function or instruction. This is something which comes under a technique called Return Oriented Programming aka ROP.)</p>
 <p>After the first instruction of the <code>func1</code> function, that is pushing the <code>rbp</code> on the stack, we can see an updated stack.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551b8
-0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
-</code></pre><p>This points to the place where the <code>main</code> function&rsquo;s <code>base pointer</code> is. Think this as a chain like connection which links to the next stop.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551b8
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span><span class="line"><span class="cl">0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
+</span></span></code></pre></div><p>This points to the place where the <code>main</code> function&rsquo;s <code>base pointer</code> is. Think this as a chain like connection which links to the next stop.</p>
 <p>Now after creating some space in this new stack frame for <code>var1</code>&hellip;. Stack looks like this. (<em>Notice that the stack keeps on growing down, towards low memory regions.</em>)</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1e0:	0x0000000000000000	0x0000000000000000
-0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551b8
-0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-</code></pre><p>The <code>leave</code> instruction does a lot of the work. It copies the <code>rbp</code> to <code>rsp</code> and then restores the old <code>rbp</code> from the stack again.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1e0:	0x0000000000000000	0x0000000000000000
+</span></span><span class="line"><span class="cl">0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551b8
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span></code></pre></div><p>The <code>leave</code> instruction does a lot of the work. It copies the <code>rbp</code> to <code>rsp</code> and then restores the old <code>rbp</code> from the stack again.</p>
 <p>This will move the base pointer back to <code>0x00007fffffffe210</code> and the stack pointer to <code>0x00007fffffffe1f8</code>.</p>
 <p>This instruction basically releases a stack frame set up by a function. That means now our new stack will look something like this.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1f8:	0x00005555555551b8	0x0000000000000000
-0x7fffffffe208:	0x00007ffff7ffdab0	0x0000000000000001
-0x7fffffffe218:	0x00007ffff7de0790	0x00007fffffffe310
-0x7fffffffe228:	0x00005555555551a6	0x0000000155554040
-0x7fffffffe238:	0x00007fffffffe328	0x00007fffffffe328
-</code></pre><p>The next <code>ret</code> statement will take off the top of the value from stack and move the instruction control to that memory location&hellip; that is, set the <code>rip</code> value to that memory location. This means that the next instruction to be executed will be &lt;main+18&gt; which stores the <code>eax</code> (return value from the previous function call) into <code>[rbp-0x4]</code> location on stack.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/i 0x00005555555551b8
-=&gt; 0x5555555551b8 &lt;main+18&gt;:	mov    DWORD PTR [rbp-0x4],eax
-</code></pre><p>So when <code>func1</code> returns back, our stack looks something like this.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
-0x7fffffffe240:	0x00007fffffffe328	0x42033bae0bc1441d
-</code></pre><p>Now for the next function <code>func2</code>, our stack is like this, just before the <code>sub    rsp,0x10</code> instruction. This instruction will create enough memory for the variables to be.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551c5
-0x7fffffffe200:	0x0000000000000000	0x00000037f7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
-</code></pre><p>Once the space in stack memory is created, the stack looks like this</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe1e0:	0x0000000000000000	0x0000003700000000
-0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551c5
-0x7fffffffe200:	0x0000000000000000	0x00000037f7ffdab0
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-</code></pre><p>If you notice, these are the same memory locations which were used by <code>func1</code> to store <code>0x37</code> (<code>mov    DWORD PTR [rbp-0x4],0x37</code>)&hellip;. and since the stack is not cleaned properly, the value from that function is still in the place it was left to be picked by our variable <code>var2</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1f8:	0x00005555555551b8	0x0000000000000000
+</span></span><span class="line"><span class="cl">0x7fffffffe208:	0x00007ffff7ffdab0	0x0000000000000001
+</span></span><span class="line"><span class="cl">0x7fffffffe218:	0x00007ffff7de0790	0x00007fffffffe310
+</span></span><span class="line"><span class="cl">0x7fffffffe228:	0x00005555555551a6	0x0000000155554040
+</span></span><span class="line"><span class="cl">0x7fffffffe238:	0x00007fffffffe328	0x00007fffffffe328
+</span></span></code></pre></div><p>The next <code>ret</code> statement will take off the top of the value from stack and move the instruction control to that memory location&hellip; that is, set the <code>rip</code> value to that memory location. This means that the next instruction to be executed will be &lt;main+18&gt; which stores the <code>eax</code> (return value from the previous function call) into <code>[rbp-0x4]</code> location on stack.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/i 0x00005555555551b8
+</span></span><span class="line"><span class="cl">=&gt; 0x5555555551b8 &lt;main+18&gt;:	mov    DWORD PTR [rbp-0x4],eax
+</span></span></code></pre></div><p>So when <code>func1</code> returns back, our stack looks something like this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00007ffff7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span><span class="line"><span class="cl">0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
+</span></span><span class="line"><span class="cl">0x7fffffffe240:	0x00007fffffffe328	0x42033bae0bc1441d
+</span></span></code></pre></div><p>Now for the next function <code>func2</code>, our stack is like this, just before the <code>sub    rsp,0x10</code> instruction. This instruction will create enough memory for the variables to be.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551c5
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00000037f7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span><span class="line"><span class="cl">0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
+</span></span></code></pre></div><p>Once the space in stack memory is created, the stack looks like this</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe1e0:	0x0000000000000000	0x0000003700000000
+</span></span><span class="line"><span class="cl">0x7fffffffe1f0:	0x00007fffffffe210	0x00005555555551c5
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x00000037f7ffdab0
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span></code></pre></div><p>If you notice, these are the same memory locations which were used by <code>func1</code> to store <code>0x37</code> (<code>mov    DWORD PTR [rbp-0x4],0x37</code>)&hellip;. and since the stack is not cleaned properly, the value from that function is still in the place it was left to be picked by our variable <code>var2</code>.</p>
 <p>This can be checked with <code>x/w ($rbp-0x4)</code></p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/w ($rbp-0x4)
-0x7fffffffe1ec:	0x00000037
-</code></pre><p>So the value is just as it was left by <code>func1</code>&hellip; :|</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/w ($rbp-0x4)
+</span></span><span class="line"><span class="cl">0x7fffffffe1ec:	0x00000037
+</span></span></code></pre></div><p>So the value is just as it was left by <code>func1</code>&hellip; :|</p>
 <p>Now after returning back to <code>main</code> function, the stack looks like this.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/10xg $rsp
-0x7fffffffe200:	0x0000000000000000	0x0000003700000037
-0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
-0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
-0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
-0x7fffffffe240:	0x00007fffffffe328	0x42033bae0bc1441d
-</code></pre><p>And both <code>v1</code> and <code>v2</code>, are same values and were picked from the same memory locations when in their respective function frames.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; x/w $rbp-0x4
-0x7fffffffe20c:	0x00000037
-&gt;&gt;&gt; x/w $rbp-0x8
-0x7fffffffe208:	0x00000037
-</code></pre><p><img loading="lazy" src="https://media.giphy.com/media/3ohzdNuQy40h2dUCGI/giphy.gif#center" alt=""  />
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/10xg $rsp
+</span></span><span class="line"><span class="cl">0x7fffffffe200:	0x0000000000000000	0x0000003700000037
+</span></span><span class="line"><span class="cl">0x7fffffffe210:	0x0000000000000001	0x00007ffff7de0790
+</span></span><span class="line"><span class="cl">0x7fffffffe220:	0x00007fffffffe310	0x00005555555551a6
+</span></span><span class="line"><span class="cl">0x7fffffffe230:	0x0000000155554040	0x00007fffffffe328
+</span></span><span class="line"><span class="cl">0x7fffffffe240:	0x00007fffffffe328	0x42033bae0bc1441d
+</span></span></code></pre></div><p>And both <code>v1</code> and <code>v2</code>, are same values and were picked from the same memory locations when in their respective function frames.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; x/w $rbp-0x4
+</span></span><span class="line"><span class="cl">0x7fffffffe20c:	0x00000037
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; x/w $rbp-0x8
+</span></span><span class="line"><span class="cl">0x7fffffffe208:	0x00000037
+</span></span></code></pre></div><p><img loading="lazy" src="https://media.giphy.com/media/3ohzdNuQy40h2dUCGI/giphy.gif#center" alt=""  />
 </p>
 <p>This explains the <em>somewhat</em> unusual behaviour of the program. There is nothing special about this, its just the way the stack memory works and a well crafted example presented to you.</p>
 <p>In next article, I&rsquo;ll try to cover stack overflows&hellip; which is a cool technique to insert the data in a variable which will overflow and overwrite the data for another variable. Try to think around this, if you may.</p>
@@ -2261,30 +2261,30 @@ Both values are equal
 </div>
 <p>Consider this: if we conducted a shift right operation with this, the entire frame would be filled with 0s, and the resultant value would be zero. No matter how many shifts we make.</p>
 <p>Another intriguing thing is that you can multiply a number by <code>2</code> using the shift left procedure&hellip;without actually using the <code>*</code> operation.</p>
-<pre tabindex="0"><code>void main() {
-    int a = 589;
-    int X = a*2;
-    int Y = a &lt;&lt; 1;
-}
-</code></pre><pre tabindex="0"><code>main:
-        push    rbp
-        mov     rbp, rsp
-        mov     DWORD PTR [rbp-4], 589
-
-        ; int X = a*2;
-        mov     eax, DWORD PTR [rbp-4]
-        add     eax, eax
-        mov     DWORD PTR [rbp-8], eax
-
-        ; int Y = a &lt;&lt; 1;
-        mov     eax, DWORD PTR [rbp-4]
-        add     eax, eax
-        mov     DWORD PTR [rbp-12], eax
-
-        nop
-        pop     rbp
-        ret
-</code></pre><p>At a lower level, they are identical. Nothing particularly useful, but it&rsquo;s good to know what&rsquo;s happening behind the scenes.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">void main() {
+</span></span><span class="line"><span class="cl">    int a = 589;
+</span></span><span class="line"><span class="cl">    int X = a*2;
+</span></span><span class="line"><span class="cl">    int Y = a &lt;&lt; 1;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">main:
+</span></span><span class="line"><span class="cl">        push    rbp
+</span></span><span class="line"><span class="cl">        mov     rbp, rsp
+</span></span><span class="line"><span class="cl">        mov     DWORD PTR [rbp-4], 589
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        ; int X = a*2;
+</span></span><span class="line"><span class="cl">        mov     eax, DWORD PTR [rbp-4]
+</span></span><span class="line"><span class="cl">        add     eax, eax
+</span></span><span class="line"><span class="cl">        mov     DWORD PTR [rbp-8], eax
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        ; int Y = a &lt;&lt; 1;
+</span></span><span class="line"><span class="cl">        mov     eax, DWORD PTR [rbp-4]
+</span></span><span class="line"><span class="cl">        add     eax, eax
+</span></span><span class="line"><span class="cl">        mov     DWORD PTR [rbp-12], eax
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        nop
+</span></span><span class="line"><span class="cl">        pop     rbp
+</span></span><span class="line"><span class="cl">        ret
+</span></span></code></pre></div><p>At a lower level, they are identical. Nothing particularly useful, but it&rsquo;s good to know what&rsquo;s happening behind the scenes.</p>
 <h2 id="branching">Branching</h2>
 <p>Now comes the branching. Every good program employs branching for one reason or another. This is very useful to understand when considering reverse engineering.</p>
 <h3 id="if-else">If-else</h3>
@@ -4245,34 +4245,34 @@ Both values are equal
 </span></span><span class="line"><span class="cl">        <span class="nf">ret</span>
 </span></span></code></pre></div><p>A new instruction detected - <code>mov     DWORD PTR [rbp-4], 1</code>. This is storing value <code>1</code> at some location pointed by <code>rbp-4</code>. To gain a better understanding of how that works, we&rsquo;ll have to take a detour so that we can debug the binary and see the registers and memory in action.</p>
 <p>I&rsquo;ll start <code>gdb</code> with the compiled version of the above source code, and then disassemble the main function.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; disas main
-Dump of assembler code for function main:
-   0x0000555555555119 &lt;+0&gt;:     push   rbp
-   0x000055555555511a &lt;+1&gt;:     mov    rbp,rsp
-=&gt; 0x000055555555511d &lt;+4&gt;:     mov    DWORD PTR [rbp-0x4],0x1
-   0x0000555555555124 &lt;+11&gt;:    nop
-   0x0000555555555125 &lt;+12&gt;:    pop    rbp
-   0x0000555555555126 &lt;+13&gt;:    ret
-End of assembler dump.
-</code></pre><p>In this scenario, I&rsquo;m at the <code>mov DWORD PTR [rbp-0x4],0x1</code> instruction. That means, <code>rip</code> register is pointing to this instruction, which means this will be the next instruction executed by the CPU. We can also confirm this by checking the value stored in <code>rip</code> register.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; p/x $rip
-$1 = 0x55555555511d
-</code></pre><p>See, told ya!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; disas main
+</span></span><span class="line"><span class="cl">Dump of assembler code for function main:
+</span></span><span class="line"><span class="cl">   0x0000555555555119 &lt;+0&gt;:     push   rbp
+</span></span><span class="line"><span class="cl">   0x000055555555511a &lt;+1&gt;:     mov    rbp,rsp
+</span></span><span class="line"><span class="cl">=&gt; 0x000055555555511d &lt;+4&gt;:     mov    DWORD PTR [rbp-0x4],0x1
+</span></span><span class="line"><span class="cl">   0x0000555555555124 &lt;+11&gt;:    nop
+</span></span><span class="line"><span class="cl">   0x0000555555555125 &lt;+12&gt;:    pop    rbp
+</span></span><span class="line"><span class="cl">   0x0000555555555126 &lt;+13&gt;:    ret
+</span></span><span class="line"><span class="cl">End of assembler dump.
+</span></span></code></pre></div><p>In this scenario, I&rsquo;m at the <code>mov DWORD PTR [rbp-0x4],0x1</code> instruction. That means, <code>rip</code> register is pointing to this instruction, which means this will be the next instruction executed by the CPU. We can also confirm this by checking the value stored in <code>rip</code> register.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; p/x $rip
+</span></span><span class="line"><span class="cl">$1 = 0x55555555511d
+</span></span></code></pre></div><p>See, told ya!</p>
 <p><img loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZjOTIyNThjNDdmOTFmZDcyMjYxZDE3ZjIxYmU3MmZiNmMxYTBiNCZjdD1n/DT3gYifPXBt5voafS1/giphy.gif#center" alt=""  />
 </p>
 <p>Now, let&rsquo;s print the value from <code>rbp</code> register to figure out where the <code>0x1</code> will be stored eventually.</p>
-<pre tabindex="0"><code>&gt;&gt;&gt; p/x $rbp
-$2 = 0x7fffffffdbd0
-
-&gt;&gt;&gt; p/x $rbp-4
-$3 = 0x7fffffffdbcc
-
-&gt;&gt;&gt; p/x (int *)($rbp-4)
-$4 = 0x7fffffffdbcc
-
-&gt;&gt;&gt; p/x *(int *)($rbp-4)
-$5 = 0x7fff
-</code></pre><p>The last value is the current value at the location pointed by <code>rbp-4</code> memory location. Consider the below mindmap diagram to get a clear picture.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; p/x $rbp
+</span></span><span class="line"><span class="cl">$2 = 0x7fffffffdbd0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; p/x $rbp-4
+</span></span><span class="line"><span class="cl">$3 = 0x7fffffffdbcc
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; p/x (int *)($rbp-4)
+</span></span><span class="line"><span class="cl">$4 = 0x7fffffffdbcc
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; p/x *(int *)($rbp-4)
+</span></span><span class="line"><span class="cl">$5 = 0x7fff
+</span></span></code></pre></div><p>The last value is the current value at the location pointed by <code>rbp-4</code> memory location. Consider the below mindmap diagram to get a clear picture.</p>
 
 
 
@@ -4692,22 +4692,22 @@ $5 = 0x7fff
 </div>
 <p>The <code>rbp</code> register holds a memory location, you subtract 4 from the rbp to make enough space for a <code>int</code> type data and then store the value at that location.</p>
 <p>After executing the instruction, we&rsquo;ll get <code>0x1</code> in this location.</p>
-<pre tabindex="0"><code class="language-gdb" data-lang="gdb">&gt;&gt;&gt; si
-
-&gt;&gt;&gt; disas main
-Dump of assembler code for function main:
-   0x0000555555555119 &lt;+0&gt;:     push   rbp
-   0x000055555555511a &lt;+1&gt;:     mov    rbp,rsp
-   0x000055555555511d &lt;+4&gt;:     mov    DWORD PTR [rbp-0x4],0x1
-=&gt; 0x0000555555555124 &lt;+11&gt;:    nop
-   0x0000555555555125 &lt;+12&gt;:    pop    rbp
-   0x0000555555555126 &lt;+13&gt;:    ret
-End of assembler dump.
-
-
-&gt;&gt;&gt; p/x *(int *)($rbp-4)
-$7 = 0x1
-</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;&gt;&gt; si
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; disas main
+</span></span><span class="line"><span class="cl">Dump of assembler code for function main:
+</span></span><span class="line"><span class="cl">   0x0000555555555119 &lt;+0&gt;:     push   rbp
+</span></span><span class="line"><span class="cl">   0x000055555555511a &lt;+1&gt;:     mov    rbp,rsp
+</span></span><span class="line"><span class="cl">   0x000055555555511d &lt;+4&gt;:     mov    DWORD PTR [rbp-0x4],0x1
+</span></span><span class="line"><span class="cl">=&gt; 0x0000555555555124 &lt;+11&gt;:    nop
+</span></span><span class="line"><span class="cl">   0x0000555555555125 &lt;+12&gt;:    pop    rbp
+</span></span><span class="line"><span class="cl">   0x0000555555555126 &lt;+13&gt;:    ret
+</span></span><span class="line"><span class="cl">End of assembler dump.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; p/x *(int *)($rbp-4)
+</span></span><span class="line"><span class="cl">$7 = 0x1
+</span></span></code></pre></div>
 
 
 <div class="goat svg-container ">
@@ -5765,36 +5765,36 @@ $7 = 0x1
 </span></span></code></pre></div><p>Ofcourse, few things are different like the numbers in first column (these numbers are offset values, we don&rsquo;t need to understand them right now)&hellip;. But if we focus only on the <em>second column</em> and <em>third column</em> which are <a href="https://en.wikipedia.org/wiki/Opcode"><strong>hexa-decimal values or opcodes</strong></a> and <strong>assembly code/representation</strong> respectively.</p>
 <p>The main difference between a <code>.o</code> and <code>.out</code> file is that the <code>.o</code> file is not yet linked to any platoform dependent libraries. Here is a <a href="https://stackoverflow.com/questions/58245469/o-vs-out-in-c">good stackoverflow thread</a> about the same topic.</p>
 <p>The assembly code has a syntax structure, which is a good point to start understanding how they work. Each line in the above output contains 1 assembly instruction &hellip; and every instruction is composed of either 1, 2 or 3 keywords. These can be represented in below syntax.</p>
-<pre tabindex="0"><code>## Syntax by Intel
-
-| Keyword1     | Keyword2   | Keyword3   |
-|--------------|------------|------------|
-| OPCODE       | destination| source     |
-
-
-    or
-
-
-## Syntax by AT&amp;T
-
-| Keyword1     | Keyword2  | Keyword3    |
-|--------------|-----------|-------------|
-| OPCODE       | source    | destination |
-</code></pre><p>There are few other differences between these 2 syntaxes..but this does not change anything in logic or working of the binary. You can think of them as different kinds of representations for the same thing. Read more from <a href="https://web.mit.edu/rhel-doc/3/rhel-as-en-3/i386-syntax.html">here: AT&amp;T Syntax versus Intel Syntax</a> and <a href="https://stackoverflow.com/questions/8549427/nasm-intel-versus-att-syntax-what-are-the-advantages#8550917">here: StackOverflow - NASM (Intel) versus AT&amp;T Syntax: what are the advantages?</a>. I prefer to use <strong>Intel</strong> syntax and will be using that throughout this article.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">## Syntax by Intel
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">| Keyword1     | Keyword2   | Keyword3   |
+</span></span><span class="line"><span class="cl">|--------------|------------|------------|
+</span></span><span class="line"><span class="cl">| OPCODE       | destination| source     |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    or
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">## Syntax by AT&amp;T
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">| Keyword1     | Keyword2  | Keyword3    |
+</span></span><span class="line"><span class="cl">|--------------|-----------|-------------|
+</span></span><span class="line"><span class="cl">| OPCODE       | source    | destination |
+</span></span></code></pre></div><p>There are few other differences between these 2 syntaxes..but this does not change anything in logic or working of the binary. You can think of them as different kinds of representations for the same thing. Read more from <a href="https://web.mit.edu/rhel-doc/3/rhel-as-en-3/i386-syntax.html">here: AT&amp;T Syntax versus Intel Syntax</a> and <a href="https://stackoverflow.com/questions/8549427/nasm-intel-versus-att-syntax-what-are-the-advantages#8550917">here: StackOverflow - NASM (Intel) versus AT&amp;T Syntax: what are the advantages?</a>. I prefer to use <strong>Intel</strong> syntax and will be using that throughout this article.</p>
 <p>By default, <code>objdump</code> provides <em>AT&amp;T</em> syntax but you can explicitely ask it to provide the <em>intel</em> syntax using <code>--disassembler-options=intel</code> flag.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">objdump --disassemble<span class="o">=</span>main --disassembler-options<span class="o">=</span>intel hello_world.out
 </span></span></code></pre></div><p>output</p>
-<pre tabindex="0"><code class="language-objdump" data-lang="objdump">0000000000001139 &lt;main&gt;:
-    1139:       55                      push   rbp
-    113a:       48 89 e5                mov    rbp,rsp
-    113d:       48 8d 05 c0 0e 00 00    lea    rax,[rip+0xec0]        # 2004 &lt;_IO_stdin_used+0x4&gt;
-    1144:       48 89 c7                mov    rdi,rax
-    1147:       b8 00 00 00 00          mov    eax,0x0
-    114c:       e8 df fe ff ff          call   1030 &lt;printf@plt&gt;
-    1151:       b8 05 00 00 00          mov    eax,0x5
-    1156:       5d                      pop    rbp
-    1157:       c3                      ret
-</code></pre><p>The purpose of higher level languages like C is that we don&rsquo;t have to deal with all this assembly code for all things. To effectively use assembly there are a lot of things we need to understand and think continously according to them. With higher level languages, we can write the code more easily and then pass that code to compiler, and that will generate a assembly code and binary file for us to use&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0000000000001139 &lt;main&gt;:
+</span></span><span class="line"><span class="cl">    1139:       55                      push   rbp
+</span></span><span class="line"><span class="cl">    113a:       48 89 e5                mov    rbp,rsp
+</span></span><span class="line"><span class="cl">    113d:       48 8d 05 c0 0e 00 00    lea    rax,[rip+0xec0]        # 2004 &lt;_IO_stdin_used+0x4&gt;
+</span></span><span class="line"><span class="cl">    1144:       48 89 c7                mov    rdi,rax
+</span></span><span class="line"><span class="cl">    1147:       b8 00 00 00 00          mov    eax,0x0
+</span></span><span class="line"><span class="cl">    114c:       e8 df fe ff ff          call   1030 &lt;printf@plt&gt;
+</span></span><span class="line"><span class="cl">    1151:       b8 05 00 00 00          mov    eax,0x5
+</span></span><span class="line"><span class="cl">    1156:       5d                      pop    rbp
+</span></span><span class="line"><span class="cl">    1157:       c3                      ret
+</span></span></code></pre></div><p>The purpose of higher level languages like C is that we don&rsquo;t have to deal with all this assembly code for all things. To effectively use assembly there are a lot of things we need to understand and think continously according to them. With higher level languages, we can write the code more easily and then pass that code to compiler, and that will generate a assembly code and binary file for us to use&hellip;</p>
 <h4 id="heap-stack-and-registers">Heap, Stack and Registers</h4>
 <p>Every C process (<a href="https://www.geeksforgeeks.org/difference-between-program-and-process/">not program</a>) use many things to work, 4 of them are - Heap, Stack, Registers and Instructions. We have just understood about the instructions in previous section, now let us start with others.</p>
 <p><strong>Heap</strong> is one of the memory alocation strategy used for dynamic storage allocations, ie, allocating memory at run time. The actual working of the heap is a bit complex and is out of scope for this article. For now, keep in mind that any calls to <code>malloc</code>, <code>calloc</code> or any other similar kind of function will allocate memory in heap. All objects which have dynamic storage duration are suitable for heap.</p>

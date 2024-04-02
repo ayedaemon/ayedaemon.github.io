@@ -1,469 +1,117 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>Eudyptula Task2 | Connected</title>
-<meta name="keywords" content="Eudyptula, linux">
-<meta name="description" content="Task 2 for Eudyptula challenge">
-<meta name="author" content="ayedaemon">
-<link rel="canonical" href="https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://ayedaemon.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ayedaemon.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ayedaemon.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ayedaemon.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ayedaemon.github.io/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-</noscript><meta property="og:title" content="Eudyptula Task2" />
-<meta property="og:description" content="Task 2 for Eudyptula challenge" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2022-06-01T15:14:27+05:30" />
-<meta property="article:modified_time" content="2022-06-01T15:14:27+05:30" />
-<meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/" /><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/" />
-
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Eudyptula Task2"/>
-<meta name="twitter:description" content="Task 2 for Eudyptula challenge"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://ayedaemon.github.io/post/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Eudyptula Task2",
-      "item": "https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Eudyptula Task2",
-  "name": "Eudyptula Task2",
-  "description": "Task 2 for Eudyptula challenge",
-  "keywords": [
-    "Eudyptula", "linux"
-  ],
-  "articleBody": "This is Task 02 of the Eudyptula Challenge ------------------------------------------ Now that you have written your first kernel module, it's time to take off the training wheels and move on to building a custom kernel. No more distro kernels for you, for this task you must run your own kernel. And use git! Exciting isn't it! No, oh, ok... The tasks for this round is: - download Linus's latest git tree from git.kernel.org (you have to figure out which one is his, it's not that hard, just remember what his last name is and you should be fine.) - build it, install it, and boot it. You can use whatever kernel configuration options you wish to use, but you must enable CONFIG_LOCALVERSION_AUTO=y. - show proof of booting this kernel. Bonus points for you if you do it on a \"real\" machine, and not a virtual machine (virtual machines are acceptable, but come on, real kernel developers don't mess around with virtual machines, they are too slow. Oh yeah, we aren't real kernel developers just yet. Well, I'm not anyway, I'm just a script...) Again, proof of running this kernel is up to you, I'm sure you can do well. Hint, you should look into the 'make localmodconfig' option, and base your kernel configuration on a working distro kernel configuration. Don't sit there and answer all 1625 different kernel configuration options by hand, even I, a foolish script, know better than to do that! After doing this, don't throw away that kernel and git tree and configuration file. You'll be using it for later tasks, a working kernel configuration file is a precious thing, all kernel developers have one they have grown and tended to over the years. This is the start of a long journey with yours, don't discard it like was a broken umbrella, it deserves better than that. What, why? Kernel is the main component of any operating system and is also referred as the “Heart of the Operating System”. It is at the core of all the layers present in OS and can have complete access to all the hardware (CPU, disk, RAM, etc). Therefore, it runs on very high privileges. Basically it handles most of the hardware related tasks (Allocate memory, CPU scheduling, etc) and most of the process related tasks (Copying file from/to disk, Uploading/Downloading, opening browser to read this blog, etc)\nWait, what? Does it have control to everything we do on our computers?\nA big YES and small no. It is responsible to send data across multiple resources in your system and it can intercept everything there. But it depends if it can understand what it sees.\nKernel has mainly 4 tasks:\nKeep track of the memory - who is using it and how much; And where. Decides who uses CPU, when and for how long Takes data from processes and passes sensible code to hardware for processing it and vise-versa. Receives requests via system calls (API calls; but not Web API calls) from processes. This is used to do low level stuff and build amazing tools like docker. Talking to kernel is difficult and can be dangerous if not used properly. Most of the times, user does not need to talk to kernel directly, and have got few layers of abstraction on top of it - Device drivers, system libraries, CLI shells, GUI shells (Graphical thing which comes up, when you start your system), etc.\nThis gives rise to the idea of 2 spaces - user space and kernel space. Kernel space is the memory segment that is used only by kernel and users stay out of it. Another is user space memory segment, where user can do all what he wants.\nThe rough mind map would look something like below\n[ [ [ [Hardware] --\u003e Kernel ] --\u003e OS ] --\u003e Process(browser)] # If process fails in OS, damage is small and might be recovered by kernel. # If kernel crashes, Your system goes down. # If hardware fails, you cry!! This is the complete bundle which makes up your system. Now what I want to take out of this whole jibber-jabber is that a kernel is a piece of software that works with hardware and other user-friendly softwares to solve your problems or play games and have fun.\nSince it is a piece of software, we can download it and replace old versions with new versions (manually or via a script/program/whatever). Another option for tech savvy people is to custom compile it. There could be many reasons to compile a linux kernel by yourself, few possible reasons are:-\nYou want to know how it is done. You might want to brag about it and feel superior and very tech savvy. You want to face “I use arch BTW” community. (FYI, I use arch BTW!!) You want optimal performance on specific hardware and architecture. You might want to disable/enable some kernel features. You might want to add support for extra hardware. You are solving eudyptula challenge, just like me :) Regardless of why, knowing how to compile a linux kernel is very useful and cool.\nGetting the source code for kernel. Getting source code for kernel is very easy. You just need to go to kernel.org and download the required files. I’ll be compiling Linus Torvalds’s git tree source code on archlinux/archlinux vagrant box.1\n# Use git to download the linux kernel source code. (just the latest commit =\u003e --depth=1) git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git Linux kernel is very huge software and might take up a minute to download (depends upon your connectivity). This is one of the reasons for why most of the extended functionalities are provided via loadable kernel modules. If you don’t know about kernel modules the read Eudyptula Task1 blog.\nInside the cloned directory, we have multiple files and sub-directories. Each sub-directory is for specified purpose like arch contains files for different system architecture and security contains files for selinux , apparmor and other security related files. In short, linux kernel is developed by thousands of developers in collaboration and not everybody knows about each file present in the source code and yet they have an understanding of where they have to make changes to achieve their goal. Very neat management!!\nCompiling Linux kernel Just like every configurable software, linux kernel also provide configuration support via .config file. We can either use other kernel’s config file or write a config file by ourselves.\nCreating own config file from scratch Creating own config file from scratch can be a bad idea for someone who is doing it for very first time. But if you still want to do it, I’m not gonna stop you. You can make the use of Makefile by typing make config from inside the kernel source code directory and then you’ll have to simply answer yes or no for all the configurable options that kernel supports. Read more here\nUsing existing config file You can copy the config file of your existing kernel and use it as a base config to make further changes. This is a very efficient method if there are only few changes you need to make. Most of the kernel developers have their own config files which they have fine-tuned in so many years. To know about how to get config file for your linux system read this stackoverflow thread. For my vagrant system, I can check my running kernel’s config file using below command\nls /proc/config.gz zcat /proc/config.gz | grep \".*CONFIG_\" | wc -l # Output = 9128 There are total 9128 configurable options here and it is very impractical to make all the proper changes with a text editor in one go, so instead, we will do it with some TUI script. Below script will copy the config file to working directory and start the TUI for you. Navigate to linux source code directory and run the below script.\n# Copy config file and take a backup for later review zcat /proc/config.gz \u003e .config cp .config ../old.config # Install requirements to run `make menuconfig` sudo pacman -S --noconfirm --needed\\ pkg-config ncurses \\ gcc \\ flex \\ bison # Update config file. make menuconfig Linux kernel has a lot of make options and the best way to check supporting make options is via make help command. After executing make menuconfig, a TUI will open in shell which will help you to update, save and load the new configuration. This command uses the .config file from current directory to pre-fill the old config options, this makes it very easy for us to just focus on what we want to change.\nFor my config file, I simply enabled the CONFIG_PRINTK_CALLER and CONFIG_LOCALVERSION_AUTO features of the kernel… and then saved the file with a filename - new.config (I want to keep it backed up for future tasks). We can compare the changed values from the old .config and newer new.config and see the difference.\ndiff .config ../old.config | grep -i -E 'localver|printk' # \u003c CONFIG_LOCALVERSION=\"ayedaemon\" # \u003e CONFIG_LOCALVERSION=\"\" # \u003c CONFIG_PRINTK_CALLER=y # \u003e # CONFIG_PRINTK_CALLER is not set Now we have very few steps left to be done. We need to compile the kernel, then install modules and finally, install kerrnel. Run below commands to get this done.\n# Update .config with newer config file mv -v new.config .config # Backup the newer config file cp -v .config ../new.config # Install some more dependencies sudo pacman -S --noconfirm --needed \\ bc \\ cpio # If on arch based distro or using my vagrantfile # Compile kernel (might require your input) - use -j4 to make it build faster make -j4 # Install modules (takes some time) - user -j4 to make it build faster sudo make modules_install -j4 If you are use LILO bootloader, then the kernel make file will do the job for you with this command - sudo make install. But if you are using GRUB, then you will have to make some manual steps by running below commands.\n# Copy kernel image to /boot sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux # Copy system.map to /boot sudo cp System.map /boot/System-ayedaemonlinux.map # Copy config file to /boot (just to be safe) sudo cp .config /boot/ayedaemonlinux.kernel.config Let’s take a minute to see what we just did. After we configured the linux kernel using make and .config file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-\nvmlinuz =\u003e Is the actual kernel file. Yes it is the kernel you were waiting for so long. If you fancy, do file /boot/vmlinuz-ayedaemonlinux and check the results. System.map =\u003e This is the map file which stores the kernel symbol table information. Read more about it here Anyways, we need these files in our /boot/ directory so that our boot-loader can load our compiled kernel. But our boot-loader is dumb, it can not simply detect the files from /boot/ and show us options on the boot-loader screen, we will have to do that as well. You might also need to generate a initrd file depending upon what configurations you are using on your system. If you are following the steps from this blog, then you need initrd for sure. Initrd is the program that helps your kernel to load and boot up properly by providing the modules support that are not built into the kernel at compile time. In this blog, we have not compiled all the modules in the kernel that our kernel might need at boot time, so we will create a initrd file and then we can tell our boot loader about our custom kernel.\nUse mkinitcpio command to generate a initrd file and then update bootloader config using grub-mkconfig command. If you want this kernel to be default, then you’ll have to make proper changes to the boot config file. Read more about it from arch wiki or stackoverflow. If you are someone who prefers easy workarounds, you can also select the new kernel from the grub menu at boot time; Just make sure that GRUB_TIMEOUT variable (from /etc/default/grub) is not set to zero.\n# generate initramfs sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img # update grub config - add entry to boot menu sudo grub-mkconfig -o /boot/grub/grub.cfg # Setup grub boot order if you want to - else use the lazy way Output:-\n# sudo grub-mkconfig -o /boot/grub/grub.cfg Generating grub configuration file ... Found linux image: /boot/vmlinuz-linux Found initrd image: /boot/initramfs-linux.img Found fallback initrd image(s) in /boot: initramfs-linux-fallback.img Found linux image: /boot/vmlinuz-ayedaemonlinux Found initrd image: /boot/initramfs-ayedaemonlinux.img Warning: os-prober will not be executed to detect other bootable partitions. Systems on them will not be added to the GRUB boot configuration. Check GRUB_DISABLE_OS_PROBER documentation entry. done From the output of last command, we can see that my ayedaemonlinux was detected by grub and it also updated the /boot/grub/grub.cfg file with current detections. Now, lets reboot and hope everything works as expected. Select the custom kernel from grub menu if needed and boot into it. If successfull, you can check the kernel version and other information with uname command.\n# Before Reboot --\u003e uname -a Linux archlinux 5.18.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Mon, 30 May 2022 17:53:11 +0000 x86_64 GNU/Linux # After Reboot --\u003e uname -a Linux archlinux 5.18.0ayedaemon-g8ab2afa23bd1 #1 SMP PREEMPT_DYNAMIC Wed Jun 1 16:54:51 UTC 2022 x86_64 GNU/Linux We just compiled our very own first kernel and since we have not changed much of the kernel parameters and no user-space programs are affected with this. But we get our name on the kernel tag!!\nArch is a rolling distro and the packages can be easily upgraded to latest versions available. No too old kind of errors. ↩︎\n",
-  "wordCount" : "2287",
-  "inLanguage": "en",
-  "datePublished": "2022-06-01T15:14:27+05:30",
-  "dateModified": "2022-06-01T15:14:27+05:30",
-  "author":[{
-    "@type": "Person",
-    "name": "ayedaemon"
-  }],
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Connected",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://ayedaemon.github.io/favicon.ico"
-    }
-  }
-}
-</script>
-</head>
-
-<body class=" dark" id="top">
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://ayedaemon.github.io/" accesskey="h" title="Connected (Alt + H)">Connected</a>
-            <div class="logo-switches">
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="https://ayedaemon.github.io/post/" title="Archives">
-                    <span>Archives</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/series/" title="Series">
-                    <span>Series</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/tags/" title="Tags">
-                    <span>Tags</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://ayedaemon.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
-                    <span>Search</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main">
-
-<article class="post-single">
-  <header class="post-header">
-    
-    <h1 class="post-title entry-hint-parent">
-      Eudyptula Task2
-    </h1>
-    <div class="post-description">
-      Task 2 for Eudyptula challenge
-    </div>
-    <div class="post-meta"><span title='2022-06-01 15:14:27 +0530 +0530'>June 1, 2022</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2287 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href="https://github.com/ayedaemon/ayedaemon.github.io/content/post/2022/06/Eudyptula-task-2.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
-
-</div>
-  </header> <div class="toc">
-    <details >
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">Table of Contents</span>
-        </summary>
-
-        <div class="inner"><ul>
-                <li>
-                    <a href="#what-why" aria-label="What, why?">What, why?</a><ul>
-                        <ul>
-                        
-                <li>
-                    <a href="#getting-the-source-code-for-kernel" aria-label="Getting the source code for kernel.">Getting the source code for kernel.</a></li>
-                <li>
-                    <a href="#compiling-linux-kernel" aria-label="Compiling Linux kernel">Compiling Linux kernel</a><ul>
-                        
-                <li>
-                    <a href="#creating-own-config-file-from-scratch" aria-label="Creating own config file from scratch">Creating own config file from scratch</a></li>
-                <li>
-                    <a href="#using-existing-config-file" aria-label="Using existing config file">Using existing config file</a>
-                </li>
-            </ul>
-            </ul>
-            </li>
-            </ul>
-            </li>
-            </ul>
-        </div>
-    </details>
-</div>
-
-  <div class="post-content"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">This is Task 02 of the Eudyptula Challenge
-</span></span><span class="line"><span class="cl">------------------------------------------
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Now that you have written your first kernel module, it&#39;s time to take
-</span></span><span class="line"><span class="cl">off the training wheels and move on to building a custom kernel.  No
-</span></span><span class="line"><span class="cl">more distro kernels for you, for this task you must run your own kernel.
-</span></span><span class="line"><span class="cl">And use git!  Exciting isn&#39;t it!  No, oh, ok...
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">The tasks for this round is:
-</span></span><span class="line"><span class="cl">  - download Linus&#39;s latest git tree from git.kernel.org (you have to
-</span></span><span class="line"><span class="cl">    figure out which one is his, it&#39;s not that hard, just remember what
-</span></span><span class="line"><span class="cl">    his last name is and you should be fine.)
-</span></span><span class="line"><span class="cl">  - build it, install it, and boot it.  You can use whatever kernel
-</span></span><span class="line"><span class="cl">    configuration options you wish to use, but you must enable
-</span></span><span class="line"><span class="cl">    CONFIG_LOCALVERSION_AUTO=y.
-</span></span><span class="line"><span class="cl">  - show proof of booting this kernel.  Bonus points for you if you do
-</span></span><span class="line"><span class="cl">    it on a &#34;real&#34; machine, and not a virtual machine (virtual machines
-</span></span><span class="line"><span class="cl">    are acceptable, but come on, real kernel developers don&#39;t mess
-</span></span><span class="line"><span class="cl">    around with virtual machines, they are too slow.  Oh yeah, we aren&#39;t
-</span></span><span class="line"><span class="cl">    real kernel developers just yet.  Well, I&#39;m not anyway, I&#39;m just a
-</span></span><span class="line"><span class="cl">    script...)  Again, proof of running this kernel is up to you, I&#39;m
-</span></span><span class="line"><span class="cl">    sure you can do well.
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Hint, you should look into the &#39;make localmodconfig&#39; option, and base
-</span></span><span class="line"><span class="cl">your kernel configuration on a working distro kernel configuration.
-</span></span><span class="line"><span class="cl">Don&#39;t sit there and answer all 1625 different kernel configuration
-</span></span><span class="line"><span class="cl">options by hand, even I, a foolish script, know better than to do that!
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">After doing this, don&#39;t throw away that kernel and git tree and
-</span></span><span class="line"><span class="cl">configuration file.  You&#39;ll be using it for later tasks, a working
-</span></span><span class="line"><span class="cl">kernel configuration file is a precious thing, all kernel developers
-</span></span><span class="line"><span class="cl">have one they have grown and tended to over the years.  This is the
-</span></span><span class="line"><span class="cl">start of a long journey with yours, don&#39;t discard it like was a broken
-</span></span><span class="line"><span class="cl">umbrella, it deserves better than that.
-</span></span></code></pre></div><h1 id="what-why">What, why?<a hidden class="anchor" aria-hidden="true" href="#what-why">#</a></h1>
-<p>Kernel is the main component of any operating system and is also referred as  the &ldquo;Heart of the Operating System&rdquo;. It is at the core of all the layers present in OS and can have complete access to all the hardware (CPU, disk, RAM, etc). Therefore, it runs on very high privileges. Basically it handles most of the hardware related tasks (Allocate memory, CPU scheduling, etc) and most of the process related tasks (Copying file from/to disk, Uploading/Downloading, opening browser to read this blog, etc)</p>
-<p><strong>Wait, what? Does it have control to everything we do on our computers?</strong></p>
-<p>A big YES and small no. It is responsible to send data across multiple resources in your system and it can intercept everything there. But it depends if it can understand what it sees.</p>
-<p>Kernel has mainly 4 tasks:</p>
-<ol>
-<li>Keep track of the memory - who is using it and how much; And where.</li>
-<li>Decides who uses CPU, when and for how long</li>
-<li>Takes data from processes and passes sensible code to hardware for processing it and vise-versa.</li>
-<li>Receives requests via system calls (API calls; but not Web API calls) from processes. This is used to do low level stuff and build amazing tools like docker.</li>
-</ol>
-<p>Talking to kernel is difficult and can be dangerous if not used properly. Most of the times, user does not need to talk to kernel directly, and have got few layers of abstraction on top of it - Device drivers, system libraries, CLI shells, GUI shells (Graphical thing which comes up, when you start your system), etc.</p>
-<p>This gives rise to the idea of 2 spaces - user space and kernel space. Kernel space is the memory segment that is used only by kernel and users stay out of it. Another is user space memory segment, where user can do all what he wants.</p>
-<p>The rough mind map would look something like below</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">[ [ [ [Hardware] --&gt; Kernel ] --&gt; OS ]  --&gt; Process(browser)]
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># If process fails in OS, damage is small and might be recovered by kernel.
-</span></span><span class="line"><span class="cl"># If kernel crashes, Your system goes down.
-</span></span><span class="line"><span class="cl"># If hardware fails, you cry!!
-</span></span></code></pre></div><p>This is the complete bundle which makes up your system.  Now what I want to take out of this whole jibber-jabber is that a <strong>kernel</strong> is a <strong><em>piece of software</em></strong> that works with hardware and other user-friendly softwares to solve your problems or play games and have fun.</p>
-<p>Since it is a piece of software, we can download it and replace old versions with new versions (manually or via a script/program/whatever). Another option for tech savvy people is to custom compile it. There could be many reasons to compile a linux kernel by yourself, few possible reasons are:-</p>
-<ul>
-<li>You want to know how it is done.</li>
-<li>You might want to brag about it and feel superior and very tech savvy.</li>
-<li>You want to face &ldquo;I use arch BTW&rdquo; community. (FYI, I use arch BTW!!)</li>
-<li>You want optimal performance on specific hardware and architecture.</li>
-<li>You might want to disable/enable some kernel features.</li>
-<li>You might want to add support for extra hardware.</li>
-<li>You are solving eudyptula challenge, just like me :)</li>
-</ul>
-<p>Regardless of why, knowing how to compile a linux kernel is very useful and cool.</p>
-<p><img loading="lazy" src="https://media.giphy.com/media/dCLyraFCJhaLUsG3dX/giphy.gif#center" alt=""  />
-</p>
-<h3 id="getting-the-source-code-for-kernel">Getting the source code for kernel.<a hidden class="anchor" aria-hidden="true" href="#getting-the-source-code-for-kernel">#</a></h3>
-<p>Getting source code for kernel is very easy. You just need to go to <a href="https://kernel.org/">kernel.org</a> and download the required files. I&rsquo;ll be compiling <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/">Linus Torvalds&rsquo;s git tree</a> source code on <code>archlinux/archlinux</code> vagrant box.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Use git to download the linux kernel source code. (just the latest commit =&gt; --depth=1)</span>
-</span></span><span class="line"><span class="cl">git clone --depth<span class="o">=</span><span class="m">1</span> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-</span></span></code></pre></div><p>Linux kernel is very huge software and might take up a minute to download (depends upon your connectivity). This is one of the reasons for why most of the extended functionalities are provided via loadable kernel modules. If you don&rsquo;t know about kernel modules the read <a href="https://ayedaemon.github.io/post/eudyptula/eudyptula-task-1/">Eudyptula Task1</a> blog.</p>
-<p>Inside the cloned directory, we have multiple files and sub-directories. Each sub-directory is for specified purpose like <code>arch</code> contains files for different system architecture and <code>security</code> contains files for <code>selinux</code> , <code>apparmor</code> and other security related files. In short, linux kernel is developed by thousands of developers in collaboration and not everybody knows about each file present in the source code and yet they have an understanding of where they have to make changes to achieve their goal. Very neat management!!</p>
-<h3 id="compiling-linux-kernel">Compiling Linux kernel<a hidden class="anchor" aria-hidden="true" href="#compiling-linux-kernel">#</a></h3>
-<p>Just like every configurable software, linux kernel also provide configuration support via <code>.config</code> file. We can either use other kernel&rsquo;s config file or write a config file by ourselves.</p>
-<h4 id="creating-own-config-file-from-scratch">Creating own config file from scratch<a hidden class="anchor" aria-hidden="true" href="#creating-own-config-file-from-scratch">#</a></h4>
-<p>Creating own config file from scratch can be a bad idea for someone who is doing it for very first time. But if you still want to do it, I&rsquo;m not gonna stop you. You can make the use of <code>Makefile</code> by typing <code>make config</code> from inside the kernel source code directory and then you&rsquo;ll have to simply answer <code>yes or no</code> for all the configurable options that kernel supports. <a href="https://www.linuxtopia.org/online_books/linux_kernel/kernel_configuration/ch05.html#id2564226">Read more here</a></p>
-<h4 id="using-existing-config-file">Using existing config file<a hidden class="anchor" aria-hidden="true" href="#using-existing-config-file">#</a></h4>
-<p>You can copy the config file of your existing kernel and use it as a base config to make further changes. This is a very efficient method if there are only few changes you need to make. Most of the kernel developers have their own config files which they have fine-tuned in so many years. To know about how to get config file for your linux system <a href="https://superuser.com/questions/287371/obtain-kernel-config-from-currently-running-linux-system">read this stackoverflow thread</a>. For my vagrant system, I can check my running kernel&rsquo;s config file using below command</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ls /proc/config.gz
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">zcat /proc/config.gz  <span class="p">|</span> grep  <span class="s2">&#34;.*CONFIG_&#34;</span> <span class="p">|</span> wc -l
-</span></span><span class="line"><span class="cl"><span class="c1"># Output = 9128</span>
-</span></span></code></pre></div><p>There are total <code>9128</code> configurable options here and it is very impractical to make all the proper changes with a text editor in one go, so  instead, we will do it with some <a href="https://en.wikipedia.org/wiki/Text-based_user_interface">TUI script</a>. Below script will copy the config file to working directory and start the TUI for you. Navigate to <code>linux</code> source code directory and run the below script.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Copy config file and take a backup for later review</span>
-</span></span><span class="line"><span class="cl">zcat /proc/config.gz &gt; .config
-</span></span><span class="line"><span class="cl">cp .config ../old.config
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Install requirements to run `make menuconfig`</span>
-</span></span><span class="line"><span class="cl">sudo pacman -S --noconfirm --needed<span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>	pkg-config ncurses <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>	gcc <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>	flex <span class="se">\
-</span></span></span><span class="line"><span class="cl"><span class="se"></span>	bison
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Update config file.</span>
-</span></span><span class="line"><span class="cl">make menuconfig
-</span></span></code></pre></div><p>Linux kernel has a lot of make options and the best way to check supporting make options is via <code>make help</code> command. After executing <code>make menuconfig</code>, a TUI will open in shell which will help you to update, save and load the new configuration. This command uses the <code>.config</code> file from current directory to pre-fill the old config options, this makes it very easy for us to just focus on what we want to change.</p>
-<p>For my config file, I simply enabled the <code>CONFIG_PRINTK_CALLER</code>   and <code>CONFIG_LOCALVERSION_AUTO</code> features of the kernel&hellip; and then saved the file with a filename - <code>new.config</code> (I want to keep it backed up for future tasks). We can compare the changed values from the old <code>.config</code> and newer <code>new.config</code> and see the difference.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">diff .config ../old.config  <span class="p">|</span> grep -i -E <span class="s1">&#39;localver|printk&#39;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">#   &lt; CONFIG_LOCALVERSION=&#34;ayedaemon&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#   &gt; CONFIG_LOCALVERSION=&#34;&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#   &lt; CONFIG_PRINTK_CALLER=y</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#   &gt; # CONFIG_PRINTK_CALLER is not set</span>
-</span></span></code></pre></div><p>Now we have very few steps left to be done. We need to <strong><em>compile the kernel</em></strong>, then <strong><em>install modules</em></strong> and finally, <strong><em>install kerrnel</em></strong>. Run below commands to get this done.</p>
-<pre tabindex="0"><code># Update .config with newer config file
-mv -v new.config .config
-
-# Backup the newer config file
-cp -v .config ../new.config
-
-# Install some more dependencies
-sudo pacman -S --noconfirm --needed \
-	bc \
-	cpio   # If on arch based distro or using my vagrantfile
-
-# Compile kernel (might require your input) - use -j4 to make it build faster
-make -j4
-
-# Install modules (takes some time) - user -j4 to make it build faster
-sudo make modules_install -j4
-</code></pre><p>If you are use LILO bootloader, then the kernel make file will do the job for you with this command - <code>sudo make install</code>. But if you are using GRUB, then you will have to make some manual steps by running below commands.</p>
-<pre tabindex="0"><code># Copy kernel image to /boot
-sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux
-
-# Copy system.map to /boot
-sudo cp System.map /boot/System-ayedaemonlinux.map
-
-# Copy config file to /boot (just to be safe)
-sudo cp .config /boot/ayedaemonlinux.kernel.config
-</code></pre><p>Let&rsquo;s take a minute to see what we just did. After we configured the linux kernel using <code>make</code> and <code>.config</code> file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-</p>
-<ol>
-<li><code>vmlinuz</code> =&gt; Is the actual kernel file. Yes it is the kernel you were waiting for so long. If you fancy, do 	<code>file /boot/vmlinuz-ayedaemonlinux</code> and check the results.</li>
-<li><code>System.map</code> =&gt; This is the map file which stores the kernel symbol table information. <a href="https://rlworkman.net/system.map/">Read more about it here</a></li>
-</ol>
-<p>Anyways, we need these files in our <code>/boot/</code> directory so that our boot-loader can load our compiled kernel. But our boot-loader is dumb, it can not simply detect the files from <code>/boot/</code> and show us options on the boot-loader screen, we will have to do that as well. You might also need to generate a <code>initrd</code> file depending upon what configurations you are using on your system. If you are following the steps from this blog, then you need <strong>initrd</strong> for sure. <strong>Initrd</strong> is the program that helps your kernel to load and boot up properly by providing the modules support that are not built into the kernel at compile time. In this blog, we have not compiled all the modules in the kernel that our kernel might need at boot time, so we will create a <code>initrd</code> file and then we can tell our boot loader about our custom kernel.</p>
-<p>Use <code>mkinitcpio</code> command to generate a initrd file and then update bootloader config using <code>grub-mkconfig</code> command. If you want this kernel to be default, then you&rsquo;ll have to make proper changes to the boot config file. Read more about it from <a href="https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Changing_the_default_menu_entry">arch wiki</a> or <a href="https://stackoverflow.com/questions/44422745/change-default-kernel-version-in-grub">stackoverflow</a>. If you are someone who prefers easy workarounds, you can also select the new kernel from the grub menu at boot time; Just make sure that <code>GRUB_TIMEOUT</code> variable (from <code>/etc/default/grub</code>) is not set to zero.</p>
-<pre tabindex="0"><code># generate initramfs
-sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img
-
-# update grub config - add entry to boot menu
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-# Setup grub boot order if you want to - else use the lazy way
-</code></pre><p>Output:-</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">#  sudo grub-mkconfig -o /boot/grub/grub.cfg
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Generating grub configuration file ...
-</span></span><span class="line"><span class="cl">Found linux image: /boot/vmlinuz-linux
-</span></span><span class="line"><span class="cl">Found initrd image: /boot/initramfs-linux.img
-</span></span><span class="line"><span class="cl">Found fallback initrd image(s) in /boot:  initramfs-linux-fallback.img
-</span></span><span class="line"><span class="cl">Found linux image: /boot/vmlinuz-ayedaemonlinux
-</span></span><span class="line"><span class="cl">Found initrd image: /boot/initramfs-ayedaemonlinux.img
-</span></span><span class="line"><span class="cl">Warning: os-prober will not be executed to detect other bootable partitions.
-</span></span><span class="line"><span class="cl">Systems on them will not be added to the GRUB boot configuration.
-</span></span><span class="line"><span class="cl">Check GRUB_DISABLE_OS_PROBER documentation entry.
-</span></span><span class="line"><span class="cl">done
-</span></span></code></pre></div><p>From the output of last command, we can see that my <code>ayedaemonlinux</code> was detected by grub and it also updated the <code>/boot/grub/grub.cfg</code> file with current detections. Now, lets reboot and hope everything works as expected. Select the custom kernel from grub menu if needed and boot into it. If successfull, you can check the kernel version and other information with <code>uname</code> command.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl"># Before Reboot --&gt; uname -a
-</span></span><span class="line"><span class="cl">Linux archlinux 5.18.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Mon, 30 May 2022 17:53:11 +0000 x86_64 GNU/Linux
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"># After Reboot --&gt; uname -a
-</span></span><span class="line"><span class="cl">Linux archlinux 5.18.0ayedaemon-g8ab2afa23bd1 #1 SMP PREEMPT_DYNAMIC Wed Jun 1 16:54:51 UTC 2022 x86_64 GNU/Linux
-</span></span></code></pre></div><p>We just compiled our very own first kernel and since we have not changed much of the kernel parameters and no user-space programs are affected with this. But we get our name on the kernel tag!!</p>
-<p><img loading="lazy" src="https://media.giphy.com/media/jurcfxao8M3yzHmCjS/giphy.gif#center" alt=""  />
-</p>
-<div class="footnotes" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn:1">
-<p>Arch is a rolling distro and the packages can be easily upgraded to latest versions available. No <code>&lt;package-name&gt; too old</code> kind of errors.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-</ol>
-</div>
-
-
-  </div>
-
-  <footer class="post-footer">
-    <ul class="post-tags">
-      <li><a href="https://ayedaemon.github.io/tags/eudyptula/">Eudyptula</a></li>
-      <li><a href="https://ayedaemon.github.io/tags/linux/">Linux</a></li>
-    </ul>
-  </footer>
-</article>
-    </main>
-    
-<footer class="footer">
-    <span>&copy; 2024 <a href="https://ayedaemon.github.io/">Connected</a></span>
-    <span>
-        Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
-    </span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-        <path d="M12 6H0l6-6z" />
-    </svg>
-</a>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try {
-                document.execCommand('copy');
-                copyingDone();
-            } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-            
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
-</script>
-</body>
-
-</html>
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Eudyptula Task2 | Connected</title>
+<meta name=keywords content="Eudyptula,linux"><meta name=description content="Task 2 for Eudyptula challenge"><meta name=author content="ayedaemon"><link rel=canonical href=https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/><link crossorigin=anonymous href=/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z+V9+cO1A=" rel="preload stylesheet" as=style><link rel=icon href=https://ayedaemon.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ayedaemon.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ayedaemon.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ayedaemon.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ayedaemon.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style></noscript><meta property="og:title" content="Eudyptula Task2"><meta property="og:description" content="Task 2 for Eudyptula challenge"><meta property="og:type" content="article"><meta property="og:url" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-06-01T15:14:27+05:30"><meta property="article:modified_time" content="2024-04-02T17:19:43+05:30"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2023/05/eudyptula-task-7/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/09/eudyptula-task-6/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-5/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-4/"><meta property="og:see_also" content="https://ayedaemon.github.io/post/2022/06/eudyptula-task-3/"><meta name=twitter:card content="summary"><meta name=twitter:title content="Eudyptula Task2"><meta name=twitter:description content="Task 2 for Eudyptula challenge"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://ayedaemon.github.io/post/"},{"@type":"ListItem","position":2,"name":"Eudyptula Task2","item":"https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Eudyptula Task2","name":"Eudyptula Task2","description":"Task 2 for Eudyptula challenge","keywords":["Eudyptula","linux"],"articleBody":"This is Task 02 of the Eudyptula Challenge ------------------------------------------ Now that you have written your first kernel module, it's time to take off the training wheels and move on to building a custom kernel. No more distro kernels for you, for this task you must run your own kernel. And use git! Exciting isn't it! No, oh, ok... The tasks for this round is: - download Linus's latest git tree from git.kernel.org (you have to figure out which one is his, it's not that hard, just remember what his last name is and you should be fine.) - build it, install it, and boot it. You can use whatever kernel configuration options you wish to use, but you must enable CONFIG_LOCALVERSION_AUTO=y. - show proof of booting this kernel. Bonus points for you if you do it on a \"real\" machine, and not a virtual machine (virtual machines are acceptable, but come on, real kernel developers don't mess around with virtual machines, they are too slow. Oh yeah, we aren't real kernel developers just yet. Well, I'm not anyway, I'm just a script...) Again, proof of running this kernel is up to you, I'm sure you can do well. Hint, you should look into the 'make localmodconfig' option, and base your kernel configuration on a working distro kernel configuration. Don't sit there and answer all 1625 different kernel configuration options by hand, even I, a foolish script, know better than to do that! After doing this, don't throw away that kernel and git tree and configuration file. You'll be using it for later tasks, a working kernel configuration file is a precious thing, all kernel developers have one they have grown and tended to over the years. This is the start of a long journey with yours, don't discard it like was a broken umbrella, it deserves better than that. What, why? Kernel is the main component of any operating system and is also referred as the “Heart of the Operating System”. It is at the core of all the layers present in OS and can have complete access to all the hardware (CPU, disk, RAM, etc). Therefore, it runs on very high privileges. Basically it handles most of the hardware related tasks (Allocate memory, CPU scheduling, etc) and most of the process related tasks (Copying file from/to disk, Uploading/Downloading, opening browser to read this blog, etc)\nWait, what? Does it have control to everything we do on our computers?\nA big YES and small no. It is responsible to send data across multiple resources in your system and it can intercept everything there. But it depends if it can understand what it sees.\nKernel has mainly 4 tasks:\nKeep track of the memory - who is using it and how much; And where. Decides who uses CPU, when and for how long Takes data from processes and passes sensible code to hardware for processing it and vise-versa. Receives requests via system calls (API calls; but not Web API calls) from processes. This is used to do low level stuff and build amazing tools like docker. Talking to kernel is difficult and can be dangerous if not used properly. Most of the times, user does not need to talk to kernel directly, and have got few layers of abstraction on top of it - Device drivers, system libraries, CLI shells, GUI shells (Graphical thing which comes up, when you start your system), etc.\nThis gives rise to the idea of 2 spaces - user space and kernel space. Kernel space is the memory segment that is used only by kernel and users stay out of it. Another is user space memory segment, where user can do all what he wants.\nThe rough mind map would look something like below\n[ [ [ [Hardware] --\u003e Kernel ] --\u003e OS ] --\u003e Process(browser)] # If process fails in OS, damage is small and might be recovered by kernel. # If kernel crashes, Your system goes down. # If hardware fails, you cry!! This is the complete bundle which makes up your system. Now what I want to take out of this whole jibber-jabber is that a kernel is a piece of software that works with hardware and other user-friendly softwares to solve your problems or play games and have fun.\nSince it is a piece of software, we can download it and replace old versions with new versions (manually or via a script/program/whatever). Another option for tech savvy people is to custom compile it. There could be many reasons to compile a linux kernel by yourself, few possible reasons are:-\nYou want to know how it is done. You might want to brag about it and feel superior and very tech savvy. You want to face “I use arch BTW” community. (FYI, I use arch BTW!!) You want optimal performance on specific hardware and architecture. You might want to disable/enable some kernel features. You might want to add support for extra hardware. You are solving eudyptula challenge, just like me :) Regardless of why, knowing how to compile a linux kernel is very useful and cool.\nGetting the source code for kernel. Getting source code for kernel is very easy. You just need to go to kernel.org and download the required files. I’ll be compiling Linus Torvalds’s git tree source code on archlinux/archlinux vagrant box.1\n# Use git to download the linux kernel source code. (just the latest commit =\u003e --depth=1) git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git Linux kernel is very huge software and might take up a minute to download (depends upon your connectivity). This is one of the reasons for why most of the extended functionalities are provided via loadable kernel modules. If you don’t know about kernel modules the read Eudyptula Task1 blog.\nInside the cloned directory, we have multiple files and sub-directories. Each sub-directory is for specified purpose like arch contains files for different system architecture and security contains files for selinux , apparmor and other security related files. In short, linux kernel is developed by thousands of developers in collaboration and not everybody knows about each file present in the source code and yet they have an understanding of where they have to make changes to achieve their goal. Very neat management!!\nCompiling Linux kernel Just like every configurable software, linux kernel also provide configuration support via .config file. We can either use other kernel’s config file or write a config file by ourselves.\nCreating own config file from scratch Creating own config file from scratch can be a bad idea for someone who is doing it for very first time. But if you still want to do it, I’m not gonna stop you. You can make the use of Makefile by typing make config from inside the kernel source code directory and then you’ll have to simply answer yes or no for all the configurable options that kernel supports. Read more here\nUsing existing config file You can copy the config file of your existing kernel and use it as a base config to make further changes. This is a very efficient method if there are only few changes you need to make. Most of the kernel developers have their own config files which they have fine-tuned in so many years. To know about how to get config file for your linux system read this stackoverflow thread. For my vagrant system, I can check my running kernel’s config file using below command\nls /proc/config.gz zcat /proc/config.gz | grep \".*CONFIG_\" | wc -l # Output = 9128 There are total 9128 configurable options here and it is very impractical to make all the proper changes with a text editor in one go, so instead, we will do it with some TUI script. Below script will copy the config file to working directory and start the TUI for you. Navigate to linux source code directory and run the below script.\n# Copy config file and take a backup for later review zcat /proc/config.gz \u003e .config cp .config ../old.config # Install requirements to run `make menuconfig` sudo pacman -S --noconfirm --needed\\ pkg-config ncurses \\ gcc \\ flex \\ bison # Update config file. make menuconfig Linux kernel has a lot of make options and the best way to check supporting make options is via make help command. After executing make menuconfig, a TUI will open in shell which will help you to update, save and load the new configuration. This command uses the .config file from current directory to pre-fill the old config options, this makes it very easy for us to just focus on what we want to change.\nFor my config file, I simply enabled the CONFIG_PRINTK_CALLER and CONFIG_LOCALVERSION_AUTO features of the kernel… and then saved the file with a filename - new.config (I want to keep it backed up for future tasks). We can compare the changed values from the old .config and newer new.config and see the difference.\ndiff .config ../old.config | grep -i -E 'localver|printk' # \u003c CONFIG_LOCALVERSION=\"ayedaemon\" # \u003e CONFIG_LOCALVERSION=\"\" # \u003c CONFIG_PRINTK_CALLER=y # \u003e # CONFIG_PRINTK_CALLER is not set Now we have very few steps left to be done. We need to compile the kernel, then install modules and finally, install kerrnel. Run below commands to get this done.\n# Update .config with newer config file mv -v new.config .config # Backup the newer config file cp -v .config ../new.config # Install some more dependencies sudo pacman -S --noconfirm --needed \\ bc \\ cpio # If on arch based distro or using my vagrantfile # Compile kernel (might require your input) - use -j4 to make it build faster make -j4 # Install modules (takes some time) - user -j4 to make it build faster sudo make modules_install -j4 If you are use LILO bootloader, then the kernel make file will do the job for you with this command - sudo make install. But if you are using GRUB, then you will have to make some manual steps by running below commands.\n# Copy kernel image to /boot sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux # Copy system.map to /boot sudo cp System.map /boot/System-ayedaemonlinux.map # Copy config file to /boot (just to be safe) sudo cp .config /boot/ayedaemonlinux.kernel.config Let’s take a minute to see what we just did. After we configured the linux kernel using make and .config file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-\nvmlinuz =\u003e Is the actual kernel file. Yes it is the kernel you were waiting for so long. If you fancy, do file /boot/vmlinuz-ayedaemonlinux and check the results. System.map =\u003e This is the map file which stores the kernel symbol table information. Read more about it here Anyways, we need these files in our /boot/ directory so that our boot-loader can load our compiled kernel. But our boot-loader is dumb, it can not simply detect the files from /boot/ and show us options on the boot-loader screen, we will have to do that as well. You might also need to generate a initrd file depending upon what configurations you are using on your system. If you are following the steps from this blog, then you need initrd for sure. Initrd is the program that helps your kernel to load and boot up properly by providing the modules support that are not built into the kernel at compile time. In this blog, we have not compiled all the modules in the kernel that our kernel might need at boot time, so we will create a initrd file and then we can tell our boot loader about our custom kernel.\nUse mkinitcpio command to generate a initrd file and then update bootloader config using grub-mkconfig command. If you want this kernel to be default, then you’ll have to make proper changes to the boot config file. Read more about it from arch wiki or stackoverflow. If you are someone who prefers easy workarounds, you can also select the new kernel from the grub menu at boot time; Just make sure that GRUB_TIMEOUT variable (from /etc/default/grub) is not set to zero.\n# generate initramfs sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img # update grub config - add entry to boot menu sudo grub-mkconfig -o /boot/grub/grub.cfg # Setup grub boot order if you want to - else use the lazy way Output:-\n# sudo grub-mkconfig -o /boot/grub/grub.cfg Generating grub configuration file ... Found linux image: /boot/vmlinuz-linux Found initrd image: /boot/initramfs-linux.img Found fallback initrd image(s) in /boot: initramfs-linux-fallback.img Found linux image: /boot/vmlinuz-ayedaemonlinux Found initrd image: /boot/initramfs-ayedaemonlinux.img Warning: os-prober will not be executed to detect other bootable partitions. Systems on them will not be added to the GRUB boot configuration. Check GRUB_DISABLE_OS_PROBER documentation entry. done From the output of last command, we can see that my ayedaemonlinux was detected by grub and it also updated the /boot/grub/grub.cfg file with current detections. Now, lets reboot and hope everything works as expected. Select the custom kernel from grub menu if needed and boot into it. If successfull, you can check the kernel version and other information with uname command.\n# Before Reboot --\u003e uname -a Linux archlinux 5.18.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Mon, 30 May 2022 17:53:11 +0000 x86_64 GNU/Linux # After Reboot --\u003e uname -a Linux archlinux 5.18.0ayedaemon-g8ab2afa23bd1 #1 SMP PREEMPT_DYNAMIC Wed Jun 1 16:54:51 UTC 2022 x86_64 GNU/Linux We just compiled our very own first kernel and since we have not changed much of the kernel parameters and no user-space programs are affected with this. But we get our name on the kernel tag!!\nArch is a rolling distro and the packages can be easily upgraded to latest versions available. No too old kind of errors. ↩︎\n","wordCount":"2287","inLanguage":"en","datePublished":"2022-06-01T15:14:27+05:30","dateModified":"2024-04-02T17:19:43+05:30","author":[{"@type":"Person","name":"ayedaemon"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://ayedaemon.github.io/post/2022/06/eudyptula-task-2/"},"publisher":{"@type":"Organization","name":"Connected","logo":{"@type":"ImageObject","url":"https://ayedaemon.github.io/favicon.ico"}}}</script></head><body class=dark id=top><header class=header><nav class=nav><div class=logo><a href=https://ayedaemon.github.io/ accesskey=h title="Connected (Alt + H)">Connected</a><div class=logo-switches></div></div><ul id=menu><li><a href=https://ayedaemon.github.io/archives/ title=Archives><span>Archives</span></a></li><li><a href=https://ayedaemon.github.io/series/ title=Series><span>Series</span></a></li><li><a href=https://ayedaemon.github.io/tags/ title=Tags><span>Tags</span></a></li><li><a href=https://ayedaemon.github.io/search/ title="Search (Alt + /)" accesskey=/><span>Search</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Eudyptula Task2</h1><div class=post-description>Task 2 for Eudyptula challenge</div><div class=post-meta><span title='2022-06-01 15:14:27 +0530 +0530'>June 1, 2022</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2287 words&nbsp;·&nbsp;ayedaemon&nbsp;|&nbsp;<a href=https://github.com/ayedaemon/ayedaemon.github.io/tree/main/content/post/2022/06/Eudyptula-task-2.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#what-why aria-label="What, why?">What, why?</a><ul><ul><li><a href=#getting-the-source-code-for-kernel aria-label="Getting the source code for kernel.">Getting the source code for kernel.</a></li><li><a href=#compiling-linux-kernel aria-label="Compiling Linux kernel">Compiling Linux kernel</a><ul><li><a href=#creating-own-config-file-from-scratch aria-label="Creating own config file from scratch">Creating own config file from scratch</a></li><li><a href=#using-existing-config-file aria-label="Using existing config file">Using existing config file</a></li></ul></ul></li></ul></li></ul></div></details></div><div class=post-content><div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl>This is Task 02 of the Eudyptula Challenge
+</span></span><span class=line><span class=cl>------------------------------------------
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Now that you have written your first kernel module, it&#39;s time to take
+</span></span><span class=line><span class=cl>off the training wheels and move on to building a custom kernel.  No
+</span></span><span class=line><span class=cl>more distro kernels for you, for this task you must run your own kernel.
+</span></span><span class=line><span class=cl>And use git!  Exciting isn&#39;t it!  No, oh, ok...
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The tasks for this round is:
+</span></span><span class=line><span class=cl>  - download Linus&#39;s latest git tree from git.kernel.org (you have to
+</span></span><span class=line><span class=cl>    figure out which one is his, it&#39;s not that hard, just remember what
+</span></span><span class=line><span class=cl>    his last name is and you should be fine.)
+</span></span><span class=line><span class=cl>  - build it, install it, and boot it.  You can use whatever kernel
+</span></span><span class=line><span class=cl>    configuration options you wish to use, but you must enable
+</span></span><span class=line><span class=cl>    CONFIG_LOCALVERSION_AUTO=y.
+</span></span><span class=line><span class=cl>  - show proof of booting this kernel.  Bonus points for you if you do
+</span></span><span class=line><span class=cl>    it on a &#34;real&#34; machine, and not a virtual machine (virtual machines
+</span></span><span class=line><span class=cl>    are acceptable, but come on, real kernel developers don&#39;t mess
+</span></span><span class=line><span class=cl>    around with virtual machines, they are too slow.  Oh yeah, we aren&#39;t
+</span></span><span class=line><span class=cl>    real kernel developers just yet.  Well, I&#39;m not anyway, I&#39;m just a
+</span></span><span class=line><span class=cl>    script...)  Again, proof of running this kernel is up to you, I&#39;m
+</span></span><span class=line><span class=cl>    sure you can do well.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Hint, you should look into the &#39;make localmodconfig&#39; option, and base
+</span></span><span class=line><span class=cl>your kernel configuration on a working distro kernel configuration.
+</span></span><span class=line><span class=cl>Don&#39;t sit there and answer all 1625 different kernel configuration
+</span></span><span class=line><span class=cl>options by hand, even I, a foolish script, know better than to do that!
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>After doing this, don&#39;t throw away that kernel and git tree and
+</span></span><span class=line><span class=cl>configuration file.  You&#39;ll be using it for later tasks, a working
+</span></span><span class=line><span class=cl>kernel configuration file is a precious thing, all kernel developers
+</span></span><span class=line><span class=cl>have one they have grown and tended to over the years.  This is the
+</span></span><span class=line><span class=cl>start of a long journey with yours, don&#39;t discard it like was a broken
+</span></span><span class=line><span class=cl>umbrella, it deserves better than that.
+</span></span></code></pre></div><h1 id=what-why>What, why?<a hidden class=anchor aria-hidden=true href=#what-why>#</a></h1><p>Kernel is the main component of any operating system and is also referred as the &ldquo;Heart of the Operating System&rdquo;. It is at the core of all the layers present in OS and can have complete access to all the hardware (CPU, disk, RAM, etc). Therefore, it runs on very high privileges. Basically it handles most of the hardware related tasks (Allocate memory, CPU scheduling, etc) and most of the process related tasks (Copying file from/to disk, Uploading/Downloading, opening browser to read this blog, etc)</p><p><strong>Wait, what? Does it have control to everything we do on our computers?</strong></p><p>A big YES and small no. It is responsible to send data across multiple resources in your system and it can intercept everything there. But it depends if it can understand what it sees.</p><p>Kernel has mainly 4 tasks:</p><ol><li>Keep track of the memory - who is using it and how much; And where.</li><li>Decides who uses CPU, when and for how long</li><li>Takes data from processes and passes sensible code to hardware for processing it and vise-versa.</li><li>Receives requests via system calls (API calls; but not Web API calls) from processes. This is used to do low level stuff and build amazing tools like docker.</li></ol><p>Talking to kernel is difficult and can be dangerous if not used properly. Most of the times, user does not need to talk to kernel directly, and have got few layers of abstraction on top of it - Device drivers, system libraries, CLI shells, GUI shells (Graphical thing which comes up, when you start your system), etc.</p><p>This gives rise to the idea of 2 spaces - user space and kernel space. Kernel space is the memory segment that is used only by kernel and users stay out of it. Another is user space memory segment, where user can do all what he wants.</p><p>The rough mind map would look something like below</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl>[ [ [ [Hardware] --&gt; Kernel ] --&gt; OS ]  --&gt; Process(browser)]
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># If process fails in OS, damage is small and might be recovered by kernel.
+</span></span><span class=line><span class=cl># If kernel crashes, Your system goes down.
+</span></span><span class=line><span class=cl># If hardware fails, you cry!!
+</span></span></code></pre></div><p>This is the complete bundle which makes up your system. Now what I want to take out of this whole jibber-jabber is that a <strong>kernel</strong> is a <strong><em>piece of software</em></strong> that works with hardware and other user-friendly softwares to solve your problems or play games and have fun.</p><p>Since it is a piece of software, we can download it and replace old versions with new versions (manually or via a script/program/whatever). Another option for tech savvy people is to custom compile it. There could be many reasons to compile a linux kernel by yourself, few possible reasons are:-</p><ul><li>You want to know how it is done.</li><li>You might want to brag about it and feel superior and very tech savvy.</li><li>You want to face &ldquo;I use arch BTW&rdquo; community. (FYI, I use arch BTW!!)</li><li>You want optimal performance on specific hardware and architecture.</li><li>You might want to disable/enable some kernel features.</li><li>You might want to add support for extra hardware.</li><li>You are solving eudyptula challenge, just like me :)</li></ul><p>Regardless of why, knowing how to compile a linux kernel is very useful and cool.</p><p><img loading=lazy src=https://media.giphy.com/media/dCLyraFCJhaLUsG3dX/giphy.gif#center alt></p><h3 id=getting-the-source-code-for-kernel>Getting the source code for kernel.<a hidden class=anchor aria-hidden=true href=#getting-the-source-code-for-kernel>#</a></h3><p>Getting source code for kernel is very easy. You just need to go to <a href=https://kernel.org/>kernel.org</a> and download the required files. I&rsquo;ll be compiling <a href=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/>Linus Torvalds&rsquo;s git tree</a> source code on <code>archlinux/archlinux</code> vagrant box.<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># Use git to download the linux kernel source code. (just the latest commit =&gt; --depth=1)</span>
+</span></span><span class=line><span class=cl>git clone --depth<span class=o>=</span><span class=m>1</span> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+</span></span></code></pre></div><p>Linux kernel is very huge software and might take up a minute to download (depends upon your connectivity). This is one of the reasons for why most of the extended functionalities are provided via loadable kernel modules. If you don&rsquo;t know about kernel modules the read <a href=https://ayedaemon.github.io/post/eudyptula/eudyptula-task-1/>Eudyptula Task1</a> blog.</p><p>Inside the cloned directory, we have multiple files and sub-directories. Each sub-directory is for specified purpose like <code>arch</code> contains files for different system architecture and <code>security</code> contains files for <code>selinux</code> , <code>apparmor</code> and other security related files. In short, linux kernel is developed by thousands of developers in collaboration and not everybody knows about each file present in the source code and yet they have an understanding of where they have to make changes to achieve their goal. Very neat management!!</p><h3 id=compiling-linux-kernel>Compiling Linux kernel<a hidden class=anchor aria-hidden=true href=#compiling-linux-kernel>#</a></h3><p>Just like every configurable software, linux kernel also provide configuration support via <code>.config</code> file. We can either use other kernel&rsquo;s config file or write a config file by ourselves.</p><h4 id=creating-own-config-file-from-scratch>Creating own config file from scratch<a hidden class=anchor aria-hidden=true href=#creating-own-config-file-from-scratch>#</a></h4><p>Creating own config file from scratch can be a bad idea for someone who is doing it for very first time. But if you still want to do it, I&rsquo;m not gonna stop you. You can make the use of <code>Makefile</code> by typing <code>make config</code> from inside the kernel source code directory and then you&rsquo;ll have to simply answer <code>yes or no</code> for all the configurable options that kernel supports. <a href=https://www.linuxtopia.org/online_books/linux_kernel/kernel_configuration/ch05.html#id2564226>Read more here</a></p><h4 id=using-existing-config-file>Using existing config file<a hidden class=anchor aria-hidden=true href=#using-existing-config-file>#</a></h4><p>You can copy the config file of your existing kernel and use it as a base config to make further changes. This is a very efficient method if there are only few changes you need to make. Most of the kernel developers have their own config files which they have fine-tuned in so many years. To know about how to get config file for your linux system <a href=https://superuser.com/questions/287371/obtain-kernel-config-from-currently-running-linux-system>read this stackoverflow thread</a>. For my vagrant system, I can check my running kernel&rsquo;s config file using below command</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>ls /proc/config.gz
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>zcat /proc/config.gz  <span class=p>|</span> grep  <span class=s2>&#34;.*CONFIG_&#34;</span> <span class=p>|</span> wc -l
+</span></span><span class=line><span class=cl><span class=c1># Output = 9128</span>
+</span></span></code></pre></div><p>There are total <code>9128</code> configurable options here and it is very impractical to make all the proper changes with a text editor in one go, so instead, we will do it with some <a href=https://en.wikipedia.org/wiki/Text-based_user_interface>TUI script</a>. Below script will copy the config file to working directory and start the TUI for you. Navigate to <code>linux</code> source code directory and run the below script.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># Copy config file and take a backup for later review</span>
+</span></span><span class=line><span class=cl>zcat /proc/config.gz &gt; .config
+</span></span><span class=line><span class=cl>cp .config ../old.config
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Install requirements to run `make menuconfig`</span>
+</span></span><span class=line><span class=cl>sudo pacman -S --noconfirm --needed<span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>	pkg-config ncurses <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>	gcc <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>	flex <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>	bison
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Update config file.</span>
+</span></span><span class=line><span class=cl>make menuconfig
+</span></span></code></pre></div><p>Linux kernel has a lot of make options and the best way to check supporting make options is via <code>make help</code> command. After executing <code>make menuconfig</code>, a TUI will open in shell which will help you to update, save and load the new configuration. This command uses the <code>.config</code> file from current directory to pre-fill the old config options, this makes it very easy for us to just focus on what we want to change.</p><p>For my config file, I simply enabled the <code>CONFIG_PRINTK_CALLER</code> and <code>CONFIG_LOCALVERSION_AUTO</code> features of the kernel&mldr; and then saved the file with a filename - <code>new.config</code> (I want to keep it backed up for future tasks). We can compare the changed values from the old <code>.config</code> and newer <code>new.config</code> and see the difference.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>diff .config ../old.config  <span class=p>|</span> grep -i -E <span class=s1>&#39;localver|printk&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#   &lt; CONFIG_LOCALVERSION=&#34;ayedaemon&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#   &gt; CONFIG_LOCALVERSION=&#34;&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#   &lt; CONFIG_PRINTK_CALLER=y</span>
+</span></span><span class=line><span class=cl><span class=c1>#   &gt; # CONFIG_PRINTK_CALLER is not set</span>
+</span></span></code></pre></div><p>Now we have very few steps left to be done. We need to <strong><em>compile the kernel</em></strong>, then <strong><em>install modules</em></strong> and finally, <strong><em>install kerrnel</em></strong>. Run below commands to get this done.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># Update .config with newer config file
+</span></span><span class=line><span class=cl>mv -v new.config .config
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Backup the newer config file
+</span></span><span class=line><span class=cl>cp -v .config ../new.config
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Install some more dependencies
+</span></span><span class=line><span class=cl>sudo pacman -S --noconfirm --needed \
+</span></span><span class=line><span class=cl>	bc \
+</span></span><span class=line><span class=cl>	cpio   # If on arch based distro or using my vagrantfile
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Compile kernel (might require your input) - use -j4 to make it build faster
+</span></span><span class=line><span class=cl>make -j4
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Install modules (takes some time) - user -j4 to make it build faster
+</span></span><span class=line><span class=cl>sudo make modules_install -j4
+</span></span></code></pre></div><p>If you are use LILO bootloader, then the kernel make file will do the job for you with this command - <code>sudo make install</code>. But if you are using GRUB, then you will have to make some manual steps by running below commands.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># Copy kernel image to /boot
+</span></span><span class=line><span class=cl>sudo cp arch/x86_64/boot/bzImage /boot/vmlinuz-ayedaemonlinux
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Copy system.map to /boot
+</span></span><span class=line><span class=cl>sudo cp System.map /boot/System-ayedaemonlinux.map
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Copy config file to /boot (just to be safe)
+</span></span><span class=line><span class=cl>sudo cp .config /boot/ayedaemonlinux.kernel.config
+</span></span></code></pre></div><p>Let&rsquo;s take a minute to see what we just did. After we configured the linux kernel using <code>make</code> and <code>.config</code> file, we compiled the kernel with our configuration requirements and then installed all the modules required. Once this is done, we got 2 important files we need :-</p><ol><li><code>vmlinuz</code> => Is the actual kernel file. Yes it is the kernel you were waiting for so long. If you fancy, do <code>file /boot/vmlinuz-ayedaemonlinux</code> and check the results.</li><li><code>System.map</code> => This is the map file which stores the kernel symbol table information. <a href=https://rlworkman.net/system.map/>Read more about it here</a></li></ol><p>Anyways, we need these files in our <code>/boot/</code> directory so that our boot-loader can load our compiled kernel. But our boot-loader is dumb, it can not simply detect the files from <code>/boot/</code> and show us options on the boot-loader screen, we will have to do that as well. You might also need to generate a <code>initrd</code> file depending upon what configurations you are using on your system. If you are following the steps from this blog, then you need <strong>initrd</strong> for sure. <strong>Initrd</strong> is the program that helps your kernel to load and boot up properly by providing the modules support that are not built into the kernel at compile time. In this blog, we have not compiled all the modules in the kernel that our kernel might need at boot time, so we will create a <code>initrd</code> file and then we can tell our boot loader about our custom kernel.</p><p>Use <code>mkinitcpio</code> command to generate a initrd file and then update bootloader config using <code>grub-mkconfig</code> command. If you want this kernel to be default, then you&rsquo;ll have to make proper changes to the boot config file. Read more about it from <a href=https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Changing_the_default_menu_entry>arch wiki</a> or <a href=https://stackoverflow.com/questions/44422745/change-default-kernel-version-in-grub>stackoverflow</a>. If you are someone who prefers easy workarounds, you can also select the new kernel from the grub menu at boot time; Just make sure that <code>GRUB_TIMEOUT</code> variable (from <code>/etc/default/grub</code>) is not set to zero.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># generate initramfs
+</span></span><span class=line><span class=cl>sudo mkinitcpio -k 5.18.0ayedaemon-g8ab2afa23bd1 -g /boot/initramfs-ayedaemonlinux.img
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># update grub config - add entry to boot menu
+</span></span><span class=line><span class=cl>sudo grub-mkconfig -o /boot/grub/grub.cfg
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Setup grub boot order if you want to - else use the lazy way
+</span></span></code></pre></div><p>Output:-</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>#  sudo grub-mkconfig -o /boot/grub/grub.cfg
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Generating grub configuration file ...
+</span></span><span class=line><span class=cl>Found linux image: /boot/vmlinuz-linux
+</span></span><span class=line><span class=cl>Found initrd image: /boot/initramfs-linux.img
+</span></span><span class=line><span class=cl>Found fallback initrd image(s) in /boot:  initramfs-linux-fallback.img
+</span></span><span class=line><span class=cl>Found linux image: /boot/vmlinuz-ayedaemonlinux
+</span></span><span class=line><span class=cl>Found initrd image: /boot/initramfs-ayedaemonlinux.img
+</span></span><span class=line><span class=cl>Warning: os-prober will not be executed to detect other bootable partitions.
+</span></span><span class=line><span class=cl>Systems on them will not be added to the GRUB boot configuration.
+</span></span><span class=line><span class=cl>Check GRUB_DISABLE_OS_PROBER documentation entry.
+</span></span><span class=line><span class=cl>done
+</span></span></code></pre></div><p>From the output of last command, we can see that my <code>ayedaemonlinux</code> was detected by grub and it also updated the <code>/boot/grub/grub.cfg</code> file with current detections. Now, lets reboot and hope everything works as expected. Select the custom kernel from grub menu if needed and boot into it. If successfull, you can check the kernel version and other information with <code>uname</code> command.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl># Before Reboot --&gt; uname -a
+</span></span><span class=line><span class=cl>Linux archlinux 5.18.1-arch1-1 #1 SMP PREEMPT_DYNAMIC Mon, 30 May 2022 17:53:11 +0000 x86_64 GNU/Linux
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># After Reboot --&gt; uname -a
+</span></span><span class=line><span class=cl>Linux archlinux 5.18.0ayedaemon-g8ab2afa23bd1 #1 SMP PREEMPT_DYNAMIC Wed Jun 1 16:54:51 UTC 2022 x86_64 GNU/Linux
+</span></span></code></pre></div><p>We just compiled our very own first kernel and since we have not changed much of the kernel parameters and no user-space programs are affected with this. But we get our name on the kernel tag!!</p><p><img loading=lazy src=https://media.giphy.com/media/jurcfxao8M3yzHmCjS/giphy.gif#center alt></p><div class=footnotes role=doc-endnotes><hr><ol><li id=fn:1><p>Arch is a rolling distro and the packages can be easily upgraded to latest versions available. No <code>&lt;package-name> too old</code> kind of errors.&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://ayedaemon.github.io/tags/eudyptula/>Eudyptula</a></li><li><a href=https://ayedaemon.github.io/tags/linux/>Linux</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2024 <a href=https://ayedaemon.github.io/>Connected</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
