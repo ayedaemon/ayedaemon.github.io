@@ -4,6 +4,14 @@ title: "Connected"
 theme: ["PaperMod"]
 
 
+paginate: 5
+buildDrafts: false
+buildFuture: false
+enableGitInfo : true
+
+minify:
+  disableXML: true
+  minifyOutput: true
 
 params:
   # home-info mode
@@ -60,7 +68,7 @@ params:
     keys: ["title", "permalink", "summary", "content"] ##  can be less but not more than shown in list
 
   editPost:
-    URL: "https://github.com/ayedaemon/ayedaemon.github.io/content"
+    URL: "https://github.com/ayedaemon/ayedaemon.github.io/tree/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 
@@ -69,9 +77,9 @@ params:
 
 menu:
   main:
-    - identifier: archives
+    - identifier: categories
       name: Archives
-      url: /post/
+      url: /archives/
       weight: 1
     - identifier: series
       name: Series
@@ -94,12 +102,12 @@ menu:
 pygmentsUseClasses: true
 markup:
   highlight:
-    noClasses: false
-    # anchorLineNos: true
-    # codeFences: true
-    # guessSyntax: true
-    # lineNos: true
-    # style: monokai
+    # noClasses: false
+    anchorLineNos: true
+    codeFences: true
+    guessSyntax: true
+    lineNos: false
+    style: monokai
 
 outputs:
   home:
