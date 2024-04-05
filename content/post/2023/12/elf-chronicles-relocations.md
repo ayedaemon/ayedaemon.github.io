@@ -1,7 +1,7 @@
 ---
 title: "Elf Chronicles: Relocations (6/?)"
 date: 2023-12-08T14:17:56+05:30
-draft: true
+draft: false
 # showtoc: false
 tags:
     - "C"
