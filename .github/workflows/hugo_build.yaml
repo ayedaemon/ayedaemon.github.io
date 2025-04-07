@@ -31,7 +31,7 @@ jobs:
       - name: Build the site
         run: hugo version && hugo
 
-       # Hugo builds to `./public` by default, which is where the gh-branch is checked out to
+        # Hugo builds to `./public` by default, which is where the gh-branch is checked out to
       - name: Check for changes
         id: diff
         working-directory: ./public
@@ -47,7 +47,6 @@ jobs:
         if: steps.diff.outputs.changes != 'none'
         # TODO perhaps reuse the commit message from the original commit
         run: |
-          git add --all
           git config user.name "GitHub Actions"
           git config user.email "<>"
           git add --all && git commit -m "Update blog" && git push
